@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1019">
+  <meta name="theme-color" content="#f5f5ef">
   <meta name="description" content="YEON is an independent research discovery initiative connecting Korean laboratories, ideas, and scientific work. Explore the vision.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="YEON — Research has a bigger picture.">
-  <meta property="og:description" content="A new lens on Korean research. Discover the labs, people and connections behind scientific progress.">
+  <meta property="og:title" content="YEON — Explore the research behind the research.">
+  <meta property="og:description" content="A different way to understand Korean research: explore labs, research evolution, and the connections behind published work.">
   <meta property="og:url" content="https://subhana2004.github.io/yeon/">
-  <title>YEON — Research has a bigger picture.</title>
+  <title>YEON — Explore the research behind the research.</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b1019'/%3E%3Ccircle cx='32' cy='32' r='17' stroke='%23bef4a6' stroke-width='3' fill='none'/%3E%3Ccircle cx='32' cy='15' r='5' fill='%23bef4a6'/%3E%3Ccircle cx='47' cy='40' r='5' fill='%23bef4a6'/%3E%3Ccircle cx='17' cy='40' r='5' fill='%23bef4a6'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -231,52 +231,191 @@
       *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition-duration:.01ms!important}
       .reveal{opacity:1;transform:none}
     }
+
+    /* YEON v0.2 — Editorial redesign. Feature tiles intentionally unchanged. */
+    body{background:#f5f5ef;color:#17211b}
+    ::selection{background:#cbe9b5;color:#142018}
+    :focus-visible{outline-color:#3f7152}
+    .site-header{background:#f5f5ef;color:#17211b;border-bottom:1px solid #d9ded5}
+    .nav{min-height:91px}
+    .brand{color:#17211b;font-size:30px;letter-spacing:-.085em;gap:0}
+    .logo-dot{color:#61856e}
+    .nav-context{font:600 10px var(--display);letter-spacing:.12em;color:#7b887e;margin-left:clamp(0px,6vw,75px)}
+    .nav-context span{padding:0 9px;color:#a8b8aa}
+    .nav-links a{color:#405347;font-weight:700;letter-spacing:.04em;font-size:11px}
+    .nav-links a:hover{color:#1c251e}
+    .nav-links .nav-source{border:1px solid #b9c5b9;color:#263d2e;padding:12px 19px}
+    .nav-links .nav-source:hover{background:#17251c;color:#fff;border-color:#17251c}
+    .dark-world{background:#f5f5ef;color:#18231c;overflow:hidden;position:relative}
+    .dark-world::after{content:none}
+    .hero{grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr);min-height:750px;gap:clamp(30px,5vw,100px);padding:110px 0 130px;align-items:center}
+    .hero-copy{padding-bottom:5px}
+    .eyebrow{font:700 10px var(--display);letter-spacing:.17em;color:#62796b;gap:11px}
+    .eyebrow-line{height:7px;width:7px;border-radius:50%;background:#7c9d6b;display:inline-block}
+    .eyebrow-split{color:#a5b6aa}
+    .hero h1{font:600 clamp(60px,6.9vw,112px)/1.015 var(--display);letter-spacing:-.085em;max-width:840px;margin:43px 0 36px;color:#18221c}
+    .hero h1 em{display:inline;font:italic 1.08em/.9 var(--serif);color:#6c9074;letter-spacing:-.05em;white-space:nowrap}
+    .hero-lead{color:#57685d;font-size:clamp(16px,1.27vw,19px);line-height:1.8;max-width:510px;margin-bottom:34px}
+    .hero-actions{gap:29px}
+    .hero-actions .button-primary{background:#1c3023;color:white;border:1px solid #1c3023;padding:0 23px}
+    .hero-actions .button-primary:hover{background:#30543c}
+    .hero-text-link{font:700 12px var(--display);border-bottom:1px solid #8a9b8b;padding:14px 0 8px;color:#344c3a;transition:border-color .2s,transform .2s;display:inline-flex;gap:18px;align-items:center}
+    .hero-text-link:hover{border-color:#1d3426;transform:translateY(-2px)}
+    .hero-footnote{color:#738276;font-size:12px;margin-top:68px}
+    .hero-status-dot{height:7px;width:7px;display:inline-block;background:#789d7c;border-radius:50%}
+    .hero-separator{color:#adb7ae}
+    .paper-trail{border:1px solid #bdcab9;background:#e8eee4;box-shadow:18px 18px 0 rgba(197,207,194,.34);max-width:490px;margin-left:auto;width:100%;transform:rotate(-1deg);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+    .paper-trail:hover{transform:rotate(0);box-shadow:8px 12px 0 rgba(197,207,194,.28)}
+    .specimen-header,.specimen-bottom{display:flex;justify-content:space-between;gap:16px;padding:19px 24px;border-bottom:1px solid #c7d2c5;font:700 9px var(--display);letter-spacing:.13em;color:#66806b}
+    .specimen-header span:last-child,.specimen-bottom span:last-child{text-align:right}
+    .specimen-bottom{border-top:1px solid #c7d2c5;border-bottom:0;font-size:8px;color:#748c79}
+    .specimen-main{padding:39px 34px 25px}
+    .specimen-kicker{display:flex;justify-content:space-between;align-items:center;font:700 9px var(--display);letter-spacing:.14em;color:#627a68}
+    .specimen-kicker span{font-size:18px;font-weight:400}
+    .specimen-main h2{font:600 clamp(28px,3vw,43px)/1.14 var(--display);letter-spacing:-.07em;margin:27px 0 33px}
+    .specimen-main h2 em{font:italic 1.03em var(--serif);letter-spacing:-.03em;color:#628168}
+    .trail-steps{position:relative;border-top:1px solid #c3d0c3}
+    .trail-step{display:flex;width:100%;align-items:center;gap:17px;position:relative;border:none;border-bottom:1px solid #c3d0c3;background:transparent;padding:15px 8px 15px 3px;text-align:left;color:#617168;cursor:pointer;transition:background .22s,padding-left .22s,color .22s}
+    .trail-step:hover,.trail-step.active{background:rgba(255,255,255,.5);color:#193324;padding-left:12px}
+    .trail-num{font:600 10px var(--display);color:#6f9274}
+    .trail-name{font:600 15px var(--display);letter-spacing:-.03em;flex:1}
+    .trail-arrow{font-size:16px;color:#54755d}
+    .trail-detail{display:flex;gap:13px;align-items:start;padding-top:28px;min-height:106px}
+    .trail-mark{font-size:18px;color:#67976f}
+    .trail-detail strong{display:block;font:600 13px var(--display);margin:2px 0 7px}
+    .trail-detail p{color:#708075;font-size:12px;line-height:1.65;margin:0}
+    .ribbon{background:#e1e6dc;color:#59705d;padding:14px 0;border-block:1px solid #cdd8ca}
+    .ribbon-line{font-size:10px;letter-spacing:.19em}
+    .ribbon-line b{color:#7a9f7c}
+    /* Reframe the narrative panel without changing Lab DNA feature itself */
+    .intro-grid{margin-bottom:74px}
+    .story-card{background:#e5ebe1;border-color:#cdd8cd;border-radius:14px}
+    .story-copy{padding:clamp(32px,5vw,70px)}
+    .story-copy h3{font-size:clamp(38px,3.8vw,55px)}
+    .timeline-demo{background:#dce5dc;color:#20382a;border-left:1px solid #cbd8cc}
+    .timeline-demo::before{background:none}
+    .timeline-heading{color:#64816b}
+    .timeline-heading .demo-tag{border-color:#b4c5b7}
+    .timeline-rail{background:linear-gradient(90deg,#b1c9b1,#4b7d61,#96b39c)}
+    .timeline-stops .stop::before{background:#55836a;border-color:#dae7dd;box-shadow:0 0 0 1px #609173}
+    .timeline-stops .stop:nth-child(2)::before{background:#70889b}
+    .timeline-stops .stop:nth-child(3)::before{background:#689f8c}
+    .stop small{color:#73907b}
+    .stop p{color:#728676}
+    .belief{background:#e5eae2;color:#18251c;overflow:hidden;padding:120px 0 110px}
+    .belief::before{content:none}
+    .belief .section-label{color:#6b7c6e}
+    .belief-layout{display:grid;grid-template-columns:1.12fr .68fr;gap:9vw;align-items:end;padding:38px 0 73px}
+    .belief-head h2{font:600 clamp(44px,5.6vw,81px)/1.1 var(--display);letter-spacing:-.07em;margin:0;color:#202f23}
+    .belief-head h2 em{font:italic 1.07em var(--serif);color:#6f9278}
+    .belief-intro{font-size:18px;line-height:1.8;color:#637468;max-width:390px;margin:0 0 7px}
+    .principles{margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:none;border-top:1px solid #b9c8b9;border-bottom:1px solid #b9c8b9}
+    .principle,.principle:not(:first-child){background:transparent;padding:33px 36px 35px 0;border:0}
+    .principle:not(:first-child){padding-left:34px;border-left:1px solid #bfccbe}
+    .principle .n{font:700 10px var(--display);color:#64876b;letter-spacing:.08em}
+    .principle strong{font:600 22px var(--display);letter-spacing:-.04em;color:#243329;margin:31px 0 10px}
+    .principle p{font-size:14px;color:#66786a;line-height:1.75}
+    .closing{background:#f5f5ef;color:#17211b;padding:105px 0 115px}
+    .closing-grid{display:flex;gap:75px;align-items:end}
+    .closing .section-label{color:#758579}
+    .closing h2{font:600 clamp(43px,5.1vw,74px)/1.1 var(--display);letter-spacing:-.066em;max-width:950px;margin:28px 0 20px}
+    .closing h2 em{font:italic 1.1em var(--serif);color:#668b71}
+    .closing-copy p{font-size:15px;line-height:1.75;color:#667568;max-width:490px;margin:0}
+    .closing-link{display:flex;min-width:300px;align-items:center;justify-content:space-between;gap:20px;padding:20px 0 16px;border-top:1px solid #9eafa1;border-bottom:1px solid #9eafa1;font:600 15px var(--display);letter-spacing:-.02em;transition:gap .2s}
+    .closing-link:hover{color:#477f52}
+    .closing-link-arrow{font-size:24px;font-weight:400}
+    .footer{background:#1a2a20;padding:36px 0 40px}
+    .footer .brand{color:#f1f5ed}
+    .footer small{color:#a8b6ac}
+    .footer-right{display:flex;gap:26px;flex-wrap:wrap}
+    .footer a:not(.brand){color:#b7c7bc}
+    .footer a:hover{color:#e5ffd7}
+    @media(max-width:1180px){
+      .nav-context{display:none}
+      .hero{grid-template-columns:1fr .9fr;gap:3vw}
+      .hero h1{font-size:clamp(62px,6.9vw,90px)}
+      .paper-trail{transform:none}
+    }
+    @media(max-width:760px){
+      .nav{min-height:74px}
+      .hero{grid-template-columns:1fr;gap:35px;padding:72px 0 91px;min-height:0}
+      .hero h1{font-size:clamp(58px,10.6vw,87px);margin:29px 0 27px}
+      .hero-footnote{margin-top:39px}
+      .paper-trail{margin:auto;max-width:570px;box-shadow:9px 9px 0 rgba(197,207,194,.3)}
+      .paper-trail:hover{transform:none;box-shadow:9px 9px 0 rgba(197,207,194,.3)}
+      .specimen-main h2{font-size:40px}
+      .timeline-demo{border-left:none;border-top:1px solid #cbd8cc}
+      .belief{padding:88px 0 90px}
+      .belief-layout{grid-template-columns:1fr;gap:24px;padding:31px 0 48px}
+      .belief-head h2{font-size:clamp(45px,7.5vw,67px)}
+      .belief-intro{max-width:520px}
+      .principles{grid-template-columns:1fr}
+      .principle,.principle:not(:first-child){padding:24px 0!important;border-left:0;border-bottom:1px solid #bfccbe}
+      .principle:last-child{border-bottom:0}
+      .principle strong{margin:15px 0 8px}
+      .closing{padding:82px 0}
+      .closing-grid{flex-direction:column;align-items:stretch;gap:45px}
+      .closing-link{min-width:0;max-width:390px}
+      .footer-inner{align-items:start}
+    }
+    @media(max-width:480px){
+      .hero{padding:60px 0 81px}
+      .hero h1{font-size:clamp(51px,12.2vw,66px)}
+      .eyebrow{font-size:8px;letter-spacing:.12em;flex-wrap:wrap}
+      .hero-actions{gap:14px}
+      .hero-actions .button-primary{font-size:12px}
+      .hero-text-link{font-size:11px}
+      .specimen-header,.specimen-bottom{padding:15px;font-size:8px}
+      .specimen-main{padding:28px 20px 24px}
+      .specimen-main h2{font-size:34px}
+      .trail-step{padding-block:13px}
+      .trail-name{font-size:14px}
+      .belief-head h2{font-size:clamp(44px,11vw,57px)}
+      .closing h2{font-size:clamp(44px,11.4vw,59px)}
+      .closing-link{font-size:14px}
+    }
+    @media(prefers-reduced-motion:reduce){.paper-trail{transform:none}.reveal{opacity:1;transform:none}}
   </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
-    <nav class="container nav" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="YEON home"><span class="brand-symbol" aria-hidden="true"><i></i></span>yeon<span style="color:var(--lime)">.</span></a>
-      <div class="nav-links">
-        <a href="#vision">The vision</a>
-        <a href="#features">Features</a>
-        <a href="#principles">Our principles</a>
-        <a class="nav-source" href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">View GitHub ↗</a>
-      </div>
-    </nav>
-  </header>
-  <main id="main">
-  <div class="dark-world">
+  <nav class="container nav" aria-label="Main navigation">
+    <a class="brand" href="#top" aria-label="YEON home">yeon<span class="logo-dot">.</span></a>
+    <div class="nav-context">AN INDEPENDENT RESEARCH DISCOVERY PROJECT <span> / </span> EST. 2026</div>
+    <div class="nav-links">
+      <a href="#vision">The idea</a>
+      <a href="#features">Features</a>
+      <a class="nav-source" href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+  </nav>
+</header>
+<main id="main">
+<div class="dark-world">
   <section id="top" class="container hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <div class="eyebrow"><span class="dash"></span>A new lens on Korean research</div>
-      <h1 id="hero-title">Every discovery has a <em>bigger picture.</em></h1>
-      <p class="hero-lead">Meet the ideas, laboratories, and people behind the work. YEON is reimagining how the next generation explores Korea's research landscape.</p>
+      <div class="eyebrow"><span class="eyebrow-line"></span> INTRODUCING YEON <span class="eyebrow-split">/</span> KOREAN RESEARCH, RECONSIDERED</div>
+      <h1 id="hero-title">Research is<br>more than <em>a paper.</em></h1>
+      <p class="hero-lead">Behind every publication is a lab, a history of ideas, and a network of people moving science forward. We're building a better way to explore it all.</p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#vision">Explore the vision <span class="arrow" aria-hidden="true">↗</span></a>
-        <a class="button button-outline" href="#features">Discover the features <span class="arrow" aria-hidden="true">↘</span></a>
+        <a class="button button-primary" href="#vision">Get to know YEON <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="hero-text-link" href="#features">Explore the seven features <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="hero-footnote"><span aria-hidden="true"></span>Independent initiative · Currently in development</div>
+      <div class="hero-footnote"><span class="hero-status-dot" aria-hidden="true"></span> Early-stage independent project <span class="hero-separator">·</span> Source-first by design</div>
     </div>
-    <div class="atlas" aria-label="Interactive conceptual constellation of research topics. This is an illustrative demo, not live research data.">
-      <div class="atlas-corner">FIG 01 / CONNECTIONS</div>
-      <svg class="orbit-svg" viewBox="0 0 650 650" aria-hidden="true" focusable="false">
-        <circle class="orbit" cx="326" cy="318" r="130"/><circle class="orbit" cx="326" cy="318" r="214"/><circle class="orbit" cx="326" cy="318" r="279"/>
-        <ellipse class="orbit" cx="326" cy="318" rx="290" ry="150" transform="rotate(-30 326 318)"/>
-        <ellipse class="orbit" cx="326" cy="318" rx="190" ry="291" transform="rotate(41 326 318)"/>
-        <path class="wire" d="M 326 318 L 141 137 M326 318 L 537 176 M326 318 L 90 367 M326 318 L 542 442 M326 318 L 229 578 M141 137 L 537 176 L 542 442 L 229 578 L 90 367 Z"/>
-        <path class="glow-wire" d="M141 137 L 326 318 L542 442"/>
-        <circle class="tiny" cx="141" cy="137" r="3"/><circle class="tiny" cx="537" cy="176" r="3"/><circle class="tiny" cx="90" cy="367" r="3"/><circle class="tiny" cx="542" cy="442" r="3"/><circle class="tiny" cx="229" cy="578" r="3"/>
-      </svg>
-      <div class="planet-core" aria-hidden="true"><div class="core-type">yeon<span>.</span></div></div>
-      <button class="lab-point p1 active" type="button" data-title="Research directions" data-detail="Trace how fields evolve, overlap, and influence one another." aria-pressed="true"><span aria-hidden="true"></span>Research directions</button>
-      <button class="lab-point p2" type="button" data-title="Laboratories" data-detail="Go beyond university names to explore verified lab-level work." aria-pressed="false"><span aria-hidden="true"></span>Laboratories</button>
-      <button class="lab-point p3" type="button" data-title="Scientific works" data-detail="Follow source-linked publications, code, and research activity." aria-pressed="false"><span aria-hidden="true"></span>Scientific works</button>
-      <button class="lab-point p4" type="button" data-title="Connections" data-detail="See relationships without mistaking coauthorship for formal collaboration." aria-pressed="false"><span aria-hidden="true"></span>Connections</button>
-      <button class="lab-point p5" type="button" data-title="New possibilities" data-detail="Discover publicly advertised openings and meaningful research overlap." aria-pressed="false"><span aria-hidden="true"></span>New possibilities</button>
-      <div class="atlas-info" aria-live="polite"><span class="micro">EXPLORE THE MODEL ↗</span><strong id="atlas-title">Research directions</strong><p id="atlas-detail">Trace how fields evolve, overlap, and influence one another.</p></div>
-      <div class="atlas-label">Illustrative network · Not live data</div>
+    <div class="paper-trail" aria-labelledby="trail-title">
+      <div class="specimen-header"><span>YEON FIELD NOTES</span><span>NO. 001 — CONCEPT MODEL</span></div>
+      <div class="specimen-main">
+        <div class="specimen-kicker">THE THREAD BEHIND THE WORK <span aria-hidden="true">↗</span></div>
+        <h2 id="trail-title">One discovery.<br><em>Many connections.</em></h2>
+        <div class="trail-steps" role="group" aria-label="Explore the research journey">
+          <button type="button" class="trail-step active" data-trail-title="A paper" data-trail-detail="Start with a published question, and follow the evidence beyond the abstract." aria-pressed="true"><span class="trail-num">01</span><span class="trail-name">The paper</span><span class="trail-arrow" aria-hidden="true">↗</span></button>
+          <button type="button" class="trail-step" data-trail-title="A laboratory" data-trail-detail="Discover the group behind the work and the research that came before it." aria-pressed="false"><span class="trail-num">02</span><span class="trail-name">The lab</span><span class="trail-arrow" aria-hidden="true">↗</span></button>
+          <button type="button" class="trail-step" data-trail-title="A larger picture" data-trail-detail="Trace real connections, compare approaches, and keep up with new discoveries." aria-pressed="false"><span class="trail-num">03</span><span class="trail-name">The bigger picture</span><span class="trail-arrow" aria-hidden="true">↗</span></button>
+        </div>
+        <div class="trail-detail" aria-live="polite"><span class="trail-mark" aria-hidden="true">✳</span><div><strong id="trail-current-title">A paper</strong><p id="trail-current-detail">Start with a published question, and follow the evidence beyond the abstract.</p></div></div>
+      </div>
+      <div class="specimen-bottom"><span>01 / 03 — CHOOSE A THREAD ABOVE</span><span>ILLUSTRATIVE, NOT LIVE RESEARCH DATA</span></div>
     </div>
   </section>
 </div>
@@ -285,13 +424,13 @@
   <section class="container section-pad" id="vision" aria-labelledby="vision-title">
     <div class="section-label reveal"><span>01</span> The vision</div>
     <div class="intro-grid">
-      <h2 class="reveal" id="vision-title">A lab is more than its <em>latest paper.</em></h2>
-      <p class="reveal">Research isn't a search result. It's a living story of questions, discoveries, collaborations, and changing ideas. YEON is being built to make that bigger picture understandable.</p>
+      <h2 class="reveal" id="vision-title">A lab has a story <em>worth following.</em></h2>
+      <p class="reveal">A paper tells you what was discovered. A research history tells you why it matters. YEON connects the questions, people, and ideas behind scientific work.</p>
     </div>
     <article class="story-card reveal">
       <div class="story-copy">
         <div class="index"><i></i> The signature experience · 01</div>
-        <div><h3>Introducing<br>Lab DNA.</h3><p>Discover where a lab started, how its work developed, and which questions shape its research today—all with traceable sources.</p></div>
+        <div><h3>Go beyond<br>the publication.</h3><p>With Lab DNA, trace how a research group’s ideas have evolved—from its earliest questions to its recent work. Every connection should have a source.</p></div>
         <a class="text-link" href="#features">Meet all seven features ↗</a>
       </div>
       <div class="timeline-demo" role="img" aria-label="Illustrative three-stage research timeline: origins, evolution, and new directions. Not based on any real lab.">
@@ -346,44 +485,45 @@
   </section>
 </div>
 <section class="belief" id="principles" aria-labelledby="principles-title">
-  <div class="container">
-    <div class="section-label reveal" style="color:#a9bbb0"><span style="border-color:#496257">02</span> What we believe</div>
-    <div class="belief-head reveal">
-      <h2 id="principles-title">Discovery should inspire <em>curiosity.</em><br>Evidence should earn <em>trust.</em></h2>
-      <p>We're designing YEON to give students a clearer view of real scientific work—without pretending that a data point tells the whole story.</p>
+  <div class="container belief-container">
+    <div class="section-label reveal"><span>02</span> THE THINKING BEHIND YEON</div>
+    <div class="belief-layout">
+      <div class="belief-head reveal"><h2 id="principles-title">A different kind<br>of <em>research lens.</em></h2></div>
+      <p class="belief-intro reveal">The internet makes papers easy to find. Understanding the people and ideas behind them still takes work. We think that should change.</p>
     </div>
     <div class="principles">
-      <div class="principle reveal"><div class="n">01 /</div><strong>Sources over guesses</strong><p>Lab connections and research claims should be traceable, with uncertainty clearly shown.</p></div>
-      <div class="principle reveal"><div class="n">02 /</div><strong>Context over rankings</strong><p>Different labs solve different problems. Explore the work instead of chasing artificial scores.</p></div>
-      <div class="principle reveal"><div class="n">03 /</div><strong>People over noise</strong><p>Build for students and independent researchers who want to understand, compare, and explore.</p></div>
+      <div class="principle reveal"><div class="n">01 — EVIDENCE</div><strong>Show the source.</strong><p>Research relationships should be traceable. Where we don't know, we'll say so.</p></div>
+      <div class="principle reveal"><div class="n">02 — PERSPECTIVE</div><strong>Give work its context.</strong><p>Understand how ideas developed instead of relying on simplistic lab rankings.</p></div>
+      <div class="principle reveal"><div class="n">03 — ACCESS</div><strong>Leave the door open.</strong><p>Make research discovery more navigable for students and independent explorers.</p></div>
     </div>
   </div>
 </section>
 <section class="closing" aria-labelledby="closing-title">
   <div class="container closing-grid">
-    <div>
-      <div class="section-label"><span>03</span> An independent project</div>
-      <h2 id="closing-title">The next connection could change <em>everything.</em></h2>
+    <div class="closing-copy">
+      <div class="section-label"><span>03</span> INDEPENDENT & IN PROGRESS</div>
+      <h2 id="closing-title">Good research begins<br>with <em>curiosity.</em></h2>
+      <p>YEON is an independent project by Syeda Subhana. The landing page is live; the research tools are being built in the open.</p>
     </div>
-    <a class="button" href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">Follow our build <span class="arrow" aria-hidden="true">↗</span></a>
+    <a class="closing-link" href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer"><span>See what we're building</span><span class="closing-link-arrow" aria-hidden="true">↗</span></a>
   </div>
 </section>
-  </main>
+</main>
 <footer class="footer">
   <div class="container footer-inner">
-    <div class="footer-left"><a class="brand" href="#top" aria-label="Back to YEON home"><span class="brand-symbol" aria-hidden="true"><i></i></span>yeon<span style="color:var(--lime)">.</span></a><small>Independent research discovery initiative by Syeda Subhana.</small></div>
-    <div style="display:flex;gap:24px;flex-wrap:wrap"><a href="#features">Features</a><a href="#principles">Principles</a><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+    <div class="footer-left"><a class="brand" href="#top" aria-label="Back to YEON home">yeon<span class="logo-dot">.</span></a><small>Independent research discovery project by Syeda Subhana.</small></div>
+    <div class="footer-right"><a href="#vision">The idea</a><a href="#features">Features</a><a href="#principles">Principles</a><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
   </div>
 </footer>
 <script>
   (function () {
-    var points = Array.prototype.slice.call(document.querySelectorAll(".lab-point"));
-    var title = document.getElementById("atlas-title");
-    var detail = document.getElementById("atlas-detail");
+    var points = Array.prototype.slice.call(document.querySelectorAll(".trail-step"));
+    var title = document.getElementById("trail-current-title");
+    var detail = document.getElementById("trail-current-detail");
     function activate(point) {
       points.forEach(function (p) { p.classList.toggle("active", p === point); p.setAttribute("aria-pressed", String(p === point)); });
-      title.textContent = point.getAttribute("data-title") || "";
-      detail.textContent = point.getAttribute("data-detail") || "";
+      title.textContent = point.getAttribute("data-trail-title") || "";
+      detail.textContent = point.getAttribute("data-trail-detail") || "";
     }
     points.forEach(function (p) {
       p.addEventListener("click", function () { activate(p); });
