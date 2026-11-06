@@ -1,6 +1,6 @@
 # YEON
 
-**Research has a bigger picture.**
+**Research is more than a paper.**
 
 YEON is an independent Korean research-discovery initiative by **Syeda Subhana**. This repository currently contains a **single landing page**, not a working research platform.
 
@@ -19,13 +19,13 @@ The landing page introduces seven planned capabilities:
 6. **Fit Lens** — explainable overlaps between interests and published work.
 7. **Research Face-Off** — compare scientific methods addressing similar questions.
 
-**Important:** No live lab database, recruitment matching, affiliation verification, or research feeds are implemented in this landing-page release. The interactive constellation in the hero is explicitly illustrative, not real researcher data.
+**Important:** No live lab database, recruitment matching, affiliation verification, or research feeds are implemented in this landing-page release. The interactive field-note sequence in the hero (paper → lab → bigger picture) is illustrative, not real researcher data.
 
 ## Tech
 
 Zero-build, dependency-free static site:
 - Semantic HTML, modern CSS, minimal vanilla JavaScript
-- Interactive, keyboard-focusable concept constellation
+- Interactive, keyboard-focusable research-journey concept card
 - Reduced-motion support
 - Responsive layout
 - Progressive enhancement for scroll reveals
@@ -47,7 +47,7 @@ The workflow requires GitHub Pages to be enabled in the repository settings once
 - Test desktop and mobile viewport widths.
 - Navigate with keyboard and inspect focus states.
 - Test `prefers-reduced-motion: reduce`.
-- Test the five interactive concept nodes.
+- Test the three interactive research-journey steps.
 - Run Lighthouse / accessibility testing after deployment.
 
 ## Integrity
