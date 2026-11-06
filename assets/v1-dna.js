@@ -1,34 +1,39 @@
-/* YEON Lab DNA visual switcher. The scenes are illustrative, not actual lab data. */
+/* YEON Paper Trail Evolution: a three-chapter conceptual archive.
+   No live laboratory metadata is represented. */
 (()=>{
   'use strict';
-  const dna=document.querySelector('.experience-v1 .dna-art');
+  const dna=document.querySelector('.experience-v1 .dna-paper-trail');
   if(!dna)return;
-  const board=dna.querySelector('.dna-artboard');
-  const next=dna.querySelector('[data-dna-next]');
-  const panes=[...dna.querySelectorAll('[data-dna-mode-pane]')];
-  const modeTitle=dna.querySelector('[data-dna-mode-title]');
-  const modeNumber=dna.querySelector('[data-dna-mode-number]');
-  if(!board||!next||panes.length!==3||!modeTitle||!modeNumber)return;
-  const names=['Living timeline','Research branches','Evolving layers'];
-  let mode=0;
-  function setMode(index){
-    mode=(index+panes.length)%panes.length;
-    panes.forEach((pane,i)=>{pane.hidden=i!==mode; pane.setAttribute('aria-hidden',String(i!==mode));});
-    modeTitle.textContent=names[mode];
-    modeNumber.textContent=String(mode+1).padStart(2,'0')+' / 03';
-    next.setAttribute('aria-label','Switch Lab DNA animation. Now viewing '+names[mode]+'. Next: '+names[(mode+1)%names.length]);
-    board.dataset.dnaMode=String(mode);
+  const button=dna.querySelector('#dna-next-chapter');
+  const stack=dna.querySelector('#dna-trail-stack');
+  const cards=[...dna.querySelectorAll('[data-sheet]')];
+  const pagination=dna.querySelector('#dna-trail-page');
+  const kicker=dna.querySelector('#dna-trail-kicker');
+  const title=dna.querySelector('#dna-trail-summary');
+  const description=dna.querySelector('#dna-trail-description');
+  if(!button||!stack||cards.length!==3||!pagination||!kicker||!title||!description)return;
+  const chapters=[
+    {name:'Foundation',kicker:'CHAPTER 01 — FOUNDATION',title:'Trace the starting point',description:"A lab's story starts with the questions it chooses to investigate."},
+    {name:'Development',kicker:'CHAPTER 02 — DEVELOPMENT',title:'Watch the methods evolve',description:'New studies refine assumptions, broaden methods, and open different lines of inquiry.'},
+    {name:'New directions',kicker:'CHAPTER 03 — RECENT WORK',title:'See the next questions',description:'Recent published work reveals where research interests are moving — without predicting the future.'}
+  ];
+  let current=0;
+  function show(index){
+    current=(index+chapters.length)%chapters.length;
+    const chapter=chapters[current];
+    stack.dataset.chapter=String(current);
+    cards.forEach((card,i)=>{
+      const distance=(i-current+cards.length)%cards.length;
+      const position=distance===0?'front':distance===1?'middle':'back';
+      card.dataset.position=position;
+      card.setAttribute('aria-hidden',String(position!=='front'));
+    });
+    pagination.innerHTML=String(current+1).padStart(2,'0')+' <i>/</i> 03';
+    kicker.textContent=chapter.kicker;
+    title.textContent=chapter.title;
+    description.textContent=chapter.description;
+    button.setAttribute('aria-label','Switch stage, currently '+chapter.name+'. Next: '+chapters[(current+1)%chapters.length].name);
   }
-  function syncStage(){
-    const selected=dna.querySelector('[data-dna-step][aria-pressed="true"]');
-    const n=selected?Number(selected.dataset.dnaStep):0;
-    board.dataset.dnaStage=Number.isFinite(n)?String(n):'0';
-  }
-  next.addEventListener('click',()=>{setMode(mode+1);});
-  const dots=[...dna.querySelectorAll('[data-dna-step]')];
-  // Reflect existing Lab DNA stage selection, including keyboard and label clicks.
-  const observer=new MutationObserver(syncStage);
-  dots.forEach(b=>observer.observe(b,{attributes:true,attributeFilter:['aria-pressed']}));
-  setMode(0);
-  syncStage();
+  button.addEventListener('click',()=>show(current+1));
+  show(0);
 })();

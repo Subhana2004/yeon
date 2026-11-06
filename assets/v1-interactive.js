@@ -49,37 +49,6 @@
     refreshHero(tabs[0]);
   }
 
-  // LAB DNA: three stages reveal different meanings of research evolution.
-  const dna=root.querySelector('.dna-art');
-  const stages=[
-    {index:'01 / FOUNDATION',heading:'The first research question',detail:'Explore the early questions that shaped a laboratory’s direction.'},
-    {index:'02 / DEVELOPMENT',heading:'How the methods evolved',detail:'Follow shifts in approaches and topics using documented publications.'},
-    {index:'03 / RECENT WORK',heading:'Where the lab is headed',detail:'See recent research themes, while keeping inferred trends clearly labelled.'}
-  ];
-  if(dna){
-    const buttons=Array.from(dna.querySelectorAll('[data-dna-step]'));
-    const labels=Array.from(dna.querySelectorAll('.items>div'));
-    const detail=dna.querySelector('.dna-insight');
-    function setStage(index){
-      if(index<0||index>=stages.length)return;
-      const item=stages[index];
-      buttons.forEach((b,i)=>{b.classList.toggle('active',i===index);b.setAttribute('aria-pressed',String(i===index));});
-      labels.forEach((x,i)=>x.classList.toggle('active',i===index));
-      dna.querySelector('#dna-index').textContent=item.index;
-      dna.querySelector('#dna-heading').textContent=item.heading;
-      dna.querySelector('#dna-detail').textContent=item.detail;
-      easeInContent(detail);
-    }
-    buttons.forEach((button,i)=>button.addEventListener('click',()=>setStage(i)));
-    labels.forEach((label,i)=>{
-      label.setAttribute('role','button');label.setAttribute('tabindex','0');
-      label.setAttribute('aria-label','Explore '+stages[i].index);
-      label.addEventListener('click',()=>setStage(i));
-      label.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setStage(i);}});
-    });
-    setStage(0);
-  }
-
   // FEATURES: open a functional local concept specimen, never fictional 'live' data.
   const featureList=['compare','constellation','radar','doors','fit','faceoff'];
   const cards=Array.from(root.querySelectorAll('[data-feature]'));
