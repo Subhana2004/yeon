@@ -6,6 +6,19 @@
   if(!root)return;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const motion=reduced?'auto':'smooth';
+  const easeOut='cubic-bezier(.22,1,.36,1)';
+  function easeInContent(element){
+    if(reduced||!element||typeof element.animate!=='function')return;
+    element.getAnimations().forEach(animation=>{
+      if(animation.id==='yeon-content')animation.cancel();
+    });
+    const animation=element.animate(
+      [{opacity:.38,transform:'translate3d(0,8px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],
+      {duration:380,easing:easeOut,fill:'none'}
+    );
+    animation.id='yeon-content';
+  }
+
 
   // HERO: the original note tabs now control a diagram and a keyboard-friendly pager.
   const card=root.querySelector('.editorial-card[data-switch]');
@@ -55,7 +68,7 @@
       dna.querySelector('#dna-index').textContent=item.index;
       dna.querySelector('#dna-heading').textContent=item.heading;
       dna.querySelector('#dna-detail').textContent=item.detail;
-      if(!reduced){detail.style.animation='none';requestAnimationFrame(()=>{detail.style.animation='';});}
+      easeInContent(detail);
     }
     buttons.forEach((button,i)=>button.addEventListener('click',()=>setStage(i)));
     labels.forEach((label,i)=>{
@@ -100,6 +113,7 @@
     title.textContent=spec.title;
     description.textContent=spec.desc;
     sample.innerHTML=spec.html;
+    easeInContent(sample);
     count.textContent=String(i+1).padStart(2,'0')+' / 06';
     inspector.hidden=false;
     cards.forEach((c,n)=>{c.classList.toggle('is-active',n===i);c.setAttribute('aria-expanded',String(n===i));});

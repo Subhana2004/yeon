@@ -86,3 +86,131 @@
 @media(max-width:760px){.experience-v1 .editorial-card{max-width:530px}.experience-v1 .feature-inspector{padding:21px 23px}.experience-v1 .inspector-layout{grid-template-columns:1fr;gap:20px;padding:21px 0}.experience-v1 .inspector-copy h3{margin:13px 0 10px}.experience-v1 .inspector-note{margin-top:8px;padding-top:10px}.experience-v1 .inspector-sample{min-height:215px}.experience-v1 .dna-insight{margin-top:-6px}}
 @media(max-width:480px){.experience-v1 .research-map-plot{height:93px}.experience-v1 .research-map-label{font-size:8px}.experience-v1 .journey-muted{font-size:9px}.experience-v1 .journey-arrow{width:30px;height:30px}.experience-v1 .feature-inspector{padding:18px}.experience-v1 .inspector-upper .tiny-label{font-size:9px}.experience-v1 .inspector-sample{padding:16px}.experience-v1 .inspector-lower>span{font-size:8px}.experience-v1 .inspector-paging{gap:8px}.experience-v1 .scene-card{padding:10px}}
 @media(prefers-reduced-motion:reduce){.experience-v1 .research-map .map-edge,.experience-v1 .dna-insight,.experience-v1 .feature-inspector{animation:none!important}.experience-v1 .editorial-card,.experience-v1 .research-map .map-ring,.experience-v1 .research-map .map-dot{transition:none!important}}
+
+
+/* YEON Field Notes — typography & micro-interaction polish, v0.4.
+   Scoped to V1 / V1-bright, preserving the gallery's first-release composition. */
+.experience-v1{
+ --display:'Manrope','DM Sans',sans-serif;
+ --yeon-ease:cubic-bezier(.22,1,.36,1);
+ -webkit-font-smoothing:antialiased;
+ font-optical-sizing:auto;
+ font-kerning:normal;
+ text-rendering:optimizeLegibility;
+}
+.experience-v1 .hero h1{
+ font-family:var(--display);font-weight:650;letter-spacing:-.068em;
+ line-height:1.075;text-wrap:balance;
+}
+.experience-v1 .hero h1 em{
+ font-family:var(--serif);font-weight:400;letter-spacing:-.035em;
+}
+.experience-v1 .hero .lead{font-weight:450;line-height:1.83;letter-spacing:-.008em;text-wrap:pretty}
+.experience-v1 .features-top h2,.experience-v1 .bottom h2{
+ font-family:var(--display);font-weight:650;line-height:1.135;letter-spacing:-.057em;text-wrap:balance
+}
+.experience-v1 .edition-title{font-weight:650;letter-spacing:-.057em;line-height:1.09}
+.experience-v1 .edition-title em,.experience-v1 .bottom h2 em{font-weight:400}
+.experience-v1 .feature h3,.experience-v1 .dna-copy h3,.experience-v1 .inspector-copy h3{
+ font-family:var(--display);font-weight:650;letter-spacing:-.043em;line-height:1.18
+}
+.experience-v1 .feature p,.experience-v1 .dna-copy p,.experience-v1 .bottom-copy p{
+ line-height:1.75;letter-spacing:-.003em
+}
+.experience-v1 .eyebrow,.experience-v1 .tiny-label{letter-spacing:.065em}
+.experience-v1 .brand{letter-spacing:-.064em}
+.experience-v1 .btn{
+ transition:transform .42s var(--yeon-ease),background-color .27s ease,
+ border-color .27s ease,box-shadow .42s var(--yeon-ease)
+}
+.experience-v1 .btn:hover{transform:translate3d(0,-2px,0);box-shadow:0 10px 24px rgba(32,62,41,.09)}
+.experience-v1 .btn span[aria-hidden]{display:inline-block;transition:transform .36s var(--yeon-ease)}
+.experience-v1 .btn:hover span[aria-hidden]{transform:translate3d(3px,-3px,0)}
+.experience-v1 .tab{transition:background-color .32s var(--yeon-ease),
+ color .32s var(--yeon-ease),border-color .32s var(--yeon-ease),transform .32s var(--yeon-ease)}
+@media(hover:hover){.experience-v1 .tab:hover{transform:translateY(-2px)}}
+.experience-v1 .journey-arrow,.experience-v1 .scene-action,
+.experience-v1 .scene-choice button,.experience-v1 .inspector-paging button{
+ transition:background-color .35s var(--yeon-ease),color .25s ease,
+ border-color .25s ease,transform .4s var(--yeon-ease),box-shadow .4s var(--yeon-ease)
+}
+.experience-v1 .journey-arrow:hover,.experience-v1 .inspector-paging button:hover{
+ transform:translateY(-2px);box-shadow:0 5px 13px rgba(28,67,37,.13)
+}
+.experience-v1 .editorial-card{transition:transform .7s var(--yeon-ease),box-shadow .7s var(--yeon-ease)}
+.experience-v1 .research-map .map-edge,.experience-v1 .research-map .map-ring,
+.experience-v1 .research-map .map-dot{
+ transition-duration:.58s;transition-timing-function:var(--yeon-ease)
+}
+.experience-v1 .stage [data-stage].selected{animation:yeon-stage-in .48s var(--yeon-ease) both}
+.experience-v1 .dna-insight{animation:yeon-stage-in .5s var(--yeon-ease) both}
+.experience-v1 .feature-inspector{animation:yeon-panel-refined .62s var(--yeon-ease) both}
+.experience-v1 .feature{
+ transition:transform .58s var(--yeon-ease),box-shadow .5s var(--yeon-ease),border-color .3s ease
+}
+@media(hover:hover){
+ .experience-v1 .feature:hover{transform:translateY(-5px);box-shadow:0 22px 43px rgba(20,50,28,.095)}
+ .experience-v1 .feature .glyph svg{
+  transition:transform .65s var(--yeon-ease);transform-origin:36% 60%
+ }
+ .experience-v1 .feature:hover .glyph svg{transform:translate3d(0,-3px,0) scale(1.035)}
+}
+.experience-v1 .feature.is-active{transform:translateY(-2px)}
+.experience-v1 .feature:focus-visible{border-radius:16px}
+.experience-v1 .feature-inspector .inspector-sample{isolation:isolate}
+.experience-v1 .feature-inspector .scene-card{
+ transition:transform .42s var(--yeon-ease),background-color .35s ease
+}
+.experience-v1 .reveal{
+ transform:translateY(18px);
+ transition:opacity .84s var(--yeon-ease),transform .84s var(--yeon-ease)
+}
+.experience-v1 .reveal.visible{transform:translateY(0)}
+.experience-v1 .feature-grid .feature:nth-child(2){transition-delay:.07s}
+.experience-v1 .feature-grid .feature:nth-child(3){transition-delay:.14s}
+.experience-v1 .feature-grid .feature:nth-child(4){transition-delay:.04s}
+.experience-v1 .feature-grid .feature:nth-child(5){transition-delay:.11s}
+.experience-v1 .feature-grid .feature:nth-child(6){transition-delay:.18s}
+@keyframes yeon-stage-in{
+ from{opacity:.28;transform:translate3d(0,9px,0)}
+ to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes yeon-panel-refined{
+ from{opacity:0;transform:translate3d(0,13px,0)}
+ to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes yeon-hero-enter{
+ from{opacity:0;transform:translate3d(0,17px,0)}
+ to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes yeon-card-arrive{
+ from{opacity:0;transform:translate3d(0,21px,0) rotate(-2.4deg)}
+ to{opacity:1;transform:translate3d(0,0,0) rotate(-1.5deg)}
+}
+@media(prefers-reduced-motion:no-preference){
+ .experience-v1 .hero-copy > .eyebrow{animation:yeon-hero-enter .78s .08s var(--yeon-ease) both}
+ .experience-v1 .hero-copy > h1{animation:yeon-hero-enter .9s .15s var(--yeon-ease) both}
+ .experience-v1 .hero-copy > .lead{animation:yeon-hero-enter .85s .23s var(--yeon-ease) both}
+ .experience-v1 .hero-copy > .actions{animation:yeon-hero-enter .82s .31s var(--yeon-ease) both}
+ .experience-v1 .hero-copy > .fine{animation:yeon-hero-enter .82s .37s var(--yeon-ease) both}
+ .experience-v1 .editorial-card{animation:yeon-card-arrive .98s .18s var(--yeon-ease) both}
+}
+@media(max-width:760px){
+ .experience-v1 .hero h1{letter-spacing:-.061em;line-height:1.07}
+ .experience-v1 .features-top h2{letter-spacing:-.05em}
+}
+@media(prefers-reduced-motion:reduce){
+ .experience-v1 .hero-copy > *,
+ .experience-v1 .editorial-card,
+ .experience-v1 .stage [data-stage].selected,
+ .experience-v1 .dna-insight,
+ .experience-v1 .feature-inspector{animation:none!important}
+ .experience-v1 .btn,.experience-v1 .btn span[aria-hidden],
+ .experience-v1 .tab,.experience-v1 .journey-arrow,
+ .experience-v1 .scene-action,.experience-v1 .scene-choice button,
+ .experience-v1 .inspector-paging button,.experience-v1 .feature,
+ .experience-v1 .feature .glyph svg,.experience-v1 .reveal{
+  transition:none!important;transform:none!important
+ }
+ .experience-v1 .reveal{opacity:1!important}
+}
