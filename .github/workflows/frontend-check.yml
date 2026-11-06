@@ -1,0 +1,37 @@
+name: Validate YEON frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/frontend-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check app/app.js
+      - name: Check app shell and feature wiring
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs');
+          const assert=require('node:assert/strict');
+          const html=fs.readFileSync('app/index.html','utf8');
+          const css=fs.readFileSync('app/styles.css','utf8');
+          const js=fs.readFileSync('app/app.js','utf8');
+          for(const f of ['app/index.html','app/styles.css','app/app.js']) assert(fs.existsSync(f));
+          assert(html.includes('id="view"') && html.includes('./app.js?v=1'));
+          assert(css.includes('prefers-reduced-motion:reduce'));
+          for(const key of ['explore','compare','constellation','radar','doors','fit','faceoff']){
+            assert(js.includes(key), 'missing feature '+key);
+          }
+          assert(js.includes('fictional samples'), 'demo content must be labeled');
+          console.log('YEON frontend static checks passed');
+          NODE
