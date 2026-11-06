@@ -1,0 +1,104 @@
+/* YEON V1 / V1 Bright — typography refinement only, November 2026.
+   Loaded after interactive styles. No layout composition, palette, or interaction changes. */
+.experience-v1 {
+  --yeon-type: 'Plus Jakarta Sans', 'Manrope', 'Inter', 'Segoe UI', Arial, sans-serif;
+  --display: var(--yeon-type);
+  --sans: var(--yeon-type);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 400;
+  font-kerning: normal;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.experience-v1 :is(h1,h2,h3,h4,p,button,a,strong,b) {
+  font-kerning: normal;
+  font-optical-sizing: auto;
+}
+/* Controlled weight and breathing room replace compressed, blocky heading forms. */
+.experience-v1 .hero h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.095;
+  letter-spacing: -.053em;
+  text-wrap: balance;
+}
+.experience-v1 .hero h1 em {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -.018em;
+}
+.experience-v1 .hero .lead {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.76;
+  letter-spacing: -.009em;
+  text-wrap: pretty;
+}
+.experience-v1 .features-top h2,
+.experience-v1 .bottom h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.145;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+.experience-v1 .edition-title {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.046em;
+}
+.experience-v1 .feature h3,
+.experience-v1 .dna-copy h3,
+.experience-v1 .inspector-copy h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -.031em;
+}
+.experience-v1 .edition-content b,
+.experience-v1 .dna-insight strong,
+.experience-v1 .inspector-sample :is(h4,strong) {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -.018em;
+}
+.experience-v1 .feature p,
+.experience-v1 .dna-copy p,
+.experience-v1 .bottom-copy p,
+.experience-v1 .edition-content p,
+.experience-v1 .inspector-copy p {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.76;
+  letter-spacing: -.004em;
+}
+.experience-v1 .feature .top,
+.experience-v1 .eyebrow,
+.experience-v1 .tiny-label,
+.experience-v1 .micro {
+  letter-spacing: .075em;
+}
+.experience-v1 .btn,
+.experience-v1 .tab,
+.experience-v1 .journey-arrow {
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: -.006em;
+}
+.experience-v1 .brand {letter-spacing: -.058em;}
+@media (max-width: 760px) {
+  .experience-v1 .hero h1 {line-height: 1.09;letter-spacing: -.043em;}
+  .experience-v1 .hero .lead {font-size: 15px;line-height: 1.71;}
+  .experience-v1 .features-top h2,
+  .experience-v1 .bottom h2 {letter-spacing: -.037em;line-height: 1.17;}
+  .experience-v1 .edition-title {letter-spacing: -.034em;}
+}
+@media (max-width: 390px) {
+  .experience-v1 .hero h1 {letter-spacing: -.035em;}
+}
