@@ -15,12 +15,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Deploy static landing page
+  package:
+    name: Prepare static Pages artifact
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -30,6 +27,17 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: .
+
+  deploy:
+    name: Publish Pages website
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Allow artifact discovery to settle
+        run: sleep 10
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
