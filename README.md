@@ -9,7 +9,7 @@ https://subhana2004.github.io/yeon/
 
 ## Landing-page design previews
 
-- [V-1 · Field Notes](https://subhana2004.github.io/yeon/v1/) — brighter editorial, citrus-light palette and interactive field note.
+- [V-1 · Field Notes](https://subhana2004.github.io/yeon/v1/) — original Field Notes visual language, gently brightened surfaces and interactive field note.
 - [V-2 · The Index](https://subhana2004.github.io/yeon/v2/) — original Swiss-inspired comparison direction.
 - [V-3 · Deep Forest](https://subhana2004.github.io/yeon/v3/) — expanded user journey and evidence-first explanation.
 - [V-4 · Open Archive](https://subhana2004.github.io/yeon/v4/) — original archival direction.
