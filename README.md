@@ -57,3 +57,16 @@ The current site avoids invented research metrics, fabricated lab relationships,
 ## Repository
 
 https://github.com/Subhana2004/yeon
+
+
+## Landing-page design variations (review previews)
+
+The existing home page remains available at [YEON](https://subhana2004.github.io/yeon/). Four alternative landing-page designs are published for visual review:
+
+- [Compare all four designs](https://subhana2004.github.io/yeon/variations/)
+- [V-1 — Field Notes](https://subhana2004.github.io/yeon/v1/) — warm editorial journal, sage accents, interactive field notes.
+- [V-2 — The Index](https://subhana2004.github.io/yeon/v2/) — typographic Swiss grid and burnt-rust accents.
+- [V-3 — Deep Forest](https://subhana2004.github.io/yeon/v3/) — dark green and a scientific specimen interface.
+- [V-4 — Open Archive](https://subhana2004.github.io/yeon/v4/) — museum-like archival layout with expressive serif typography.
+
+All four use shared CSS/JS in `assets/`, showcase the same seven planned features, and use clearly labeled illustrative visuals rather than live research records. No variant is currently selected as the official homepage.
