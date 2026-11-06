@@ -9,6 +9,8 @@ https://subhana2004.github.io/yeon/
 
 ## Landing-page design previews
 
+- [V-1 Simple Lab DNA](https://subhana2004.github.io/yeon/v1-simple/) — single editorial chapter card, one Next chapter button; current layered Paper Trail version stays unchanged.
+
 - [V-1 · Field Notes](https://subhana2004.github.io/yeon/v1/) — exact original from the four-design gallery.
 - [V-1 Bright](https://subhana2004.github.io/yeon/v1-bright/) — same V-1 typography, structure, animations and illustrations; brighter surfaces/contrast only.
 - [V-2 · The Index](https://subhana2004.github.io/yeon/v2/) — original Swiss-inspired comparison direction.
