@@ -13,14 +13,6 @@
 @media(max-width:760px){.container{width:calc(100% - 40px)}.nav{min-height:70px}.nav-right{gap:14px}.nav-right .hide-mobile{display:none}.hero{min-height:0}.hero-grid,.v2 .hero-grid,.v4 .hero-grid{grid-template-columns:1fr;gap:32px;padding:55px 0 65px;min-height:0}.hero h1,.v2 .hero h1{font-size:clamp(58px,11.9vw,90px)!important}.v4 .hero h1{font-size:clamp(83px,14vw,120px)!important}.hero-art{min-height:0;max-width:610px}.v1 .editorial-card{margin:20px auto 0}.v3 .forest-sheet{margin:20px 10px 10px 0}.v4 .archive{margin:15px 9px 10px 0}.features{padding:85px 0}.features-top{display:block}.features-top p{margin-top:20px}.feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dna-banner{grid-template-columns:1fr}.dna-copy{padding:35px;gap:26px}.dna-art{min-height:210px;padding:35px}.bottom{padding:75px 0}.bottom-row{grid-template-columns:1fr;gap:25px}.footer-row{align-items:start;flex-direction:column;gap:18px}}
 @media(max-width:480px){.container{width:calc(100% - 36px)}.brand{font-size:25px}.nav-right .version{padding:9px 12px}.hero h1,.v2 .hero h1{font-size:clamp(51px,13vw,66px)!important}.v4 .hero h1{font-size:clamp(80px,17vw,100px)!important}.hero-grid{padding-top:45px}.lead{font-size:15px}.panel,.v1 .editorial-card,.v3 .forest-sheet,.v4 .archive{padding:22px}.v1 .edition-title{font-size:41px}.v3 .forest-sheet h3{font-size:36px}.v4 .archive h3{font-size:46px}.feature-grid{grid-template-columns:1fr}.feature{min-height:230px}.features-top h2{font-size:42px}.dna-copy{padding:30px}.dna-art{padding:27px}.bottom h2{font-size:49px}.v4 .bottom h2{font-size:67px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
-
-/* V1 Field Notes — original design restored, with only a modest brightness lift.
-   No typography, layout, motion, accents, components, or content changes. */
-.v1{--paper:#fffefa;background:#fffefa}
-.v1 .hero{background:#fffefa}
-.v1 .editorial-card{background:#fbfdf8}
-.v1 .bottom,.v1 .footer{background:#f0f5ed}
-
 /* V3 — deeper research explanation and concrete evidence policy. */
 .v3 .lead{max-width:530px;line-height:1.82}
 .v3 .hero-grid{padding-top:68px;padding-bottom:105px}

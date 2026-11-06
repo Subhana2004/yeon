@@ -1,0 +1,15 @@
+/* Original four-variation V1, surfaces and contrast lifted only.
+No layout, animation, typography or content changes. */
+.v1-bright{--ink:#17281e;--paper:#fffefb;--accent:#3c7950;--line:#d5e0d5;background:#fffefb}
+.v1-bright .header{border-bottom-color:#dae5db}
+.v1-bright .hero{background:#fffefb}
+.v1-bright .hero h1 em{color:#4c8860}
+.v1-bright .lead{color:#425f4c}
+.v1-bright .editorial-card{background:#f7fcf5;border-color:#b9d4be;box-shadow:0 20px 45px rgba(35,77,44,.085)}
+.v1-bright .editorial-card::before{border-color:#cfe3d0}
+.v1-bright .edition-title em{color:#5b9770}
+.v1-bright .card-no{color:#4a7959}
+.v1-bright .edition-content{border-top-color:#b7d1ba}
+.v1-bright .edition-content p{color:#47634f}
+.v1-bright .bottom,.v1-bright .footer{background:#eff6eb}
+.v1-bright .footer{border-top-color:#d0e1ce}
