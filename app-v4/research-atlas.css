@@ -249,3 +249,26 @@ body {background:var(--v4-bg);color:var(--v4-ink)}
 @media(prefers-reduced-motion:reduce) {
  .view-enter,.v4-prompt,.v4-field,.archive-entry {animation:none!important;transition:none!important}
 }
+
+/* Screenshot audit: active-first chip contrast, no redundant hero heading,
+   compact two-column lab index aligned with its evidence preview. */
+.v4-fields-list .v4-field:first-child.active {
+  background:var(--v4-ink);
+  border-color:var(--v4-ink);
+  color:var(--v4-paper);
+}
+.v4-section-head {display:none}
+.v4-workspace .v4-layout,.v4-workspace .v4-reader-layout {margin-top:30px}
+.archive-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:0 13px!important}
+.archive-entry {min-height:126px;padding:16px 11px 14px 13px}
+.archive-entry-main strong {font-size:clamp(15px,1.2vw,18px)}
+.archive-entry-overline span:last-child {max-width:63%;font-size:9px}
+.archive-preview {min-height:490px}
+@media(max-width:1080px){
+  .archive-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .archive-preview {min-height:320px}
+}
+@media(max-width:600px) {
+  .archive-grid {grid-template-columns:minmax(0,1fr)!important;gap:0!important}
+  .archive-entry {min-height:98px}
+}
