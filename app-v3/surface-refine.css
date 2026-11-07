@@ -1,0 +1,196 @@
+/* YEON Research Fieldbook — V3 / soft-surface refinement.
+   Reference: YEON V1 Field Notes landing language.
+   Less framing, more space; preserve information density and all interactions. */
+:root {
+  --canvas:#f6f7f2;
+  --paper:#fdfefb;
+  --paper-2:#f0f5ed;
+  --paper-3:#e5eee2;
+  --line:#e3eae0;
+  --line-strong:#d2dfd1;
+  --ink:#213529;
+  --ink-2:#34503d;
+  --muted:#657769;
+  --forest:#244733;
+  --forest-2:#315940;
+}
+:root[data-theme="dark"] {
+  --canvas:#15201a;
+  --paper:#1d2c23;
+  --paper-2:#26392c;
+  --paper-3:#304736;
+  --line:#2e4434;
+  --line-strong:#3b5a43;
+  --ink:#e9f2e7;
+  --ink-2:#d9e9d8;
+  --muted:#b1c5b2;
+  --forest:#102a1d;
+  --forest-2:#1e412f;
+}
+
+/* Landing-page-like arrival, rather than a set of technical rulers. */
+.site-header {
+  background:var(--paper);
+  border-bottom:0;
+  box-shadow:0 7px 28px rgba(31,69,42,.035);
+}
+.brand-divider{background:var(--line)}
+.primary-nav{gap:clamp(4px,.8vw,14px)}
+.primary-nav a{
+  height:36px;padding:0 clamp(7px,.75vw,12px);
+  border-bottom:0;border-radius:10px;
+  transition:background-color .18s var(--ease),color .18s var(--ease);
+}
+.primary-nav a.active{background:var(--paper-2);color:var(--ink-2);border-color:transparent}
+.primary-nav a:hover{background:var(--paper-2)}
+.command-trigger,.icon-button{border-color:transparent;border-radius:12px;background:var(--paper-2)}
+.command-trigger:hover,.icon-button:hover{border-color:transparent;background:var(--paper-3)}
+.system-strip{
+  width:min(calc(100% - 5.5vw),1530px);margin:13px auto 0;
+  background:var(--paper-2);color:var(--muted);
+  border-radius:11px;padding:11px 17px;letter-spacing:0;
+}
+.system-strip strong{color:var(--ink-2)}
+.system-strip a{color:var(--ink-2);border-color:var(--line-strong)}
+.signal-pulse{background:#6ba37a;box-shadow:0 0 0 4px rgba(106,167,119,.12)}
+#main{padding-top:44px}
+.page-intro{padding-bottom:38px}
+.context-line .chapter-index{border-color:var(--line);background:var(--paper)}
+.intro-stat{border-top:0;padding-top:8px}
+.evidence-warning{
+  border:0;border-radius:12px;background:var(--paper-2);
+  padding:14px 18px;margin-bottom:19px;
+}
+
+/* The workspace becomes a set of editorial surfaces, not a spreadsheet grid. */
+.explorer-shell{
+  gap:16px;border:0;background:transparent;
+  align-items:stretch;
+}
+.index-panel,.dossier{
+  border:0;border-radius:19px;overflow:hidden;
+  box-shadow:0 10px 34px rgba(31,68,40,.035);
+}
+.index-panel{background:var(--paper-2)}
+.index-head{padding-bottom:16px}
+.index-search{border-color:var(--line);border-radius:12px;background:var(--paper);margin-bottom:18px;transition:box-shadow .18s,border-color .18s}
+.index-search:focus-within{outline:0;border-color:#84a98b;box-shadow:0 0 0 3px rgba(100,156,111,.13)}
+.filter-wrap{border:0;padding-bottom:17px}
+.filter-chip{border-color:var(--line);background:var(--paper);border-radius:100px}
+.filter-chip:hover{border-color:var(--line-strong);background:var(--paper-3)}
+.index-list{padding:3px 0 14px}
+.index-row{
+  width:calc(100% - 20px);margin:3px 10px;padding:14px 13px;
+  border-radius:12px;
+  transition:background-color .18s var(--ease),transform .18s var(--ease);
+}
+.index-row::before{left:0;top:12px;bottom:12px;width:3px;border-radius:8px}
+.index-row.is-selected{background:var(--paper)}
+@media (hover:hover) and (pointer:fine){
+  .index-row:hover{background:var(--paper);transform:translateX(2px)}
+}
+.dossier{background:var(--paper)}
+.dossier-top{border:0;padding-bottom:27px}
+.lab-monogram{border:0;border-radius:18px;background:var(--paper-2)}
+.topic-tag{border-color:transparent;border-radius:7px;background:var(--paper-2);padding:6px 10px}
+.small-action,.outlined-btn,.lens-button{
+  border-color:var(--line);border-radius:10px;background:var(--paper);
+  transition:background-color .18s var(--ease),border-color .18s var(--ease);
+}
+.small-action:hover,.outlined-btn:hover,.lens-button:hover{border-color:var(--line-strong);background:var(--paper-2)}
+.chronology{
+  margin:0 19px 2px;padding:26px 28px 28px;
+  border:0;border-radius:17px;background:var(--paper-2);
+}
+.chronology-tabs{gap:7px;background:none;border:0;margin-top:21px}
+.chronology-tab{border-radius:10px;padding:13px 12px;background:var(--paper);border:0}
+.chronology-tab.selected{background:var(--forest);color:#f0f5e9}
+.research-chapter{
+  margin-top:11px;border:0;border-radius:13px;
+  background:var(--paper);padding:23px 24px;
+}
+.work-index{padding-top:30px}
+.work-list{display:grid;gap:8px;margin-top:16px}
+.work-row,.work-row:last-child{
+  border:0;background:var(--paper-2);
+  border-radius:11px;padding:14px 16px;
+}
+.context-rail{background:transparent;border:0;gap:15px}
+.context-folio{border-radius:19px;overflow:hidden}
+.context-steps{border-color:rgba(225,244,227,.12)}
+.related{border-radius:19px;background:var(--paper-2);border:0;overflow:hidden}
+.related button,.graph-relatives button{border-color:var(--line)}
+
+/* Comparison, graph, Radar, opportunities: hierarchy through tone and spacing. */
+.tool-panel,.door-frame,.faceoff-shell,.graph-layout,.radar-layout,.fit-workspace{
+  border:0;border-radius:20px;overflow:hidden;
+  background:var(--paper);
+  box-shadow:0 11px 34px rgba(31,68,40,.035);
+}
+.panel-toolbar,.door-filter,.faceoff-top{border-bottom:0}
+.lens-button{padding:9px 14px}
+.lens-button.selected{background:var(--forest);color:#f0f5e9;border-color:var(--forest)}
+.comparison-grid{gap:14px;padding:15px}
+.comparison-pane,.comparison-pane:first-child{
+  border:0;background:var(--paper-2);border-radius:16px;
+}
+.compare-select{border-color:var(--line-strong);padding-bottom:12px}
+.graph-canvas{border-radius:18px 0 0 18px;overflow:hidden}
+.graph-topline,.graph-bottomline{border-color:rgba(217,244,218,.075)}
+.graph-controls button{border-radius:9px}
+.graph-inspector{background:var(--paper)}
+.inspector-divider{background:var(--paper-3)}
+.solid-button{border-radius:10px}
+.graph-list{gap:6px;background:transparent}
+.graph-list button{border-radius:9px}
+.radar-follows{border:0;background:var(--paper-2)}
+.feed-entry{border-color:var(--line)}
+.notice-row{
+  margin:6px 12px;border:0;border-radius:13px;
+  padding:20px 18px;background:var(--paper-2);
+}
+.interest-panel{border:0}
+.interests button{border-radius:10px}
+.faceoff-columns>article:first-child,.faceoff-columns>article:last-child{border:0}
+.faceoff-columns>article{background:var(--paper-2);border-radius:16px;margin:0 10px 15px}
+.method-block{border-radius:12px;background:var(--paper)}
+.site-footer{border:0;background:var(--canvas)}
+.palette{border:0;border-radius:19px}
+.palette-input-row{border-color:var(--line)}
+.toast{border-radius:12px}
+
+/* Retain generous, coherent spacing when the panels stack. */
+@media (max-width:1160px){
+  .context-rail{border:0;gap:13px}
+  .context-folio{border-radius:18px}
+}
+@media (max-width:820px){
+  .explorer-shell{gap:13px}
+  .index-panel,.dossier,.context-folio,.related{border-radius:17px}
+  .index-panel{border-bottom:0}
+  .context-rail{gap:13px}
+  .graph-canvas{border-radius:17px 17px 0 0}
+  .graph-inspector{border:0}
+  .radar-follows{border:0}
+}
+@media (max-width:600px){
+  .site-header{padding-bottom:8px}
+  .primary-nav{gap:5px;padding-bottom:2px}
+  .primary-nav a{height:36px;border-radius:8px;padding:0 10px}
+  .system-strip{width:calc(100% - 24px);margin-top:9px;padding:10px 12px;gap:6px 9px}
+  #main{padding-top:31px}
+  .chronology{margin:0 11px;padding:20px 13px;border-radius:13px}
+  .chronology-tab{padding:12px 8px}
+  .research-chapter{padding:18px 14px}
+  .dossier-top,.work-index{padding-left:18px;padding-right:18px}
+  .comparison-grid{gap:10px;padding:10px}
+  .comparison-pane{padding:22px 18px}
+  .comparison-pane:first-child{border:0}
+  .notice-row{margin:6px 9px;padding:17px 13px}
+  .faceoff-columns>article{margin:8px}
+  .faceoff-columns>article:first-child{border:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .index-row,.index-search,.small-action,.lens-button,.outlined-btn,.primary-nav a{transition:none!important}
+  .index-row:hover{transform:none!important}
+}

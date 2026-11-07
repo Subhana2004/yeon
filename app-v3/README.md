@@ -29,3 +29,7 @@ Open `index.html` in a browser; or `python -m http.server 8080` from the repo ro
 
 ## Next stages
 Replace the `LABS` fixture with an evidence-backed data adapter before describing any results as real Korean research.
+
+## V3 soft-surface refinement (November 2026)
+
+The visual treatment was brought closer to YEON's V1 Field Notes landing page: warm pale-sage surfaces, rounded research folios, roomier panel spacing, pill navigation, and significantly fewer hard section dividers. All interaction logic and synthetic demo records remain unchanged. Overrides live in `surface-refine.css` and can be reverted independently.
