@@ -86,8 +86,34 @@
       </section>
     </aside>`;
   }
+  const FIELD_NOTES = [
+    ['Vision','How do machines see beyond the obvious?','01','◉'],
+    ['Language','What makes an explanation trustworthy?','02','Aa'],
+    ['Multimodal','What happens when signals meet?','03','∞'],
+    ['Systems','Can research infrastructure explain itself?','04','≡']
+  ];
+  function experienceIntro(l){
+    return `<section class="experience-intro" aria-label="Research discovery start">
+      <div class="experience-heading">
+        <div class="experience-title"><span class="quiet-caption"><span class="caption-square" aria-hidden="true"></span> THE RESEARCH FIELDBOOK / 01</span>
+          <h1>Begin with a <em>question.</em></h1>
+          <p>Explore the thinking behind a laboratory. Start with what fascinates you; follow the research from there.</p>
+          <div class="experience-actions"><button type="button" class="explore-action" data-focus-index>${ico('search',17)} Browse the collection ${ico('arrow',16)}</button><button type="button" class="surprise-action" data-surprise>${ico('refresh',15)} Surprise me</button></div>
+        </div>
+        <aside class="experience-quote" aria-label="Current research question"><span>NOW READING / ${esc(l.short.toUpperCase())}</span><blockquote>${esc(l.statement)}</blockquote><div class="quote-foot"><span>${esc(l.focus)}</span><span class="quote-serial">↗</span></div></aside>
+      </div>
+      <div class="field-shelf-head"><span>Choose a field of inquiry</span><span>Each field opens a different path into the archive</span></div>
+      <div class="field-shelf" role="group" aria-label="Browse by research field">
+      ${FIELD_NOTES.map(([topic,description,number,mark])=>{
+        const on=state.topic===topic,count=LABS.filter(x=>x.topics.includes(topic)).length;
+        return `<button type="button" class="field-tile field-${topic.toLowerCase()} ${on?'field-selected':''}" data-field-shelf="${topic}" aria-pressed="${on}"><span class="tile-head"><span>${number} / ${esc(topic)}</span><span class="field-arrow" aria-hidden="true">↗</span></span><span class="field-graphic" aria-hidden="true">${mark}</span><span class="tile-foot"><strong>${esc(description)}</strong><small>${count} sample ${count===1?'lab':'labs'}</small></span></button>`;
+      }).join('')}
+      </div>
+      <div class="collection-heading"><div><span class="quiet-caption">YOUR WORKSPACE</span><h2>Inside the <em>archive.</em></h2></div><div class="collection-tools"><span>08 fictional lab profiles · frontend study</span><button type="button" data-surprise>${ico('refresh',15)} Next discovery</button></div></div>
+    </section>`;
+  }
   function explore(){const l=by(state.lab);const results=resultLabs();return `<div class="workspace-view view-enter">
-    ${pageIntro('I','THE RESEARCH INDEX','A field guide to <span class="muted-title">the work.</span>',`<p>Find a research direction, open its laboratory dossier and trace how the questions develop.</p><div class="intro-stat"><span>08</span> <span>example labs / 4 research themes</span></div>`)}
+    ${experienceIntro(l)}
     ${warning()}
     <span id="lab-selection-status" class="sr-only" role="status" aria-live="polite">Reading ${esc(l.name)}</span><div class="explorer-shell ${state.mobileIndexOpen?'browse-open':''}"><div class="mobile-lab-picker"><div><small>Current laboratory dossier</small><strong>${esc(l.name)}</strong></div><button type="button" data-browse-toggle aria-controls="lab-index" aria-expanded="${state.mobileIndexOpen}">${state.mobileIndexOpen?'Close index':'Browse labs'}</button></div><aside id="lab-index" class="index-panel" aria-label="Laboratory index"><div class="index-head"><span class="micro-label">THE INDEX <span class="serial">/ ${String(results.length).padStart(2,'0')}</span></span><button class="text-control" type="button" data-reset-search>Reset</button></div><label class="index-search">${ico('search',18)}<span class="sr-only">Search laboratory records</span><input type="search" id="lab-search" autocomplete="off" placeholder="Search by lab or theme…" value="${esc(state.search)}"/></label><div class="filter-wrap"><span class="micro-label">FIELD OF STUDY</span><div class="filters">${['All',...topics].map(t=>`<button type="button" data-topic="${t}" aria-pressed="${t===state.topic}" class="filter-chip ${t===state.topic?'is-on':''}">${t}</button>`).join('')}</div></div><div class="index-results"><div id="index-list" class="index-list">${results.length?results.map(labRow).join(''):`<div class="empty-result">No matches. Try a different theme or search phrase.</div>`}</div></div><div class="index-foot">Select a laboratory to open its field record. <span>↗</span></div></aside>
     <div id="selected-dossier">${dossier(l)}</div>${contextPanel(l)}
@@ -162,6 +188,9 @@
   });
   document.addEventListener('click',e=>{
     const t=e.target.closest('button,[data-go],[data-graph-node]');if(!t)return;
+    if(t.hasAttribute('data-focus-index')){if(matchMedia('(max-width: 820px)').matches&&!state.mobileIndexOpen){state.mobileIndexOpen=true;render();}document.getElementById('lab-search')?.focus({preventScroll:true});document.getElementById('lab-index')?.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});return;}
+    if(t.hasAttribute('data-surprise')){const i=LABS.findIndex(x=>x.id===state.lab);const next=LABS[(i+3)%LABS.length];state.topic='All';state.search='';selectLab(next.id);render();const target=document.getElementById('selected-lab-heading');target?.focus({preventScroll:true});toast(`Your next discovery: ${next.short}`);return;}
+    if(t.dataset.fieldShelf){const field=t.dataset.fieldShelf;state.topic=state.topic===field?'All':field;state.search='';const matching=LABS.filter(x=>state.topic==='All'||x.topics.includes(state.topic));if(matching.length){state.lab=matching[0].id;state.chapter=0;}render();const target=document.querySelector(`[data-field-shelf="${field}"]`);target?.focus({preventScroll:true});return;}
     if(t.hasAttribute('data-browse-toggle')){state.mobileIndexOpen=!state.mobileIndexOpen;render();const toggle=document.querySelector('[data-browse-toggle]');if(toggle)toggle.focus({preventScroll:true});if(state.mobileIndexOpen)document.getElementById('lab-search')?.focus({preventScroll:true});return;}
     if(t.dataset.selectLab){selectLab(t.dataset.selectLab,{keyboard:e.detail===0});return;}
     if(t.hasAttribute('data-next-chapter')){setChapter((state.chapter+1)%3);return;}
