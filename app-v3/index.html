@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f4f6f1" />
+  <meta name="description" content="YEON Fieldbook — an interactive research exploration prototype. All laboratories and publications are fictional demonstration records." />
+  <meta property="og:title" content="YEON / Research Fieldbook" />
+  <meta property="og:description" content="A new way to explore the questions, methods and relationships behind research. Frontend demonstration." />
+  <title>YEON — Research Fieldbook (V3)</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231c3829'/%3E%3Cpath d='M12 16 31 42 51 16' fill='none' stroke='%23d4edac' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css?v=3" />
+  <script src="./app.js?v=3" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to research workspace</a>
+  <div class="application">
+    <header class="site-header">
+      <div class="identity">
+        <a class="logo" href="#explore" aria-label="YEON Fieldbook home"><span class="logo-mark" aria-hidden="true">Y</span><span>yeon<span class="logo-dot">.</span></span></a>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <span class="brand-sub">RESEARCH FIELDBOOK <span class="beta">α / Preview</span></span>
+      </div>
+      <nav id="primary-nav" class="primary-nav" aria-label="Research tools">
+        <a href="#explore" data-nav="explore">Explore</a>
+        <a href="#compare" data-nav="compare">Compare</a>
+        <a href="#constellation" data-nav="constellation">Constellation</a>
+        <a href="#radar" data-nav="radar">Radar</a>
+        <a href="#doors" data-nav="doors">Open Doors</a>
+        <a href="#fit" data-nav="fit">Fit Lens</a>
+        <a href="#faceoff" data-nav="faceoff">Face-Off</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" id="command-trigger" class="command-trigger" aria-keyshortcuts="Control+K Meta+K" aria-label="Open quick search"><span class="search-glyph" aria-hidden="true">⌕</span><span class="command-label">Quick find</span><kbd>⌘ K</kbd></button>
+        <button type="button" id="theme-toggle" class="icon-button" aria-label="Switch appearance" title="Switch light and dark appearance"><span aria-hidden="true">◐</span></button>
+      </div>
+    </header>
+    <div class="system-strip"><span class="signal-pulse" aria-hidden="true"></span><strong>INTERACTIVE FRONTEND STUDY</strong><span>All labs, papers, relationships and opportunities are fictional demonstrations.</span><a href="../app-v2/">View V2</a></div>
+    <main id="main" tabindex="-1"><div id="app-content" aria-live="off"></div></main>
+    <footer class="site-footer"><span>YEON · Independent research discovery initiative</span><span>Interface study / V3</span><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a></footer>
+  </div>
+  <div class="palette-backdrop" id="palette-backdrop" hidden>
+    <div class="palette" role="dialog" aria-modal="true" aria-label="Quick navigation">
+      <div class="palette-input-row"><span aria-hidden="true">⌕</span><label class="sr-only" for="palette-input">Search tools or laboratories</label><input type="search" id="palette-input" autocomplete="off" placeholder="Find a laboratory or feature…" /><kbd>ESC</kbd></div>
+      <div class="palette-results" id="palette-results" role="listbox" aria-label="Quick navigation results"></div>
+      <div class="palette-footer">Navigate with <kbd>↑</kbd><kbd>↓</kbd> · open with <kbd>↵</kbd> · close with <kbd>ESC</kbd></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
