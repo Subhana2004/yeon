@@ -1,0 +1,52 @@
+/* YEON Fieldbook V3 — typography-only refinement.
+ * Keep all original color, layout and interaction decisions; soften text rhythm.
+ * This layer is deliberately separate and reversible. */
+:root {
+  --font: 'Plus Jakarta Sans', 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+}
+body {
+  font-size: 14px;
+  line-height: 1.7;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+button,input,select { font-family: var(--font); }
+/* Headlines: allow the letter shapes to breathe instead of colliding. */
+.page-intro h1 { font-weight: 500; letter-spacing: -.042em; line-height: 1.11; }
+.lab-header h2 { font-weight: 500; letter-spacing: -.039em; line-height: 1.13; }
+.section-title-row h3,.chapter-reading h3 { font-weight: 550; letter-spacing: -.025em; line-height: 1.27; }
+.feed-head h2,.faceoff-top h2 { font-weight: 500; letter-spacing: -.036em; line-height: 1.15; }
+.graph-inspector h3,.faceoff-columns h3 { font-weight: 550; letter-spacing: -.027em; line-height: 1.18; }
+.feed-entry h3,.notice-row h3,.match-head h3 { font-weight: 600; letter-spacing: -.022em; line-height: 1.28; }
+.logo { font-weight: 650; letter-spacing: -.065em; }
+.primary-nav a { font-weight: 550; letter-spacing: -.012em; }
+.row-main strong { font-weight: 600; letter-spacing: -.008em; line-height: 1.38; }
+.row-main>span { line-height: 1.48; }
+/* Reading matter: restore natural spacing and consistent baseline rhythm. */
+.statement { line-height: 1.52; font-weight: 400; }
+.intro-aside { line-height: 1.78; }
+.chapter-reading p { line-height: 1.83; font-size: 13px; }
+.comparison-analysis p { line-height: 1.77; }
+.method-block p { line-height: 1.8; }
+/* Quiet metadata: less technical noise while retaining precise mono identifiers. */
+.micro-label { font-family: var(--font); font-size: 10px; font-weight: 600; letter-spacing: .035em; line-height: 1.6; }
+.brand-sub { font-family: var(--font); font-size: 10px; font-weight: 550; letter-spacing: .018em; line-height: 1.42; }
+.system-strip { font-family: var(--font); font-size: 11px; font-weight: 400; letter-spacing: .003em; line-height: 1.55; }
+.system-strip strong { font-weight: 600; }
+.site-footer { font-family: var(--font); font-weight: 450; letter-spacing: -.007em; line-height: 1.65; }
+/* Keep serials / counters distinctly editorial, rather than using mono for every label. */
+.chapter-index,.intro-stat span:first-child,.serif-num { font-variant-numeric: tabular-nums; }
+@media (max-width: 820px) {
+ .page-intro h1 { letter-spacing: -.037em; line-height: 1.12; }
+ .lab-header h2 { letter-spacing: -.035em; }
+}
+@media (max-width: 600px) {
+ .page-intro h1 { letter-spacing: -.029em; line-height: 1.15; }
+ .lab-header h2 { letter-spacing: -.027em; line-height: 1.15; }
+ .chapter-reading h3 { line-height: 1.3; letter-spacing: -.017em; }
+ .micro-label { font-size: 9px; letter-spacing: .035em; }
+}
