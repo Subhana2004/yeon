@@ -45,6 +45,18 @@ try {
         return {tag:el.tagName,cls:String(el.className||'').slice(0,80),left:Math.round(b.left),right:Math.round(b.right)};
       }).filter(el=>el.right>innerWidth+1||el.left< -1).slice(0,12));
       console.error('OVERFLOW',width,JSON.stringify(offending));
+      const diagnostics=await page.evaluate(()=>({
+        html:{scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth},
+        body:{scroll:document.body.scrollWidth,client:document.body.clientWidth},
+        elements:[...document.querySelectorAll('body *')].map(el=>{
+          const rect=el.getBoundingClientRect(),css=getComputedStyle(el);
+          return {tag:el.tagName,cls:String(el.className||'').slice(0,70),
+            scroll:el.scrollWidth,client:el.clientWidth,
+            left:Math.round(rect.left),right:Math.round(rect.right),
+            overflowX:css.overflowX,position:css.position};
+        }).filter(x=>x.scroll>x.client+4).sort((a,b)=>(b.scroll-b.client)-(a.scroll-a.client)).slice(0,24)
+      }));
+      console.error('SCROLL_DIAGNOSTICS',width,JSON.stringify(diagnostics));
     }
     assert.ok(info.overflow<=2,`horizontal page overflow at ${width}: ${info.overflow}px`);
     assert.ok(info.body>0,'archive body must have width');
