@@ -1,0 +1,35 @@
+name: Original V4 visual and interaction checks
+
+on:
+  pull_request:
+    paths:
+      - 'app-v4/**'
+      - 'tests/v4-original-browser-smoke.mjs'
+      - '.github/workflows/v4-original-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test original V4 layout and interactions
+        run: node tests/v4-original-browser-smoke.mjs
+      - name: Capture original V4 viewport screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yeon-v4-original-viewport-screenshots
+          path: artifacts/v4-original
+          if-no-files-found: ignore
