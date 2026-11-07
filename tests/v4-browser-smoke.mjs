@@ -42,6 +42,13 @@ try {
       topGridColumns:getComputedStyle(document.querySelector('.v4-top-grid')).gridTemplateColumns,
       count:getComputedStyle(document.querySelector('.v4-fields-list')).gridTemplateColumns
     }));
+    if(measure.overflow>2) {
+      const offenders=await page.evaluate(()=>[...document.querySelectorAll('body *')].map(el=>{
+        const box=el.getBoundingClientRect();
+        return {tag:el.tagName,cls:String(el.className||'').slice(0,100),left:Math.round(box.left),right:Math.round(box.right),width:Math.round(box.width),scrollWidth:el.scrollWidth};
+      }).filter(el=>el.right>window.innerWidth+1||el.left< -1).sort((a,b)=>b.right-a.right).slice(0,20));
+      console.error('Overflow diagnostics',width,JSON.stringify(offenders));
+    }
     assert.ok(measure.overflow<=2,
       `Unexpected document horizontal overflow at ${width}px: ${measure.overflow}px`);
     await page.screenshot({path:resolve(outputDir,`v4-${width}.png`),fullPage:true});
