@@ -930,13 +930,13 @@ body{background:var(--v4-bg)}
       const toggle=document.querySelector('[data-browse-toggle]');
       if(toggle){toggle.textContent='Browse labs';toggle.setAttribute('aria-expanded','false');}
     }
-    if(document.querySelector('.archive-library')){
+    if(document.querySelector('.archive-library')&&!opts.silent){
       if(opts.keyboard)document.querySelector(`.archive-entry[data-select-lab="${id}"]`)?.focus({preventScroll:true});
       else if(matchMedia('(max-width: 840px)').matches){
         document.getElementById('archive-preview-heading')?.focus({preventScroll:true});
         document.getElementById('archive-preview')?.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
       }
-    }else if(matchMedia('(max-width: 840px)').matches){
+    }else if(!opts.silent&&matchMedia('(max-width: 840px)').matches){
       const heading=document.getElementById('selected-lab-heading');
       heading?.focus({preventScroll:true});
       document.getElementById('selected-dossier')?.scrollIntoView({block:'start',behavior:'instant'});
@@ -949,6 +949,11 @@ body{background:var(--v4-bg)}
       list.innerHTML=r.length?r.map(v4ArchiveCard).join(''):`<div class="archive-empty"><strong>No matching records.</strong><p>Try a broader topic or clear your search.</p><button type="button" data-reset-search>Show all laboratories</button></div>`;
       const count=document.querySelector('.archive-match-count');if(count)count.textContent=String(r.length).padStart(2,'0');
       const status=document.getElementById('archive-status');if(status)status.textContent=`${r.length} matching example ${r.length===1?'lab':'labs'}`;
+      const archiveBody=document.querySelector('.archive-body');
+      archiveBody?.classList.toggle('has-no-results',r.length===0);
+      const preview=document.getElementById('archive-preview');
+      if(preview)preview.hidden=r.length===0;
+      if(r.length&&!r.some(x=>x.id===state.lab))selectLab(r[0].id,{silent:true});
     }else{list.innerHTML=r.length?r.map(labRow).join(''):`<div class="empty-result">No matches. Try a different theme or search phrase.</div>`;
       const counter=document.querySelector('.serial');if(counter)counter.textContent='/ '+String(r.length).padStart(2,'0');}
     document.querySelectorAll('[data-topic],[data-v4-field]').forEach(b=>{const topic=b.dataset.topic||b.dataset.v4Field;const active=topic===state.topic;b.classList.toggle('is-on',active);b.setAttribute('aria-pressed',String(active))});
