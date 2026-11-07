@@ -324,3 +324,17 @@ body{background:var(--v4-bg)}
     scroll-behavior:auto!important;
   }
 }
+
+/* Narrow-device reader tabs: keep the strip in its panel rather than expanding
+   the document viewport when translated/font-loaded labels get wider. */
+@media(max-width:420px) {
+  .v4-trail-tabs {
+    min-width:0;max-width:100%;
+    overflow-x:auto;overflow-y:hidden;
+    flex-wrap:nowrap;gap:12px;
+    overscroll-behavior-x:contain;
+    scrollbar-width:thin;
+    scroll-padding-inline:4px;
+  }
+  .v4-trail-tab {flex:0 0 auto;white-space:nowrap}
+}
