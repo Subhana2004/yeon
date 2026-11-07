@@ -38,3 +38,10 @@ The visual treatment was brought closer to YEON's V1 Field Notes landing page: w
 ## V3 unified design refinement (November 2026)
 
 `styles.css` is now the only loaded visual stylesheet; legacy `type-refine.css` and `surface-refine.css` are retained in Git history for rollback, not loaded. The visual system uses softened surfaces, consolidated semantic tokens and restrained motion. Mobile Explore presents the selected dossier immediately; `Browse labs` reveals the filtered index. All records remain fictional and the frontend is static.
+
+## Investigation-flow refinement (V3.1)
+
+- Selecting a lab now updates the dossier and research context without remounting Explore; search filters and index position are retained.
+- The research context shows the selected lab's demonstration method, a stated example limitation, and direct next actions to inspect evolution, compare a related lab, or explore shared topics.
+- Lab DNA chapters include a single next-chapter control. Arrow keys also navigate the lab index, and reduced-motion users receive instant updates.
+- All records and connections remain fictional. There is no backend or live research feed.

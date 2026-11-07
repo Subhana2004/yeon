@@ -1,0 +1,150 @@
+/* YEON Fieldbook / investigation interactions. Keep the fieldbook, remove the empty theatre.
+   The selected lab persists across tools; context prompts expose a real next action.
+   CSS lives in its own reviewable layer so the current version is easily reversible. */
+:root {
+  --engage-ease: cubic-bezier(.23,1,.32,1);
+  --engage-glow: rgba(42,82,51,.065);
+}
+:root[data-theme="dark"] { --engage-glow: rgba(0,0,0,.15); }
+
+/* A dossier that responds, not a page that remounts. */
+#selected-dossier { min-width:0; }
+#selected-dossier .dossier { position:relative; }
+@media (prefers-reduced-motion:no-preference) {
+  #selected-dossier .dossier-arrival { animation:dossier-swap 165ms var(--engage-ease) both; }
+  @keyframes dossier-swap { from { opacity:.85; transform:translateY(3px) } to { opacity:1; transform:none } }
+}
+.index-row.is-selected { box-shadow:inset 3px 0 var(--forest-2); }
+.index-row:focus-visible { outline-offset:-4px; border-radius:10px; }
+.index-panel .index-foot { line-height:1.6; }
+
+/* The context pane is now lab-specific: it suggests useful investigation moves,
+   not a repeated 'read beyond the title' marketing statement. */
+.inquiry-folio {
+  min-height:372px;
+  border-radius:18px;
+  padding:25px 23px 23px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+  background:var(--forest);
+}
+.inquiry-folio .rail-heading { align-items:center; }
+.inquiry-main { min-width:0; }
+.inquiry-marker {
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  color:#b6d4b6;
+  font:600 10px/1.4 var(--font);
+  letter-spacing:.065em;
+  margin-bottom:15px;
+}
+.inquiry-marker::before { content:""; width:19px;height:1px;background:#a8cfad; }
+.inquiry-main h3 {
+  color:#f5f9ef;
+  font:550 clamp(24px,2.35vw,35px)/1.16 var(--font);
+  letter-spacing:-.034em;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+  margin:0 0 16px;
+}
+.inquiry-main p {
+  font-size:12px;
+  line-height:1.7;
+  color:#b3ccb9;
+  margin:0;
+  max-width:33ch;
+}
+.inquiry-main p strong { font-weight:600;color:#e2f3d9; }
+.inquiry-actions { display:grid;gap:7px; }
+.inquiry-actions button {
+  color:#eaf5e5;
+  background:rgba(243,255,235,.06);
+  border:1px solid rgba(228,250,218,.15);
+  display:flex;
+  align-items:center;
+  gap:9px;
+  width:100%;
+  min-height:43px;
+  padding:11px 12px;
+  text-align:left;
+  border-radius:10px;
+  font:550 11px/1.3 var(--font);
+  transition:background-color 140ms var(--engage-ease), border-color 140ms var(--engage-ease);
+}
+.inquiry-actions button span { flex:1;min-width:0; }
+.inquiry-actions button:focus-visible { outline:3px solid #c9e9b3;outline-offset:2px; }
+@media (hover:hover) and (pointer:fine) {
+  .inquiry-actions button:hover {background:rgba(242,255,235,.13);border-color:rgba(238,255,228,.36)}
+}
+.related { padding:24px 19px; }
+.related-top { align-items:flex-start;flex-wrap:wrap; }
+.related-top span:last-child { font:400 10px/1.45 var(--font);letter-spacing:0; }
+.related-lab {
+  border-top:0;
+  border-radius:9px;
+  padding:11px 12px;
+  margin:2px 0;
+  background:transparent;
+  transition:background-color 130ms var(--engage-ease);
+}
+.related-lab small { font-size:11px;line-height:1.45; }
+@media (hover:hover) and (pointer:fine) {
+  .related-lab:hover { background:var(--paper-3); }
+}
+.related-lab:focus-visible { outline-offset:0; }
+.view-map {
+  background:var(--paper);
+  margin-top:12px;
+  padding:13px 14px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  min-height:44px;
+  color:var(--ink-2);
+}
+.view-map:hover { background:var(--paper-3); }
+
+/* A clear next action for each actual research chapter. */
+.chapter-next {
+  border:0;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  color:var(--ink-2);
+  padding:13px 0 4px;
+  margin-top:5px;
+  font:600 12px/1.45 var(--font);
+  width:100%;
+  text-align:left;
+  border-top:1px solid var(--line);
+}
+.chapter-next > span:first-child { flex:1; }
+.chapter-next-index { color:var(--muted);font-variant-numeric:tabular-nums;font-weight:500;font-size:11px; }
+.chapter-next svg { transition:transform 150ms var(--engage-ease); }
+@media (hover:hover) and (pointer:fine) { .chapter-next:hover svg { transform:translateX(3px); } }
+.chapter-next:focus-visible { border-radius:6px; }
+@media (prefers-reduced-motion:reduce) {
+  .dossier-arrival, .research-chapter { animation:none!important;transform:none!important; }
+  .chapter-next svg { transition:none; }
+}
+@media (max-width:1160px) {
+  .inquiry-folio { min-height:0; }
+  .inquiry-main h3 { font-size:clamp(23px,3vw,34px); }
+}
+@media (max-width:820px) {
+  .inquiry-folio { min-height:0;gap:25px; }
+  .context-rail { gap:0; }
+  .inquiry-actions {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .inquiry-actions button {font-size:11px;}
+  #selected-dossier {scroll-margin-top:18px;}
+}
+@media (max-width:520px) {
+  .inquiry-folio {padding:26px 21px;}
+  .inquiry-actions { grid-template-columns:1fr; }
+  .inquiry-main p {max-width:100%;}
+  .related {padding:21px;}
+  .chapter-next {font-size:11px;gap:8px;}
+  .chapter-next-index {font-size:10px;}
+}
