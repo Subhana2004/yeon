@@ -17,6 +17,8 @@ const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'original V4 application script required');
 new Script(script,{filename:'original-v4.js'});
 assert.match(html,/href="\.\/archive-refined\.css"/);
+assert.match(html,/href="\.\/research-atlas\.css"/);
+assert.match(readFileSync(resolve(root,'app-v4/research-atlas.css'),'utf8'),/\.v4-question-desk/);
 assert.match(css,/\.archive-preview/);
 assert.match(script,/has-no-results/);
 assert.doesNotMatch(script,/max-width: 820px/);
@@ -93,6 +95,21 @@ try {
         'keyboard moves focus to next lab card');
       assert.match(await page.locator('#archive-preview-heading').innerText(),/Mosaic/);
       assert.equal(await page.locator('.archive-entry[data-select-lab="mosaic"]').getAttribute('aria-pressed'),'true');
+      // The new question desk must actually select a research path.
+      await page.locator('[data-v4-prompt="prism"]').click();
+      assert.match(await page.locator('#archive-preview-heading').innerText(),/Prism/);
+      assert.equal(await page.locator('[data-v4-prompt="prism"]').getAttribute('aria-pressed'),'true');
+      await page.locator('#archive-preview [data-v4-idea="1"]').click();
+      assert.match(await page.locator('.archive-preview-question').innerText(),/Feature alignment/);
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="1"]').getAttribute('aria-pressed'),'true');
+      await page.locator('#archive-preview [data-v4-idea="2"]').click();
+      assert.match(await page.locator('.archive-preview-question').innerText(),/Missing inputs/);
+      await page.locator('#archive-preview [data-follow="prism"]').click();
+      assert.equal(await page.locator('#archive-preview [data-follow="prism"]').getAttribute('aria-pressed'),'true');
+      await page.locator('#archive-preview [data-compare-from="prism"]').click();
+      assert.ok(await page.locator('.standard-view').isVisible());
+      await page.locator('[data-nav="explore"]').click();
+      await page.locator('.v4-question-desk').waitFor({state:'visible'});
     }
     if(width===390){
       const search=page.locator('#lab-search');
@@ -112,7 +129,7 @@ try {
       await page.locator('#theme-toggle').click();
       const bgDark=await page.locator('.archive-preview').evaluate(el=>getComputedStyle(el).backgroundColor);
       assert.notEqual(bgLight,bgDark,'preview surface should switch with dark theme');
-      await page.locator('[data-v4-mode="investigate"]').click();
+      await page.locator('.v4-switch [data-v4-mode="investigate"]').click();
       assert.ok(await page.locator('.v4-reading-strip').isVisible());
       await page.locator('[data-nav="compare"]').click();
       await page.locator('.standard-view').waitFor();
