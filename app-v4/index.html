@@ -819,11 +819,6 @@ body{background:var(--v4-bg)}
     ['Multimodal','Signals in dialogue','Where different kinds of data meet'],
     ['Systems','The invisible structures','Reliability underneath discovery']
   ];
-  function v4FieldButtons(){return V4_FIELDS.map(([topic],i)=>{
-    const count=topic==='All'?LABS.length:LABS.filter(l=>l.topics.includes(topic)).length;
-    return `<button type="button" data-v4-field="${topic}" aria-pressed="${state.topic===topic}" class="v4-field ${state.topic===topic?'active':''}"><span class="v4-field-copy"><strong>${topic==='All'?'All fields':topic}</strong></span><span class="v4-field-count">${String(count).padStart(2,'0')}</span></button>`;
-  }).join('');}
-  
   function v4Evidence(l){const data=[['The question',l.statement,'01'],['The method',l.methods[0]+' · '+l.methods[1],'02'],['The boundary',l.limits[0]+'. '+l.limits[1]+'.','03']];const selected=data[state.v4Idea];return `<div class="v4-trail" aria-label="Research evidence reading lens"><div class="v4-trail-head"><span class="v4-meta">READING LENS</span><span class="v4-muted">${selected[2]} / 03</span></div><div class="v4-trail-tabs" role="group" aria-label="Inspect research perspective">${data.map(([name,,n],i)=>`<button class="v4-trail-tab ${i===state.v4Idea?'active':''}" data-v4-idea="${i}" aria-pressed="${i===state.v4Idea}">${n} ${name}</button>`).join('')}</div><div class="v4-trail-content" aria-live="polite"><span class="v4-meta">${selected[0].toUpperCase()}</span><p>${esc(selected[1])}</p></div><button class="v4-text-link" data-inspect-method type="button">Follow this through Lab DNA ${ico('arrow',15)}</button></div>`;}
   function v4ArchiveCard(l,i){
     const active=state.lab===l.id;
@@ -887,7 +882,7 @@ body{background:var(--v4-bg)}
         </aside>
       </div>
       <div class="v4-switch" role="group" aria-label="Choose research exploration approach"><span>YOUR APPROACH</span><div class="v4-switch-buttons"><button type="button" data-v4-mode="discover" aria-pressed="${discover}" class="${discover?'selected':''}">Discover by question</button><button type="button" data-v4-mode="investigate" aria-pressed="${!discover}" class="${!discover?'selected':''}">Investigate a lab</button></div><span class="v4-switch-note">Switch between discovery and focused reading</span></div>
-      ${discover?`<div class="v4-fields"><div class="v4-field-title"><span class="v4-meta">OR FILTER BY FIELD</span><span>EXPLORE THE COLLECTION</span></div><div class="v4-fields-list">${v4FieldButtons()}</div></div>`:`<div class="v4-reading-strip"><div><span class="v4-meta">READING NOW</span><strong>${esc(l.name)}</strong></div><p>${esc(l.statement)}</p><button type="button" data-v4-jump="selected-dossier">Continue reading ${ico('arrow',16)}</button></div>`}
+      ${discover?'':`<div class="v4-reading-strip"><div><span class="v4-meta">READING NOW</span><strong>${esc(l.name)}</strong></div><p>${esc(l.statement)}</p><button type="button" data-v4-jump="selected-dossier">Continue reading ${ico('arrow',16)}</button></div>`}
     </section>`;
   }
   function explore(){const l=by(state.lab);return `<div class="workspace-view v4-workspace view-enter">
