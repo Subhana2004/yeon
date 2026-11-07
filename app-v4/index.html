@@ -804,6 +804,13 @@ body{background:var(--v4-bg)}
       <div class="collection-heading"><div><span class="quiet-caption">YOUR WORKSPACE</span><h2>Inside the <em>archive.</em></h2></div><div class="collection-tools"><span>08 fictional lab profiles · frontend study</span><button type="button" data-surprise>${ico('refresh',15)} Next discovery</button></div></div>
     </section>`;
   }
+
+  const V4_STARTERS=[
+    {lab:'mosaic',name:'When knowledge changes',hint:'Systems & retrieval',number:'01'},
+    {lab:'prism',name:'When signals disagree',hint:'Multimodal understanding',number:'02'},
+    {lab:'horizon',name:'When the world shifts',hint:'Adaptive learning',number:'03'},
+    {lab:'delta',name:'When results need proof',hint:'Reproducible systems',number:'04'}
+  ];
   const V4_FIELDS=[
     ['All','The full collection','Every question, one place'],
     ['Vision','Ways of seeing','From observation to understanding'],
@@ -811,10 +818,11 @@ body{background:var(--v4-bg)}
     ['Multimodal','Signals in dialogue','Where different kinds of data meet'],
     ['Systems','The invisible structures','Reliability underneath discovery']
   ];
-  function v4FieldButtons(){return V4_FIELDS.map(([t,label,description],i)=>{
-    const count=t==='All'?LABS.length:LABS.filter(x=>x.topics.includes(t)).length;
-    return `<button type="button" data-v4-field="${t}" aria-pressed="${state.topic===t}" class="v4-field ${state.topic===t?'active':''}"><span class="v4-field-num">${String(i+1).padStart(2,'0')}</span><span class="v4-field-copy"><strong>${label}</strong><small>${description}</small></span><span class="v4-field-count">${count.toString().padStart(2,'0')} ↗</span></button>`;
+  function v4FieldButtons(){return V4_FIELDS.map(([topic],i)=>{
+    const count=topic==='All'?LABS.length:LABS.filter(l=>l.topics.includes(topic)).length;
+    return `<button type="button" data-v4-field="${topic}" aria-pressed="${state.topic===topic}" class="v4-field ${state.topic===topic?'active':''}"><span class="v4-field-copy"><strong>${topic==='All'?'All fields':topic}</strong></span><span class="v4-field-count">${String(count).padStart(2,'0')}</span></button>`;
   }).join('');}
+  
   function v4Evidence(l){const data=[['The question',l.statement,'01'],['The method',l.methods[0]+' · '+l.methods[1],'02'],['The boundary',l.limits[0]+'. '+l.limits[1]+'.','03']];const selected=data[state.v4Idea];return `<div class="v4-trail" aria-label="Research evidence reading lens"><div class="v4-trail-head"><span class="v4-meta">READING LENS</span><span class="v4-muted">${selected[2]} / 03</span></div><div class="v4-trail-tabs" role="group" aria-label="Inspect research perspective">${data.map(([name,,n],i)=>`<button class="v4-trail-tab ${i===state.v4Idea?'active':''}" data-v4-idea="${i}" aria-pressed="${i===state.v4Idea}">${n} ${name}</button>`).join('')}</div><div class="v4-trail-content" aria-live="polite"><span class="v4-meta">${selected[0].toUpperCase()}</span><p>${esc(selected[1])}</p></div><button class="v4-text-link" data-inspect-method type="button">Follow this through Lab DNA ${ico('arrow',15)}</button></div>`;}
   function v4ArchiveCard(l,i){
     const active=state.lab===l.id;
@@ -827,25 +835,26 @@ body{background:var(--v4-bg)}
   }
   function v4ArchivePreview(l){
     const no=String(LABS.indexOf(l)+1).padStart(2,'0');
-    return `<aside id="archive-preview" class="archive-preview" aria-label="Selected laboratory preview" aria-live="polite">
-      <div class="archive-preview-top"><span>SELECTED FIELD NOTE <b>${no} / ${String(LABS.length).padStart(2,'0')}</b></span><span class="archive-preview-symbol" aria-hidden="true">✳</span></div>
-      <div class="archive-preview-body">
-        <span class="archive-preview-institution">${esc(l.institution)} · ${esc(l.topics[0])}</span>
-        <h3 id="archive-preview-heading" tabindex="-1">${esc(l.name)}</h3>
-        <p class="archive-preview-question">${esc(l.statement)}</p>
-        <div class="archive-preview-motif" aria-hidden="true"><span></span><i></i><span></span></div>
-      </div>
-      <div class="archive-preview-foot">
-        <div><span>EXPLORING</span><strong>${esc(l.focus)}</strong></div>
-        <button class="archive-preview-cta" type="button" data-v4-jump="selected-dossier">Read full dossier ${ico('arrow',16)}</button>
-      </div>
+    const panes=[
+      ['The question',l.statement],
+      ['The approach',l.methods.join(' · ')],
+      ['The limitations',l.limits.join(' · ')]
+    ];
+    const selected=panes[state.v4Idea];
+    return `<aside id="archive-preview" class="archive-preview" aria-label="Selected laboratory research preview">
+      <div class="archive-preview-top"><span>FIELD NOTE / ${no}</span><span>DEMO PROFILE</span></div>
+      <div class="archive-preview-heading"><span class="archive-preview-institution">${esc(l.institution)} · ${esc(l.topics.join(' / '))}</span><h3 id="archive-preview-heading" tabindex="-1">${esc(l.name)}</h3><span class="archive-preview-focus">${esc(l.focus)}</span></div>
+      <div class="archive-preview-tabs" role="group" aria-label="Choose research lens">${panes.map(([label],i)=>`<button type="button" data-v4-idea="${i}" aria-pressed="${state.v4Idea===i}" class="archive-lens ${state.v4Idea===i?'active':''}">${String(i+1).padStart(2,'0')} <span>${label}</span></button>`).join('')}</div>
+      <div class="archive-preview-body" aria-live="polite"><span class="v4-meta">${selected[0].toUpperCase()}</span><p class="archive-preview-question">${esc(selected[1])}</p></div>
+      <div class="archive-preview-foot"><button class="archive-preview-cta" type="button" data-v4-jump="selected-dossier">Open research trail ${ico('arrow',16)}</button><div class="archive-secondary-actions"><button type="button" data-compare-from="${l.id}">Compare</button><button type="button" data-follow="${l.id}" aria-pressed="${state.follows.has(l.id)}">${state.follows.has(l.id)?'Following':'Follow +'}</button></div></div>
     </aside>`;
   }
+  
   function v4Index(l){
     const found=resultLabs();
     return `<section id="lab-index" class="v4-index archive-library" aria-label="Search and explore the laboratory archive">
       <div class="archive-library-top">
-        <div class="archive-library-intro"><span class="v4-meta">THE RESEARCH COLLECTION / VOL. 01</span><h3>Find a lab worth <em>following.</em></h3><p>Browse by research field, or search for a question. Select any record to preview its research before diving deeper.</p></div>
+        <div class="archive-library-intro"><span class="v4-meta">02 / THE COLLECTION</span><h3>Eight labs. <em>Different questions.</em></h3><p>Select a record to inspect its question, approach and limitations. No scores or invented rankings.</p></div>
         <div class="archive-availability"><span class="archive-availability-dot" aria-hidden="true"></span><strong>${LABS.length} lab records</strong><span>Fictional interface examples</span></div>
       </div>
       <div class="archive-toolbar">
