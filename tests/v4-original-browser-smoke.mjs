@@ -69,6 +69,18 @@ try {
         });
       });
       console.error('ISOLATE_BLOCKS',width,JSON.stringify(isolate));
+      const archiveParts=await page.evaluate(()=>{
+        const items=['.archive-library-top','.archive-toolbar','.archive-filter-row',
+          '.archive-library-rule','.archive-body','.archive-collection','.archive-grid',
+          '.archive-preview','.archive-preview-body','.archive-preview-foot'];
+        return items.map(selector=>{
+          const e=document.querySelector(selector);if(!e)return {selector,missing:true};
+          const original=e.style.display;e.style.display='none';
+          const remain=document.documentElement.scrollWidth-innerWidth;
+          e.style.display=original;return {selector,overflowWithout:remain};
+        });
+      });
+      console.error('ARCHIVE_ISOLATION',width,JSON.stringify(archiveParts));
     }
     assert.ok(info.overflow<=2,`horizontal page overflow at ${width}: ${info.overflow}px`);
     assert.ok(info.body>0,'archive body must have width');
