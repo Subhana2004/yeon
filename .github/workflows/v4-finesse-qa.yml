@@ -1,0 +1,35 @@
+name: V4 Finesse UI quality check
+
+on:
+  pull_request:
+    paths:
+      - 'app-v4-finesse/**'
+      - 'tests/v4-browser-smoke.mjs'
+      - '.github/workflows/v4-finesse-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install smoke-test browser
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify V4 responsive geometry and interactions
+        run: node tests/v4-browser-smoke.mjs
+      - name: Publish viewport screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yeon-v4-finesse-viewport-screenshots
+          path: artifacts/v4-smoke
+          if-no-files-found: ignore
