@@ -209,3 +209,7 @@
 /* The archive preview's decorative orbital halo previously enlarged page scrollWidth
    at tablet/laptop widths, even though the visible surface was clipped. */
 .archive-preview {overflow:clip}
+
+/* At the stacked preview breakpoint, omit the off-canvas decorative circle:
+   its shadow contributes scrollable width on Chrome even in an overflow clip. */
+@media(max-width:1100px) {.archive-preview::after {display:none!important}}
