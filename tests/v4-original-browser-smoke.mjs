@@ -57,6 +57,18 @@ try {
         }).filter(x=>x.scroll>x.client+4).sort((a,b)=>(b.scroll-b.client)-(a.scroll-a.client)).slice(0,24)
       }));
       console.error('SCROLL_DIAGNOSTICS',width,JSON.stringify(diagnostics));
+      const isolate=await page.evaluate(()=>{
+        const blocks=['.v4-top','.v4-live-note','.v4-fields','.v4-integrity',
+        '.v4-section-head','.v4-layout','.archive-library','.v4-dossier-area',
+        '#v4-evidence-inspector','.site-header','.site-footer'];
+        return blocks.map(selector=>{
+          const el=document.querySelector(selector);if(!el)return {selector,missing:true};
+          const original=el.style.display;el.style.display='none';
+          const width=document.documentElement.scrollWidth-innerWidth;
+          el.style.display=original;return {selector,overflowWithout:width};
+        });
+      });
+      console.error('ISOLATE_BLOCKS',width,JSON.stringify(isolate));
     }
     assert.ok(info.overflow<=2,`horizontal page overflow at ${width}: ${info.overflow}px`);
     assert.ok(info.body>0,'archive body must have width');
