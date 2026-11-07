@@ -201,3 +201,7 @@
 @media(prefers-reduced-motion:reduce) {
  .v4-workspace *, .v4-workspace *::before,.v4-workspace *::after {scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+/* Empty searches use the complete width instead of leaving a blank preview. */
+.archive-body.has-no-results {grid-template-columns:minmax(0,1fr)}
+.archive-preview[hidden] {display:none!important}
