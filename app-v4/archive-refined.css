@@ -205,3 +205,7 @@
 /* Empty searches use the complete width instead of leaving a blank preview. */
 .archive-body.has-no-results {grid-template-columns:minmax(0,1fr)}
 .archive-preview[hidden] {display:none!important}
+
+/* The archive preview's decorative orbital halo previously enlarged page scrollWidth
+   at tablet/laptop widths, even though the visible surface was clipped. */
+.archive-preview {overflow:clip}
