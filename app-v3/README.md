@@ -33,3 +33,8 @@ Replace the `LABS` fixture with an evidence-backed data adapter before describin
 ## V3 soft-surface refinement (November 2026)
 
 The visual treatment was brought closer to YEON's V1 Field Notes landing page: warm pale-sage surfaces, rounded research folios, roomier panel spacing, pill navigation, and significantly fewer hard section dividers. All interaction logic and synthetic demo records remain unchanged. Overrides live in `surface-refine.css` and can be reverted independently.
+
+
+## V3 unified design refinement (November 2026)
+
+`styles.css` is now the only loaded visual stylesheet; legacy `type-refine.css` and `surface-refine.css` are retained in Git history for rollback, not loaded. The visual system uses softened surfaces, consolidated semantic tokens and restrained motion. Mobile Explore presents the selected dossier immediately; `Browse labs` reveals the filtered index. All records remain fictional and the frontend is static.
