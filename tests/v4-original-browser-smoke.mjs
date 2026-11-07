@@ -109,7 +109,7 @@ try {
       await page.locator('#archive-preview [data-compare-from="prism"]').click();
       assert.ok(await page.locator('.standard-view').isVisible());
       await page.locator('[data-nav="explore"]').click();
-      assert.ok(await page.locator('.v4-question-desk').isVisible());
+      await page.locator('.v4-question-desk').waitFor({state:'visible'});
     }
     if(width===390){
       const search=page.locator('#lab-search');
