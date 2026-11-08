@@ -7,7 +7,7 @@
   <meta name="description" content="YEON Fieldbook — an interactive research exploration prototype. All laboratories and publications are fictional demonstration records." />
   <meta property="og:title" content="YEON / Research Fieldbook" />
   <meta property="og:description" content="A new way to explore the questions, methods and relationships behind research. Frontend demonstration." />
-  <title>YEON — Research Reader (V4)</title>
+  <title>YEON — The Archive · V4 Reading Room</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231c3829'/%3E%3Cpath d='M12 16 31 42 51 16' fill='none' stroke='%23d4edac' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -653,6 +653,7 @@ body{background:var(--v4-bg)}
 /* Original V4 archive refinements live in ./archive-refined.css */
 </style>
 <link rel="stylesheet" href="./archive-refined.css" />
+  <link rel="stylesheet" href="./archive-reading-room.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to research workspace</a>
@@ -738,6 +739,7 @@ body{background:var(--v4-bg)}
   const tags=topics=>topics.map(t=>`<span class="topic-tag">${esc(t)}</span>`).join('');
   const memo=(key,fallback)=>{try{const v=localStorage.getItem(key);return v===null?fallback:JSON.parse(v);}catch(e){return fallback;}};
   const persist=(key,val)=>{try{localStorage.setItem(key,JSON.stringify(val));}catch(e){/* local storage optional */}};
+  const archiveNotes=memo('yeon_v4_archive_notes',{});
   const saved=memo('yeon_v3_follows',[]);
   const state={view:'explore',lab:'arbor',topic:'All',search:'',chapter:0,compA:'arbor',compB:'mosaic',lens:'directions',graphNode:'arbor',radar:'all',radarUnread:new Set(),follows:new Set(Array.isArray(saved)?saved:[]),door:'All',fit:new Set(['Vision','Systems']),face:'methods',mobileIndexOpen:false,v4Mode:'discover',v4Idea:0};
   const content=document.getElementById('app-content');
@@ -816,47 +818,84 @@ body{background:var(--v4-bg)}
     return `<button type="button" data-v4-field="${t}" aria-pressed="${state.topic===t}" class="v4-field ${state.topic===t?'active':''}"><span class="v4-field-num">${String(i+1).padStart(2,'0')}</span><span class="v4-field-copy"><strong>${label}</strong><small>${description}</small></span><span class="v4-field-count">${count.toString().padStart(2,'0')} ↗</span></button>`;
   }).join('');}
   function v4Evidence(l){const data=[['The question',l.statement,'01'],['The method',l.methods[0]+' · '+l.methods[1],'02'],['The boundary',l.limits[0]+'. '+l.limits[1]+'.','03']];const selected=data[state.v4Idea];return `<div class="v4-trail" aria-label="Research evidence reading lens"><div class="v4-trail-head"><span class="v4-meta">READING LENS</span><span class="v4-muted">${selected[2]} / 03</span></div><div class="v4-trail-tabs" role="group" aria-label="Inspect research perspective">${data.map(([name,,n],i)=>`<button class="v4-trail-tab ${i===state.v4Idea?'active':''}" data-v4-idea="${i}" aria-pressed="${i===state.v4Idea}">${n} ${name}</button>`).join('')}</div><div class="v4-trail-content" aria-live="polite"><span class="v4-meta">${selected[0].toUpperCase()}</span><p>${esc(selected[1])}</p></div><button class="v4-text-link" data-inspect-method type="button">Follow this through Lab DNA ${ico('arrow',15)}</button></div>`;}
-  function v4ArchiveCard(l,i){
+  function v4ArchiveCard(l){
     const active=state.lab===l.id;
-    const kind=l.topics[0].toLowerCase();
-    return `<button type="button" class="archive-entry archive-entry--${kind} ${active?'is-selected':''}" data-select-lab="${l.id}" aria-pressed="${active}" aria-label="Read ${esc(l.name)}">
-      <span class="archive-entry-overline"><span>№ ${String(LABS.indexOf(l)+1).padStart(2,'0')}</span><span>${esc(l.institution)}</span></span>
-      <span class="archive-entry-main"><span class="archive-entry-initial" aria-hidden="true">${esc(l.short.charAt(0))}</span><strong>${esc(l.name)}</strong></span>
-      <span class="archive-entry-end"><span>${esc(l.focus)}</span><span class="archive-entry-arrow" aria-hidden="true">↗</span></span>
+    const number=String(LABS.indexOf(l)+1).padStart(2,'0');
+    return `<button class="archive-entry ar-entry ${active?'is-selected':''}" type="button" data-select-lab="${l.id}" aria-pressed="${active}" aria-label="Read ${esc(l.name)}">
+      <span class="ar-entry-number">${number}</span>
+      <span class="ar-entry-content"><strong>${esc(l.name)}</strong><small>${esc(l.focus)}</small><span class="ar-entry-topic">${esc(l.topics.join(' · '))}</span></span>
+      <span class="ar-entry-symbol" aria-hidden="true">↗</span>
     </button>`;
   }
   function v4ArchivePreview(l){
-    const no=String(LABS.indexOf(l)+1).padStart(2,'0');
-    return `<aside id="archive-preview" class="archive-preview" aria-label="Selected laboratory preview" aria-live="polite">
-      <div class="archive-preview-top"><span>SELECTED FIELD NOTE <b>${no} / ${String(LABS.length).padStart(2,'0')}</b></span><span class="archive-preview-symbol" aria-hidden="true">✳</span></div>
-      <div class="archive-preview-body">
-        <span class="archive-preview-institution">${esc(l.institution)} · ${esc(l.topics[0])}</span>
+    const i=LABS.indexOf(l),no=String(i+1).padStart(2,'0');
+    const tabs=[['Question','What are they trying to understand?'],['Approach','How are they investigating it?'],['Limits','What remains unresolved?']];
+    const lens=Math.max(0,Math.min(2,state.v4Idea));
+    const body=lens===0
+      ?`<div class="ar-premise"><span class="ar-eyebrow">THE RESEARCH QUESTION</span><p class="ar-statement">${esc(l.statement)}</p><div class="ar-context"><span>WHERE THE WORK BEGINS</span><p>${esc(l.chapters[0][1])}</p></div></div>`
+      :lens===1
+      ?`<div class="ar-analysis"><span class="ar-eyebrow">THE METHODS & ASSUMPTIONS</span><h4>How the question is approached</h4><ol class="ar-research-points">${l.methods.map((method,index)=>`<li><span>0${index+1}</span><strong>${esc(method)}</strong></li>`).join('')}</ol><div class="ar-context"><span>UNDERLYING ASSUMPTIONS</span><p>${esc(l.assumptions.join(' · '))}</p></div></div>`
+      :`<div class="ar-analysis"><span class="ar-eyebrow">WHAT WE CANNOT YET CLAIM</span><h4>Where this approach may fail</h4><ol class="ar-research-points">${l.limits.map((limit,index)=>`<li><span>0${index+1}</span><strong>${esc(limit)}</strong></li>`).join('')}</ol><div class="ar-context"><span>BEFORE YOU DRAW CONCLUSIONS</span><p>These limitations are fictional examples. A real conclusion would require a verified publication, evaluation protocol and supporting evidence.</p></div></div>`;
+    return `<article id="archive-preview" class="archive-preview ar-reader" aria-label="Selected laboratory research reading">
+      <div class="ar-reader-top"><div><span class="ar-eyebrow">YEON READING ROOM / FIELD RECORD</span><span class="ar-folio">№ ${no} <span>/</span> ${String(LABS.length).padStart(2,'0')}</span></div>
+        <div class="ar-reader-nav" role="group" aria-label="Move between research records">
+          <button type="button" data-archive-step="-1" aria-label="Previous laboratory" title="Previous laboratory">←</button>
+          <button type="button" data-archive-step="1" aria-label="Next laboratory" title="Next laboratory">→</button>
+        </div>
+      </div>
+      <div class="ar-reader-heading">
+        <span class="ar-institution">${esc(l.institution)} <span aria-hidden="true">/</span> Fictional sample laboratory</span>
         <h3 id="archive-preview-heading" tabindex="-1">${esc(l.name)}</h3>
-        <p class="archive-preview-question">${esc(l.statement)}</p>
-        <div class="archive-preview-motif" aria-hidden="true"><span></span><i></i><span></span></div>
+        <div class="ar-reader-sub"><span>${esc(l.focus)}</span><span class="ar-topic-list">${l.topics.map(t=>`<span>${esc(t)}</span>`).join('')}</span></div>
       </div>
-      <div class="archive-preview-foot">
-        <div><span>EXPLORING</span><strong>${esc(l.focus)}</strong></div>
-        <button class="archive-preview-cta" type="button" data-v4-jump="selected-dossier">Read full dossier ${ico('arrow',16)}</button>
+      <div class="ar-reading-controls">
+        <div class="ar-reading-label"><span>READ THE RESEARCH</span><span>0${lens+1} / 03</span></div>
+        <div class="ar-tabs" role="tablist" aria-label="Research reading lens">
+          ${tabs.map(([label,subtitle],n)=>`<button type="button" role="tab" id="ar-tab-${n}" aria-controls="ar-reader-panel" aria-selected="${lens===n}" tabindex="${lens===n?0:-1}" data-v4-idea="${n}"><span>0${n+1}</span><strong>${label}</strong><small>${subtitle}</small></button>`).join('')}
+        </div>
       </div>
-    </aside>`;
+      <section id="ar-reader-panel" role="tabpanel" aria-labelledby="ar-tab-${lens}" class="ar-lens-panel" aria-live="polite">${body}</section>
+      <div class="ar-private-notes">
+        <details class="ar-notebook" data-note-drawer>
+          <summary><span><span class="ar-notebook-symbol" aria-hidden="true">✎</span> My reading notes</span><span>${archiveNotes[l.id]?'Note saved':'Private · This browser'}</span></summary>
+          <div class="ar-note-editor"><label for="ar-note-input">What would you ask about this research?</label><textarea id="ar-note-input" data-archive-note="${l.id}" rows="3" placeholder="A question to verify, an interesting assumption, a paper to find…">${esc(archiveNotes[l.id]||'')}</textarea><p id="ar-note-status" role="status">Saved locally in this browser. No account or sync.</p></div>
+        </details>
+      </div>
+      <div class="ar-reader-actions">
+        <button class="ar-main-cta" type="button" data-v4-jump="selected-dossier">Read the full research trail <span aria-hidden="true">↗</span></button>
+        <button class="ar-action" type="button" data-compare-from="${l.id}">Compare <span aria-hidden="true">↗</span></button>
+        <button class="ar-action" type="button" data-follow="${l.id}" aria-pressed="${state.follows.has(l.id)}">${state.follows.has(l.id)?'✓ Saved to Radar':'+ Follow lab'}</button>
+      </div>
+      <p class="ar-disclaimer">Demonstration only. Names, works and research histories are invented examples.</p>
+    </article>`;
   }
   function v4Index(l){
     const found=resultLabs();
-    return `<section id="lab-index" class="v4-index archive-library" aria-label="Search and explore the laboratory archive">
-      <div class="archive-library-top">
-        <div class="archive-library-intro"><span class="v4-meta">THE RESEARCH COLLECTION / VOL. 01</span><h3>Find a lab worth <em>following.</em></h3><p>Browse by research field, or search for a question. Select any record to preview its research before diving deeper.</p></div>
-        <div class="archive-availability"><span class="archive-availability-dot" aria-hidden="true"></span><strong>${LABS.length} lab records</strong><span>Fictional interface examples</span></div>
+    return `<section id="lab-index" class="archive-library ar-library" aria-label="Research archive and reading workspace">
+      <header class="ar-library-heading">
+        <div><span class="ar-eyebrow">THE YEON ARCHIVE <span class="ar-serial">/ VOL. 01</span></span><h2>Find the work behind <em>the name.</em></h2><p>Choose a research direction. Read the question, inspect its approach and test its limits before going deeper.</p></div>
+        <div class="ar-library-count"><strong>${LABS.length.toString().padStart(2,'0')}</strong><span>sample research<br>records</span></div>
+      </header>
+      <div class="archive-body ar-workspace">
+        <aside class="ar-index" aria-label="Laboratory index">
+          <div class="ar-index-title"><span>THE INDEX</span><span class="ar-index-edition">01 — 08</span></div>
+          <label class="ar-search">
+            ${ico('search',18)}<span class="sr-only">Search laboratory archive</span>
+            <input id="lab-search" type="search" autocomplete="off" placeholder="Search a question, method or lab…" value="${esc(state.search)}" />
+            <kbd aria-hidden="true">/</kbd>
+          </label>
+          <div class="ar-filter-set" role="group" aria-label="Filter by research field">
+            ${V4_FIELDS.map(([topic])=>{const count=topic==='All'?LABS.length:LABS.filter(x=>x.topics.includes(topic)).length;return `<button type="button" class="ar-filter ${state.topic===topic?'is-on':''}" data-v4-field="${topic}" aria-pressed="${state.topic===topic}">${topic==='All'?'All':esc(topic)} <span>${count}</span></button>`;}).join('')}
+          </div>
+          <div class="ar-list-meta"><span><strong class="archive-match-count">${String(found.length).padStart(2,'0')}</strong> MATCHING RECORDS</span><button type="button" data-reset-search>Reset ${ico('refresh',13)}</button></div>
+          <span id="archive-status" class="sr-only" role="status" aria-live="polite">${found.length} matching example ${found.length===1?'lab':'labs'}</span>
+          <div id="index-list" class="archive-grid ar-list" aria-label="Research records">
+            ${found.length?found.map(v4ArchiveCard).join(''):`<div class="archive-empty ar-empty"><strong>No matching records.</strong><p>Try removing a topic filter or using a shorter research term.</p><button type="button" data-reset-search>View every record</button></div>`}
+          </div>
+          <div class="ar-index-tip">Use ↑ ↓ to move between records. Select one to inspect its research.</div>
+        </aside>
+        ${v4ArchivePreview(l)}
       </div>
-      <div class="archive-toolbar">
-        <label class="archive-search">${ico('search',19)}<span class="sr-only">Search laboratory archive</span><input type="search" id="lab-search" autocomplete="off" placeholder="Search a lab, topic, or research question…" value="${esc(state.search)}"/><span class="archive-search-hint" aria-hidden="true">/</span></label>
-        <button type="button" class="archive-clear" data-reset-search>Clear filters ${ico('refresh',14)}</button>
-      </div>
-      <div class="archive-filter-row" role="group" aria-label="Filter archive by research field">
-        ${V4_FIELDS.map(([topic,label])=>{const count=topic==='All'?LABS.length:LABS.filter(x=>x.topics.includes(topic)).length;return `<button type="button" class="archive-filter ${state.topic===topic?'is-on':''}" data-v4-field="${topic}" aria-pressed="${state.topic===topic}">${topic==='All'?'All fields':topic}<span>${String(count).padStart(2,'0')}</span></button>`;}).join('')}
-      </div>
-      <div class="archive-library-rule"><span>RECORDS <strong class="archive-match-count">${String(found.length).padStart(2,'0')}</strong></span><span id="archive-status" role="status" aria-live="polite">${found.length} matching example ${found.length===1?'lab':'labs'}</span><span>SELECT TO INVESTIGATE ↓</span></div>
-      <div class="archive-body"><div class="archive-collection"><div id="index-list" class="archive-grid">${found.length?found.map(v4ArchiveCard).join(''):`<div class="archive-empty"><strong>No matching records.</strong><p>Try a broader research topic or clear your search.</p><button type="button" data-reset-search>Show all laboratories</button></div>`}</div></div>${v4ArchivePreview(l)}</div>
     </section>`;
   }
   function v4Intro(l){const discover=state.v4Mode==='discover';return `<section class="v4-top ${discover?'v4-discover':'v4-investigate'}" aria-label="Explore introduction">
@@ -875,12 +914,12 @@ body{background:var(--v4-bg)}
   function explore(){const l=by(state.lab);return `<div class="workspace-view v4-workspace view-enter">
    ${v4Intro(l)}
    <div class="v4-integrity" role="note"><span class="v4-integrity-dot"></span><strong>INTERFACE DEMONSTRATION</strong><span>Labs, papers and opportunities are fictional examples, not verified Korean research records.</span></div>
-   <div class="v4-section-head"><div><span class="v4-meta">${state.v4Mode==='discover'?'THE ARCHIVE / BEGIN EXPLORING':'THE ARCHIVE / DEEP READING'}</span><h2>${state.v4Mode==='discover'?'Open the <em>archive.</em>':'Explore the <em>dossier.</em>'}</h2></div><span>Every entry starts with a question.</span></div>
+   
 
    <span id="lab-selection-status" class="sr-only" role="status" aria-live="polite">Reading ${esc(l.name)}</span>
    <div class="explorer-shell v4-layout ${state.v4Mode==='investigate'?'v4-reader-layout':''} ${state.mobileIndexOpen?'browse-open':''}">
     ${v4Index(l)}
-    <div class="v4-dossier-area"><div id="v4-evidence-inspector">${v4Evidence(l)}</div><div id="selected-dossier">${dossier(l)}</div>${contextPanel(l)}</div>
+    <div class="v4-dossier-area"><details id="ar-full-dossier" class="ar-full-dossier"><summary class="ar-full-summary"><span><span class="ar-eyebrow">DEEPER READING / THE COMPLETE RECORD</span><strong>Research chronology, example works & related questions</strong></span><span class="ar-summary-cta">Open dossier ↓</span></summary><div class="ar-deep-content"><div id="selected-dossier">${dossier(l)}</div>${contextPanel(l)}</div></details></div>
    </div></div>`;}
   function compareCard(l,side){const labels={directions:['Research focus',l.focus,'Related research questions',l.statement],history:['Early research',l.chapters[0][0],'Recent chapter',l.chapters[2][0]],methods:['Main approach',l.methods[0],'Other method',l.methods[1]],works:['Example publication',l.works[0],'Another example',l.works[1]]};let v=labels[state.lens];return `<article class="comparison-pane"><div class="pane-cap"><span>${side==='a'?'DOCUMENT A':'DOCUMENT B'}</span><span>DEMONSTRATION LAB</span></div><label class="sr-only" for="compare-${side}">Choose laboratory ${side.toUpperCase()}</label><select id="compare-${side}" data-compare-select="${side}" class="compare-select">${LABS.map(x=>`<option value="${x.id}" ${l.id===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><p class="pane-inst">${esc(l.institution)}</p><div class="compare-meta">${tags(l.topics)}</div><div class="comparison-analysis"><span class="micro-label">${esc(v[0])}</span><h3>${esc(v[1])}</h3><span class="micro-label">${esc(v[2])}</span><p>${esc(v[3])}</p></div><button data-open-lab="${l.id}" class="view-dossier">Open complete dossier ${ico('arrow',16)}</button></article>`;}
   function compare(){const l=by(state.compA),r=by(state.compB);return `<div class="standard-view view-enter">${pageIntro('II','LABORATORY COMPARISON','Two directions, <span class="muted-title">one question.</span>',`<p>Compare research approaches with a consistent lens. No invented leaderboards or admission predictions.</p>`)}${warning()}<section class="tool-panel"><div class="panel-toolbar"><div><span class="micro-label">COMPARISON LENS</span><div class="lens-list" role="group" aria-label="Comparison lens">${[['directions','Direction'],['history','Evolution'],['methods','Methods'],['works','Selected works']].map(([k,v])=>`<button data-lens="${k}" aria-pressed="${k===state.lens}" class="lens-button ${k===state.lens?'selected':''}">${v}</button>`).join('')}</div></div><button class="outlined-btn" data-swap>${ico('swap',15)} Swap</button></div><div class="comparison-grid">${compareCard(l,'a')}${compareCard(r,'b')}</div><div class="tool-footnote">Comparisons describe fictional fixtures. In a real release, every association will link to supporting publications and official lab sources.</div></section></div>`;}
