@@ -126,6 +126,10 @@ try {
       assert.ok(await page.locator('.comparison-grid').isVisible());
       await page.locator('[data-nav="explore"]').click();
       await page.locator('.ar-reader').waitFor();
+      await page.locator('.ar-hero-fields [data-v4-field="Systems"]').click();
+      assert.equal((await page.locator('.archive-match-count').innerText()).trim(),'04');
+      assert.equal(await page.locator('.ar-filter[data-v4-field="Systems"]').evaluate(el=>document.activeElement===el),true,'hero shortcut focuses actual archive filter');
+      await page.locator('#lab-index [data-v4-field="All"]').click();
     }
     if(width===390){
       const search=page.locator('#lab-search');
@@ -141,6 +145,7 @@ try {
       assert.ok(Number(await page.locator('.archive-match-count').innerText())>1);
       await page.locator('.archive-entry[data-select-lab="mosaic"]').click();
       assert.ok(await page.locator('.ar-reader').isVisible());
+      assert.ok(await page.locator('.ar-tip-mobile').isVisible());
       await page.locator('.ar-reader [data-archive-step="1"]').click();
       assert.match(await page.locator('.ar-reader-heading h3').innerText(),/Horizon/);
       await page.locator('.ar-reader [data-archive-step="-1"]').click();
