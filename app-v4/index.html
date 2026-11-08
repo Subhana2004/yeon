@@ -892,7 +892,7 @@ body{background:var(--v4-bg)}
           <div id="index-list" class="archive-grid ar-list" aria-label="Research records">
             ${found.length?found.map(v4ArchiveCard).join(''):`<div class="archive-empty ar-empty"><strong>No matching records.</strong><p>Try removing a topic filter or using a shorter research term.</p><button type="button" data-reset-search>View every record</button></div>`}
           </div>
-          <div class="ar-index-tip">Use ↑ ↓ to move between records. Select one to inspect its research.</div>
+          <div class="ar-index-tip"><span class="ar-tip-desktop">Use ↑ ↓ to move between records.</span><span class="ar-tip-mobile">Scroll to see more records ↓</span> Select one to inspect its research.</div>
         </aside>
         ${v4ArchivePreview(l)}
       </div>
@@ -1037,7 +1037,7 @@ body{background:var(--v4-bg)}
       if(targetEl){targetEl.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
       return;
     }
-    if(t.dataset.archiveStep!==undefined){const step=Number(t.dataset.archiveStep);const index=LABS.findIndex(x=>x.id===state.lab);const visible=resultLabs();const activeIndex=visible.findIndex(x=>x.id===state.lab);const next=visible[(activeIndex+step+visible.length)%visible.length];if(next){selectLab(next.id);document.querySelector('#archive-preview [data-archive-step="'+step+'"]')?.focus({preventScroll:true});}return;}
+    if(t.dataset.archiveStep!==undefined){const step=Number(t.dataset.archiveStep);const visible=resultLabs();const activeIndex=visible.findIndex(x=>x.id===state.lab);const next=visible[(activeIndex+step+visible.length)%visible.length];if(next){selectLab(next.id);document.querySelector('#archive-preview [data-archive-step="'+step+'"]')?.focus({preventScroll:true});}return;}
     if(t.hasAttribute('data-browse-toggle')){state.mobileIndexOpen=!state.mobileIndexOpen;render();const toggle=document.querySelector('[data-browse-toggle]');if(toggle)toggle.focus({preventScroll:true});if(state.mobileIndexOpen)document.getElementById('lab-search')?.focus({preventScroll:true});return;}
     if(t.dataset.selectLab){selectLab(t.dataset.selectLab,{keyboard:e.detail===0});if(t.classList.contains('ar-entry')&&matchMedia('(max-width: 840px)').matches)document.getElementById('archive-preview')?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});return;}
     if(t.hasAttribute('data-next-chapter')){setChapter((state.chapter+1)%3);return;}
