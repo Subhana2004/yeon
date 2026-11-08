@@ -1,0 +1,164 @@
+/** YEON V6 end-to-end Chromium QA
+ * Seven viewport widths, routing, state, honest empty states and visual captures.
+ */
+import assert from 'node:assert/strict';
+import {readFileSync,mkdirSync} from 'node:fs';
+import {dirname,resolve} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {Script} from 'node:vm';
+import {chromium} from 'playwright';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const folder=resolve(root,'app-v6');
+const html=readFileSync(resolve(folder,'index.html'),'utf8');
+const css=readFileSync(resolve(folder,'style.css'),'utf8');
+const app=readFileSync(resolve(folder,'app.js'),'utf8');
+const data=readFileSync(resolve(folder,'data.js'),'utf8');
+new Script(app,{filename:'app-v6.js'});
+new Script(data,{filename:'data-v6.js'});
+assert.match(html,/YEON V6/);
+assert.match(html,/robots" content="noindex/);
+assert.match(css,/prefers-reduced-motion/);
+assert.match(css,/\.archive-shell/);
+assert.match(app,/function faceoffView/);
+assert.match(app,/function doorsView/);
+assert.match(app,/function connectionsView/);
+assert.match(app,/function fitView/);
+assert.match(app,/function radarView/);
+assert.match(app,/function dnaView/);
+assert.match(app,/function compareView/);
+const widths=[1440,1280,1024,840,768,390,320];
+const output=resolve(root,'artifacts/v6');mkdirSync(output,{recursive:true});
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+async function assertNoOverflow(page,width){
+ const delta=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+ if(delta>2){
+  const bad=await page.evaluate(()=>[...document.querySelectorAll('body *')].map(e=>{const b=e.getBoundingClientRect();return{tag:e.tagName,cls:String(e.className||'').slice(0,80),right:Math.round(b.right),left:Math.round(b.left)}}).filter(x=>x.right>innerWidth+2||x.left<-2).slice(0,20));
+  console.error('Overflow',width,delta,JSON.stringify(bad));
+ }
+ assert.ok(delta<=2,'page horizontal overflow at width '+width+': '+delta);
+}
+try{
+ for(const width of widths){
+  const page=await browser.newPage({viewport:{width,height:920},deviceScaleFactor:1,acceptDownloads:true});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(pathToFileURL(resolve(folder,'index.html')).href,{waitUntil:'domcontentloaded'});
+  await page.locator('.specimen').waitFor();
+  assert.equal(await page.locator('.archive-row').count(),8,'eight sample records rendered');
+  assert.equal(await page.locator('.directory-link').count(),7,'seven connected research tools');
+  assert.ok(await page.locator('.cover h1').isVisible());
+  await assertNoOverflow(page,width);
+  await page.screenshot({path:resolve(output,'v6-home-'+width+'.png'),fullPage:true});
+  if([1440,390,320].includes(width)){
+   await page.locator('.archive-shell').screenshot({path:resolve(output,'v6-archive-'+width+'.png')});
+  }
+  if(width===1440){
+   await page.locator('[data-feature="horizon"]').click();
+   assert.match(await page.locator('.specimen-body h2').innerText(),/Horizon/);
+   await page.locator('[data-feature="mosaic"]').click();
+   await page.locator('#archive-search').fill('citation');
+   assert.equal(await page.locator('.archive-row').count(),1,'search methods/terms across records');
+   assert.match(await page.locator('.archive-row').first().innerText(),/Vertex/);
+   await page.locator('#archive-search').fill('zxyz_not_a_lab');
+   assert.match(await page.locator('.archive-list').innerText(),/No matching research/);
+   await page.locator('[data-clear]').first().click();
+   assert.equal(await page.locator('.archive-row').count(),8,'search reset returns all records');
+   await page.locator('.archive-row[data-pick="mosaic"]').focus();
+   await page.keyboard.press('ArrowDown');
+   assert.equal(await page.locator('.archive-row[data-pick="horizon"]').getAttribute('aria-pressed'),'true','keyboard research navigation');
+   await page.locator('.archive-row[data-pick="mosaic"]').click();
+   await page.locator('.reader-tabs [data-lens="method"]').click();
+   assert.match(await page.locator('#reader-panel').innerText(),/Sparse and dense retrieval/);
+   await page.keyboard.press('ArrowRight');
+   assert.equal(await page.locator('.reader-tabs [data-lens="limits"]').getAttribute('aria-selected'),'true');
+   await page.keyboard.press('Home');
+   assert.equal(await page.locator('.reader-tabs [data-lens="question"]').getAttribute('aria-selected'),'true');
+   await page.locator('.reader-notes summary').click();
+   await page.locator('#research-note').fill('Check the evidence behind freshness.');
+   assert.match(await page.locator('#note-status').innerText(),/Saved locally/);
+   await page.locator('#research-reader [data-follow="mosaic"]').click();
+   assert.equal(await page.locator('#radar-count').innerText(),'1');
+   await page.reload();await page.locator('.archive-shell').waitFor();
+   await page.locator('.reader-notes summary').click();
+   assert.equal(await page.locator('#research-note').inputValue(),'Check the evidence behind freshness.');
+   assert.equal(await page.locator('#radar-count').innerText(),'1');
+   await page.locator('#research-reader [data-compare-selected="mosaic"]').click();
+   await page.locator('.comparison-table').waitFor();
+   assert.match(await page.locator('.compare-heads').innerText(),/Mosaic/);
+   await page.locator('[data-select="compB"]').selectOption('prism');
+   assert.match(await page.locator('.compare-heads').innerText(),/Prism/);
+   await page.locator('[data-swap]').click();
+   assert.equal(await page.locator('[data-select="compA"]').inputValue(),'prism');
+   await page.locator('[data-face-from-compare]').click();
+   assert.match(await page.locator('.page-heading h1').innerText(),/Research Face-Off/);
+   await page.locator('[data-scenario="missing"]').click();
+   assert.match(await page.locator('.face-question').innerText(),/incomplete/);
+   await page.locator('[data-save-question]').click();
+   await page.locator('[data-route="dna"]').first().click();
+   assert.equal(await page.locator('.dna-step').count(),3,'Lab DNA chapters');
+   await page.locator('[data-select="selected"]').selectOption('vertex');
+   assert.match(await page.locator('.quote-big').innerText(),/evidence/);
+   await page.locator('[data-route="connections"]').first().click();
+   assert.ok(await page.locator('.connection-row').count()>0);
+   await page.locator('.connection-row').first().click();
+   await page.locator('.comparison-table').waitFor();
+   await page.locator('[data-route="radar"]').first().click();
+   assert.match(await page.locator('.saved-list').innerText(),/Mosaic/);
+   const downloadPromise=page.waitForEvent('download');
+   await page.locator('[data-export]').click();
+   const downloaded=await downloadPromise;
+   assert.match(downloaded.suggestedFilename(),/YEON-V6-field-notes.md/);
+   await page.locator('#more-toggle').click();
+   await page.locator('.more-menu [data-route="doors"]').click();
+   assert.match(await page.locator('.doors-figure').innerText(),/No verified openings/);
+   await page.locator('[data-check="0"]').check();
+   assert.match(await page.locator('.check-progress').innerText(),/1 \/ 5/);
+   await page.locator('[data-clear-checks]').click();
+   assert.match(await page.locator('.check-progress').innerText(),/0 \/ 5/);
+   await page.locator('#more-toggle').click();
+   await page.locator('.more-menu [data-route="fit"]').click();
+   assert.ok(await page.locator('.fit-row').count()>0);
+   await page.locator('[data-interest="Multimodal"]').click();
+   assert.match(await page.locator('.fit-row').first().innerText(),/Why this appears/);
+   await page.locator('#quick-toggle').click();
+   await page.locator('#command-input').fill('prism');
+   assert.match(await page.locator('#command-results').innerText(),/Prism/);
+   await page.keyboard.press('Escape');
+   assert.equal(await page.locator('#command-backdrop').isHidden(),true);
+   await page.locator('#theme-toggle').click();
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
+   await page.locator('[data-route="explore"]').first().click();
+   await page.locator('.archive-shell').waitFor();
+   await assertNoOverflow(page,width);
+   await page.screenshot({path:resolve(output,'v6-dark-1440.png'),fullPage:false});
+   await page.locator('[data-route="about"]').click();
+   assert.match(await page.locator('.about-prose').innerText(),/localStorage/);
+  }
+  if(width===390){
+   await page.locator('#mobile-toggle').click();
+   assert.equal(await page.locator('#mobile-toggle').getAttribute('aria-expanded'),'true');
+   await page.locator('.mobile-panel [data-route="fit"]').click();
+   await page.locator('.fit-row').first().waitFor();
+   await assertNoOverflow(page,width);
+   await page.screenshot({path:resolve(output,'v6-fit-390.png'),fullPage:true});
+   await page.locator('#mobile-toggle').click();
+   await page.locator('.mobile-panel [data-route="explore"]').click();
+   await page.locator('.archive-row[data-pick="prism"]').click();
+   assert.match(await page.locator('#reader-heading').innerText(),/Prism/);
+   await page.locator('[data-lens="limits"]').click();
+   assert.match(await page.locator('#reader-panel').innerText(),/Missing inputs/);
+   await page.locator('.reader-notes summary').click();
+   await page.locator('#research-note').fill('A question from the mobile research desk.');
+   await page.reload();
+   await page.locator('.reader-notes summary').click();
+   assert.equal(await page.locator('#research-note').inputValue(),'A question from the mobile research desk.');
+   await page.locator('#mobile-toggle').click();
+   await page.locator('.mobile-panel [data-route="radar"]').click();
+   await page.locator('.radar-layout').waitFor();
+   await assertNoOverflow(page,width);
+  }
+  assert.deepEqual(errors,[],'no uncaught JS errors at '+width+'px');
+  console.log('PASS V6 '+width+'px: responsive, navigable, no runtime errors or overflow');
+  await page.close();
+ }
+ console.log('PASS V6: complete cross-tool research journey, persistence and all viewport sizes');
+}finally{await browser.close();}
