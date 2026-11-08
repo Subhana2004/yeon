@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f4ec">
+<meta name="description" content="YEON V6 — Explore the questions, methods and limits behind research. An interactive, fictional research-discovery demonstration.">
+<meta property="og:title" content="YEON V6 — Research, beyond the lab name">
+<meta property="og:description" content="An editorial research reader. Follow questions, compare approaches and build your own reading desk. Fictional prototype data.">
+<meta name="robots" content="noindex,nofollow">
+<title>YEON V6 — A Research Reader</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23213b30'/%3E%3Cpath d='M13 17l19 27 19-27M32 44v6' stroke='%23d8e7af' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="site">
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="identity" href="#explore" data-route="explore" aria-label="YEON home">
+        <span class="identity-seal" aria-hidden="true"><span>Y</span><i></i></span>
+        <span class="identity-name">yeon<span>.</span></span>
+        <span class="identity-descriptor">the research<br>reader</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Main sections">
+        <a data-route="explore" href="#explore">Explore</a>
+        <a data-route="dna" href="#dna">Lab DNA</a>
+        <a data-route="compare" href="#compare">Compare</a>
+        <a data-route="connections" href="#connections">Connections</a>
+        <a data-route="radar" href="#radar">Radar <span id="radar-count" class="radar-count">0</span></a>
+        <div class="more-nav">
+          <button id="more-toggle" type="button" aria-expanded="false" aria-controls="more-menu">More <span aria-hidden="true">⌄</span></button>
+          <div id="more-menu" class="more-menu" hidden>
+            <a data-route="doors" href="#doors">Open Doors <span>Verify opportunities</span></a>
+            <a data-route="fit" href="#fit">Fit Lens <span>Understand topic overlap</span></a>
+            <a data-route="faceoff" href="#faceoff">Research Face-Off <span>Challenge two approaches</span></a>
+          </div>
+        </div>
+      </nav>
+      <div class="masthead-actions">
+        <button id="quick-toggle" class="icon-control search-control" type="button" aria-label="Search the research reader" title="Search (Ctrl or Command + K)"><span aria-hidden="true">⌕</span><small>Search</small></button>
+        <button id="theme-toggle" class="icon-control theme-control" type="button" aria-label="Switch to dark appearance" title="Toggle appearance"><span aria-hidden="true">◐</span></button>
+        <button id="mobile-toggle" class="icon-control mobile-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-panel"><span aria-hidden="true">☰</span></button>
+      </div>
+    </div>
+  </header>
+  <div class="truth-strip" role="note"><span class="truth-mark" aria-hidden="true"></span><strong>V6 / WORKING PROTOTYPE</strong><span>Lab profiles, papers and research relationships are fictional sample records, not verified Korean university data.</span></div>
+  <div id="mobile-panel" class="mobile-panel" hidden>
+    <nav aria-label="Mobile sections">
+      <a data-route="explore" href="#explore">Explore <span>01</span></a>
+      <a data-route="dna" href="#dna">Lab DNA <span>02</span></a>
+      <a data-route="compare" href="#compare">Compare <span>03</span></a>
+      <a data-route="connections" href="#connections">Connections <span>04</span></a>
+      <a data-route="radar" href="#radar">Radar <span>05</span></a>
+      <a data-route="doors" href="#doors">Open Doors <span>06</span></a>
+      <a data-route="fit" href="#fit">Fit Lens <span>07</span></a>
+      <a data-route="faceoff" href="#faceoff">Research Face-Off <span>08</span></a>
+    </nav>
+  </div>
+  <main id="main" tabindex="-1"><div id="app"></div></main>
+  <footer class="site-footer">
+    <div class="footer-left"><strong>yeon.</strong><p>Questions first. Evidence always.</p></div>
+    <div class="footer-right"><span>Independent research-discovery prototype · V6</span><a href="#about" data-route="about">About & privacy</a><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">Source ↗</a></div>
+  </footer>
+</div>
+<div class="command-backdrop" id="command-backdrop" hidden>
+  <section class="command" role="dialog" aria-modal="true" aria-label="Quick research search">
+    <div class="command-top"><label for="command-input">Go to a research tool or lab</label><span>ESC TO CLOSE</span></div>
+    <input id="command-input" type="search" autocomplete="off" placeholder="Try retrieval, evidence, vision, or a lab name…">
+    <div id="command-results" class="command-results"></div>
+    <p>Search the eight fictional records and eight interactive research views.</p>
+  </section>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="./data.js"></script>
+<script src="./app.js" defer></script>
+</body>
+</html>
