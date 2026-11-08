@@ -206,3 +206,24 @@ body{background:var(--v4-bg);color:var(--v4-ink)}
 @media(prefers-reduced-motion:reduce){
   .v4-workspace *, .v4-workspace *::before,.v4-workspace *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+/* Compact mobile browsing: real collection reachable without three screens of tiles. */
+@media(max-width:600px){
+ .v4-fields-list{
+   display:flex!important;align-items:stretch;gap:0!important;
+   overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;
+   scrollbar-width:thin;scrollbar-color:var(--v4-line) transparent;
+   padding-bottom:4px
+ }
+ .v4-fields-list .v4-field,
+ .v4-fields-list .v4-field:first-child{
+   min-width:178px!important;max-width:178px!important;flex:0 0 178px!important;
+   min-height:113px!important;scroll-snap-align:start;
+   border-right:1px solid var(--v4-line)!important
+ }
+ .v4-fields-list .v4-field:last-child{border-right:0!important}
+ .v4-field-copy small{max-width:18ch}
+ .v4-live-note{min-height:0}
+ .v4-live-copy{padding-top:10px}
+ .v4-live-question{font-size:clamp(25px,7.3vw,32px);line-height:1.19}
+}
