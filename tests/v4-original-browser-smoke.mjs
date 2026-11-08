@@ -146,7 +146,11 @@ try {
       await page.locator('.ar-reader [data-archive-step="-1"]').click();
       assert.match(await page.locator('.ar-reader-heading h3').innerText(),/Mosaic/);
       await page.locator('.ar-notebook summary').click();
-      assert.equal(await page.locator('#ar-note-input').inputValue(),'What independent evidence supports this?');
+      await page.locator('#ar-note-input').fill('A mobile reading note to verify.');
+      await page.reload();
+      await page.locator('.archive-entry[data-select-lab="mosaic"]').click();
+      await page.locator('.ar-notebook summary').click();
+      assert.equal(await page.locator('#ar-note-input').inputValue(),'A mobile reading note to verify.');
 
       assert.match(await page.locator('#archive-preview-heading').innerText(),/Mosaic/);
       const bgLight=await page.locator('.archive-preview').evaluate(el=>getComputedStyle(el).backgroundColor);
