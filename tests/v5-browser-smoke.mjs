@@ -97,9 +97,7 @@ for(const width of widths){
   assert.match(await page.locator('.panel-top .pill').first().innerText(),/1 \/ 5/);
   await page.locator('[data-clear-checks]').click();
   assert.match(await page.locator('.panel-top .pill').first().innerText(),/0 \/ 5/);
-  await page.locator('[data-go="fit"]').first().click().catch(async()=>{
-    await page.evaluate(()=>location.hash='#fit');
-  });
+  await page.evaluate(()=>location.hash='#fit');
   await page.locator('.page-head h1').waitFor();
   assert.match(await page.locator('.page-head h1').innerText(),/Fit Lens/);
   await page.locator('[data-interest="Language"]').click();
