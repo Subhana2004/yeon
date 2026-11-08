@@ -496,3 +496,29 @@ main{width:100%;flex:1}
  html{scroll-behavior:auto}
  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+/* Screenshot-reviewed accessibility and archive reading refinements. */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.reader-crossrefs{padding:16px 0 25px;border-top:1px solid var(--line)}
+.reader-crossrefs-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+.reader-crossrefs .smallprint{font-size:10px}
+.reader-chapters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.reader-chapters button{display:flex;flex-direction:column;gap:9px;text-align:left;min-width:0;min-height:96px;padding:11px 8px 5px;border:0;border-top:1px solid var(--line-deep);background:transparent;transition:color .18s var(--ease),border-color .18s var(--ease)}
+.reader-chapters button>span{font:500 10px/1.4 var(--mono);color:var(--muted)}
+.reader-chapters button strong{font:600 12px/1.35 var(--sans);letter-spacing:-.015em;overflow-wrap:break-word}
+.reader-chapters button small{font-size:16px;color:var(--forest-mid);margin-top:auto}
+.reader-chapters button:hover{color:var(--forest-mid);border-top-color:var(--forest-mid)}
+@media(max-width:620px){
+ .reader-chapters{gap:8px}
+ .reader-chapters button{padding:10px 5px 4px;min-height:100px}
+ .reader-chapters button>span{font-size:9px}
+ .reader-chapters button strong{font-size:11px}
+ .reader-crossrefs-head .smallprint{font-size:9px}
+}
+@media(max-width:365px){
+ .reader-chapters{grid-template-columns:1fr;gap:0}
+ .reader-chapters button{min-height:56px;display:grid;grid-template-columns:1fr 18px;align-items:center;gap:2px;padding:10px 3px}
+ .reader-chapters button>span{grid-column:1}
+ .reader-chapters button strong{grid-column:1}
+ .reader-chapters button small{grid-column:2;grid-row:1/3}
+}
