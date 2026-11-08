@@ -101,6 +101,11 @@ try {
       await page.locator('#archive-preview [data-v4-idea="1"]').click();
       assert.match(await page.locator('#fieldbook-lens-content').innerText(),/retrieval|grounded|query|search/i);
       assert.equal(await page.locator('#archive-preview [data-v4-idea="1"]').getAttribute('aria-selected'),'true');
+      await page.locator('#archive-preview [data-v4-idea="1"]').focus();
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="2"]').getAttribute('aria-selected'),'true');
+      await page.keyboard.press('Home');
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="0"]').getAttribute('aria-selected'),'true');
       await page.locator('#archive-preview [data-v4-idea="2"]').click();
       assert.ok((await page.locator('#fieldbook-lens-content').innerText()).length>35);
       await page.locator('#archive-preview [data-follow="mosaic"]').click();
