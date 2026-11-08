@@ -1,0 +1,208 @@
+/* YEON / FIELDNOTE REFINEMENT — derived from the original V4, not V5.
+   Applied after archive-refined.css. Single calm palette, useful controls,
+   legible content states and reduced-motion support. */
+:root {
+  --field-canvas:#f3f5ef;
+  --field-surface:#fdfdf8;
+  --field-subtle:#f0f3ec;
+  --field-sage:#e5eee1;
+  --field-border:#d9e1d6;
+  --field-ink:#1e3829;
+  --field-muted:#607466;
+  --field-accent:#467358;
+  --field-focus:#2c7451;
+  --field-motion:cubic-bezier(.22,1,.36,1);
+  --v4-bg:var(--field-canvas);
+  --v4-paper:var(--field-surface);
+  --v4-sage:var(--field-subtle);
+  --v4-ink:var(--field-ink);
+  --v4-soft:var(--field-muted);
+  --v4-line:var(--field-border);
+  --yeon-v4-focus:var(--field-focus);
+  --yeon-v4-card:#f8faf5;
+  --yeon-v4-selected:#e3ede1;
+  --yeon-v4-hover:#edf4ea;
+  --yeon-v4-border:#83a98b;
+  --yeon-v4-note:#e4eddf;
+}
+:root[data-theme="dark"] {
+  --field-canvas:#141e19;
+  --field-surface:#1e2d23;
+  --field-subtle:#25382c;
+  --field-sage:#2a4833;
+  --field-border:#3c5342;
+  --field-ink:#e9f2e7;
+  --field-muted:#adc6af;
+  --field-accent:#aacdb0;
+  --field-focus:#c7e5c6;
+  --yeon-v4-card:#24382a;
+  --yeon-v4-selected:#2d4e38;
+  --yeon-v4-hover:#31513c;
+  --yeon-v4-border:#688d72;
+  --yeon-v4-note:#2a4130;
+}
+body{background:var(--v4-bg);color:var(--v4-ink)}
+#main{padding-bottom:64px}
+.site-header{border-bottom-color:var(--field-border);background:var(--v4-paper)}
+.primary-nav a{font-weight:600}
+.primary-nav a.active{color:var(--v4-ink)}
+/* The original masthead and warm editorial hierarchy remain intact. */
+.v4-top{background:var(--v4-paper);border-radius:16px;box-shadow:0 16px 48px rgba(36,65,43,.035)}
+.v4-lead h1{letter-spacing:-.062em;text-wrap:balance}
+.v4-lead>p{max-width:56ch;text-wrap:pretty}
+.v4-top-grid{align-items:stretch}
+.v4-live-note{background:var(--yeon-v4-note);border-radius:12px;box-shadow:none}
+.v4-live-question{max-width:23ch;text-wrap:pretty}
+.v4-note-bottom{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.fieldbook-live-cta{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 0 9px 11px;background:transparent;border:0;color:var(--v4-ink);font-size:12px;font-weight:650;white-space:nowrap}
+.fieldbook-live-cta:hover{text-decoration:underline;text-underline-offset:4px}
+.fieldbook-live-cta svg{flex:0 0 auto}
+/* A quiet typographic interest index instead of another five-card feature grid. */
+.v4-fields{margin-top:0}
+.v4-field-title{padding:5px 0 12px}
+.v4-fields-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0!important;border-top:1px solid var(--v4-line)}
+.v4-fields-list .v4-field,
+.v4-fields-list .v4-field:first-child{
+  display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+  width:100%;min-width:0;min-height:130px!important;height:auto;
+  padding:18px 14px 16px!important;
+  background:transparent!important;border:0!important;border-right:1px solid var(--v4-line)!important;
+  border-bottom:2px solid transparent!important;border-radius:0!important;
+  box-shadow:none!important;text-align:left;transform:none!important;
+  transition:background-color .22s var(--field-motion),border-color .22s var(--field-motion)!important
+}
+.v4-fields-list .v4-field:last-child{border-right:0!important}
+.v4-fields-list .v4-field:hover{background:var(--v4-sage)!important}
+.v4-fields-list .v4-field.active{background:var(--yeon-v4-selected)!important;border-bottom:2px solid var(--field-accent)!important}
+.v4-field-num{font:600 11px/1.2 var(--mono);color:var(--v4-soft)}
+.v4-field-copy{margin-top:13px}
+.v4-field-copy strong{display:block;font-size:13px;font-weight:650;letter-spacing:-.015em}
+.v4-field-copy small{display:block;font-size:11px;line-height:1.45;max-width:23ch;margin-top:5px;color:var(--v4-soft)}
+.v4-field-count{margin-top:auto;align-self:flex-end;padding-top:9px;font:600 11px var(--mono);color:var(--v4-soft)}
+.v4-integrity{margin-bottom:24px}
+/* Search and archive share one surface: restrained corners, useful density. */
+.v4-workspace .archive-library{background:var(--v4-paper)!important;border-radius:16px!important}
+.archive-library-top{padding-bottom:12px}
+.archive-library-intro>p{max-width:620px}
+.archive-search{min-height:51px;border-color:var(--v4-line);background:var(--v4-bg);border-radius:8px}
+.archive-search:focus-within{border-color:var(--field-focus);box-shadow:0 0 0 3px rgba(58,116,77,.12)}
+.archive-filter{border-radius:6px;min-height:38px;background:var(--v4-bg);border:1px solid var(--v4-line)}
+.archive-filter.is-on{background:var(--v4-ink);color:var(--v4-paper);border-color:var(--v4-ink)}
+.archive-filter-row{padding-bottom:18px}
+.archive-library-rule{border-top:1px solid var(--v4-line)}
+.archive-grid{gap:10px!important}
+.archive-entry{background:var(--yeon-v4-card);border:1px solid transparent;border-radius:8px;min-height:142px}
+.archive-entry:hover{background:var(--yeon-v4-hover);border-color:var(--v4-line)}
+.archive-entry.is-selected{border-color:var(--yeon-v4-border);background:var(--yeon-v4-selected)}
+.archive-entry-main strong{font-weight:650;letter-spacing:-.02em}
+/* The selected field note is now an actual three-step research inspector. */
+.archive-preview.fieldbook-inspector{
+  display:flex;flex-direction:column;min-height:490px;padding:clamp(21px,2.7vw,37px);
+  background:var(--yeon-v4-note);border:1px solid var(--v4-line);border-radius:10px;
+  box-shadow:none;overflow:clip
+}
+.archive-preview.fieldbook-inspector::after{display:none!important}
+.fieldbook-inspector .archive-preview-top{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding-bottom:17px;border-bottom:1px solid var(--v4-line);
+  color:var(--v4-soft);font:600 10px/1.45 var(--mono);letter-spacing:.015em
+}
+.fieldbook-inspector .archive-preview-top b{color:var(--v4-ink)}
+.fieldbook-inspector .archive-preview-body{
+  display:flex;flex-direction:column;align-items:stretch;
+  gap:0;flex:1;min-height:0;margin:0;padding:24px 0 0
+}
+.fieldbook-inspector .archive-preview-institution{font:500 11px/1.55 var(--font);color:var(--v4-soft)}
+.fieldbook-inspector #archive-preview-heading{
+  font:600 clamp(24px,2.4vw,35px)/1.2 var(--font);letter-spacing:-.045em;
+  margin:11px 0 22px;max-width:100%;overflow-wrap:break-word
+}
+.fieldbook-lens{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--v4-line);margin-bottom:18px}
+.fieldbook-lens-tab{
+  display:flex;align-items:center;gap:6px;justify-content:flex-start;text-align:left;
+  min-width:0;min-height:44px;padding:7px 3px 11px;border:0;border-bottom:2px solid transparent;
+  background:transparent;color:var(--v4-soft);font:600 12px/1.3 var(--font);
+  transition:color .2s var(--field-motion),border-color .2s var(--field-motion)
+}
+.fieldbook-lens-tab span{font:500 10px/1.3 var(--mono);opacity:.8}
+.fieldbook-lens-tab:hover{color:var(--v4-ink)}
+.fieldbook-lens-tab[aria-selected="true"]{color:var(--v4-ink);border-color:var(--field-accent)}
+.fieldbook-lens-content{min-height:157px;padding:3px 0 14px}
+.fieldbook-lens-prompt{display:block;font-size:12px;line-height:1.4;color:var(--v4-soft)}
+.fieldbook-inspector .archive-preview-question{
+  max-width:37ch;margin:12px 0 10px;
+  font:400 clamp(21px,2.25vw,30px)/1.33 var(--serif);
+  letter-spacing:-.02em;color:var(--v4-ink);
+  overflow-wrap:break-word;text-wrap:pretty
+}
+.fieldbook-preview-foot{
+  display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap;
+  gap:11px;padding-top:17px;border-top:1px solid var(--v4-line);
+}
+.fieldbook-preview-foot .archive-preview-cta{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:10px;
+  min-height:44px;padding:10px 15px;border-radius:7px;
+  background:var(--v4-ink);color:var(--v4-paper);font:650 12px var(--font)
+}
+.fieldbook-preview-foot .archive-preview-cta:hover{background:var(--forest-2)}
+.fieldbook-preview-actions{display:flex;align-items:center;flex-wrap:wrap;gap:13px}
+.fieldbook-preview-actions button{
+  border:0;border-bottom:1px solid var(--v4-line);border-radius:0;
+  color:var(--v4-ink);background:transparent;min-height:44px;
+  padding:10px 0;font:600 12px var(--font)
+}
+.fieldbook-preview-actions button:hover{border-color:var(--v4-ink)}
+.fieldbook-preview-actions [aria-pressed="true"]{color:var(--field-accent);border-color:var(--field-accent)}
+/* Avoid redundant decoration; make the dossier feel like the next chapter. */
+.v4-workspace .v4-dossier-area{gap:16px}
+.v4-dossier-area #selected-dossier,.v4-dossier-area .dossier{border-radius:15px}
+.v4-workspace :is(button,input,select,[tabindex]):focus-visible{outline:2px solid var(--field-focus);outline-offset:3px}
+.archive-preview-cta:focus-visible,.fieldbook-lens-tab:focus-visible{outline:2px solid var(--field-focus);outline-offset:3px}
+@media(max-width:1150px){
+  .v4-fields-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .v4-fields-list .v4-field:nth-child(3){border-right:0!important}
+  .v4-fields-list .v4-field{min-height:124px!important}
+  .fieldbook-inspector .archive-preview-question{max-width:53ch}
+}
+@media(max-width:840px){
+  .v4-fields-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .v4-fields-list .v4-field:nth-child(3){border-right:1px solid var(--v4-line)!important}
+  .v4-fields-list .v4-field:nth-child(2n){border-right:0!important}
+  .v4-fields-list .v4-field{min-height:118px!important}
+  .archive-preview.fieldbook-inspector{min-height:0}
+  .fieldbook-lens-content{min-height:115px}
+}
+@media(max-width:600px){
+  .v4-top{border-radius:14px}
+  .v4-field-title{margin-top:2px}
+  .v4-fields-list .v4-field,
+  .v4-fields-list .v4-field:first-child{
+    grid-column:auto!important;
+    min-height:112px!important;padding:13px 10px!important
+  }
+  .v4-field-copy{margin-top:10px}
+  .v4-field-copy strong{font-size:12px}
+  .v4-field-copy small{font-size:10px}
+  .v4-field-count{font-size:10px}
+  .v4-live-note{min-height:0}
+  .v4-note-bottom{align-items:flex-start;gap:10px}
+  .fieldbook-live-cta{font-size:11px}
+  .v4-workspace .archive-library{border-radius:14px!important}
+  .archive-preview.fieldbook-inspector{padding:19px}
+  .fieldbook-inspector .archive-preview-body{padding-top:19px}
+  .fieldbook-inspector #archive-preview-heading{font-size:26px;margin-bottom:14px}
+  .fieldbook-inspector .archive-preview-question{font-size:24px}
+  .fieldbook-preview-foot{flex-direction:column}
+  .fieldbook-preview-foot .archive-preview-cta{width:100%}
+  .fieldbook-preview-actions{justify-content:space-between}
+}
+@media(max-width:370px){
+  .v4-fields-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .v4-fields-list .v4-field{min-height:125px!important}
+  .fieldbook-lens{gap:2px}
+  .fieldbook-lens-tab{font-size:11px;gap:3px}
+  .fieldbook-preview-actions{gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .v4-workspace *, .v4-workspace *::before,.v4-workspace *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
