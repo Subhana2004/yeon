@@ -13,11 +13,15 @@ const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const htmlPath=resolve(root,'app-v4/index.html');
 const html=readFileSync(htmlPath,'utf8');
 const css=readFileSync(resolve(root,'app-v4/archive-refined.css'),'utf8');
+const refined=readFileSync(resolve(root,'app-v4/fieldbook-refinement.css'),'utf8');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'original V4 application script required');
 new Script(script,{filename:'original-v4.js'});
 assert.match(html,/href="\.\/archive-refined\.css"/);
 assert.match(css,/\.archive-preview/);
+assert.match(refined,/\.fieldbook-inspector/);
+assert.match(html,/href="\.\/fieldbook-refinement\.css"/);
+assert.doesNotMatch(html,/<div id="v4-evidence-inspector">/);
 assert.match(script,/has-no-results/);
 assert.doesNotMatch(script,/max-width: 820px/);
 assert.equal((html.match(/data-nav="/g)||[]).length,7);
@@ -93,6 +97,19 @@ try {
         'keyboard moves focus to next lab card');
       assert.match(await page.locator('#archive-preview-heading').innerText(),/Mosaic/);
       assert.equal(await page.locator('.archive-entry[data-select-lab="mosaic"]').getAttribute('aria-pressed'),'true');
+      // New fieldbook lens changes the actual evidence being read.
+      await page.locator('#archive-preview [data-v4-idea="1"]').click();
+      assert.match(await page.locator('#fieldbook-lens-content').innerText(),/retrieval|grounded|query|search/i);
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="1"]').getAttribute('aria-selected'),'true');
+      await page.locator('#archive-preview [data-v4-idea="2"]').click();
+      assert.ok((await page.locator('#fieldbook-lens-content').innerText()).length>35);
+      await page.locator('#archive-preview [data-follow="mosaic"]').click();
+      assert.equal(await page.locator('#archive-preview [data-follow="mosaic"]').getAttribute('aria-pressed'),'true');
+      await page.locator('#archive-preview [data-compare-from="mosaic"]').click();
+      await page.locator('.comparison-grid').waitFor();
+      assert.ok(await page.locator('.comparison-grid').isVisible());
+      await page.locator('[data-nav="explore"]').click();
+      await page.locator('#archive-preview').waitFor();
     }
     if(width===390){
       const search=page.locator('#lab-search');
