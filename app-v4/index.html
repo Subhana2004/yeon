@@ -662,7 +662,7 @@ body{background:var(--v4-bg)}
       <div class="identity">
         <a class="logo" href="#explore" aria-label="YEON Fieldbook home"><span class="logo-mark" aria-hidden="true">Y</span><span>yeon<span class="logo-dot">.</span></span></a>
         <span class="brand-divider" aria-hidden="true"></span>
-        <span class="brand-sub">RESEARCH READER <span class="beta">V4 / Preview</span></span>
+        <span class="brand-sub">RESEARCH READER <span class="beta">Archive edition</span></span>
       </div>
       <nav id="primary-nav" class="primary-nav" aria-label="Research tools">
         <a href="#explore" data-nav="explore">Explore</a>
@@ -678,7 +678,7 @@ body{background:var(--v4-bg)}
         <button type="button" id="theme-toggle" class="icon-button" aria-label="Switch appearance" title="Switch light and dark appearance"><span aria-hidden="true">◐</span></button>
       </div>
     </header>
-    <div class="system-strip"><span class="signal-pulse" aria-hidden="true"></span><strong>NEW EXPERIENCE STUDY</strong><span>All labs, papers, relationships and opportunities are fictional demonstrations.</span><a href="../app-v3/">Compare V3</a></div>
+    <div class="system-strip" role="note"><span class="signal-pulse" aria-hidden="true"></span><strong>YEON / INTERFACE PROTOTYPE</strong><span>Lab profiles, publications and research connections below are fictional samples.</span></div>
     <main id="main" tabindex="-1"><div id="app-content" aria-live="off"></div></main>
     <footer class="site-footer"><span>YEON · Independent research discovery initiative</span><span>Experience prototype / V4</span><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a></footer>
   </div>
@@ -906,10 +906,10 @@ body{background:var(--v4-bg)}
     <p>${discover?'Research is not a leaderboard. Choose what you care about and follow it to a laboratory, its methods and its evolving ideas.':'A slower reading desk for the curious. Take one lab apart: the question it asks, the method it tries, and the limitations it still faces.'}</p>
     <div class="v4-top-actions"><button type="button" class="v4-primary" data-v4-jump="${discover?'lab-index':'selected-dossier'}">${discover?'Explore the collection':'Read the dossier'} ${ico('arrow',17)}</button><button class="v4-quiet" type="button" data-surprise>Show me another ${ico('refresh',15)}</button></div>
    </div>
-   <aside class="v4-live-note" aria-live="polite"><div class="v4-note-top"><span>SELECTED / <span class="v4-selected-short">${esc(l.short.toUpperCase())}</span></span><span>FIELD NOTE № 01</span></div><div class="v4-live-copy"><span class="v4-note-glyph" aria-hidden="true">“</span><blockquote class="v4-live-question">${esc(l.statement)}</blockquote></div><div class="v4-note-bottom"><span class="v4-live-focus">${esc(l.focus)}</span><span>${ico('arrow',17)}</span></div></aside>
+   <aside class="v4-live-note" aria-live="polite"><div class="v4-note-top"><span>SELECTED / <span class="v4-selected-short">${esc(l.short.toUpperCase())}</span></span><span>FIELD NOTE № 01</span></div><div class="v4-live-copy"><span class="v4-note-glyph" aria-hidden="true">“</span><blockquote class="v4-live-question">${esc(l.statement)}</blockquote></div><div class="v4-note-bottom"><span class="v4-live-focus">${esc(l.focus)}</span><button type="button" class="ar-live-link" data-v4-jump="selected-dossier">Read the record ${ico('arrow',17)}</button></div></aside>
    </div>
    <div class="v4-switch" role="group" aria-label="Choose research exploration approach"><span>YOUR APPROACH</span><div class="v4-switch-buttons"><button type="button" data-v4-mode="discover" aria-pressed="${discover}" class="${discover?'selected':''}">Discover by interest</button><button type="button" data-v4-mode="investigate" aria-pressed="${!discover}" class="${!discover?'selected':''}">Investigate a lab</button></div><span class="v4-switch-note">Two interactive directions to compare</span></div>
-   ${discover?`<div class="v4-fields"><div class="v4-field-title"><span class="v4-meta">CHOOSE AN ENTRY POINT</span><span>01—05</span></div><div class="v4-fields-list">${v4FieldButtons()}</div></div>`:`<div class="v4-reading-strip"><div><span class="v4-meta">CURRENT READING</span><strong>${esc(l.name)}</strong></div><p>${esc(l.statement)}</p><button type="button" data-v4-jump="selected-dossier">Continue reading ${ico('arrow',16)}</button></div>`}
+   ${discover?`<div class="ar-hero-index"><span class="v4-meta">BROWSE THE RESEARCH INDEX</span><div class="ar-hero-fields">${V4_FIELDS.map(([topic])=>`<button type="button" data-v4-field="${topic}" aria-pressed="${state.topic===topic}">${topic==='All'?'All fields':esc(topic)} <span aria-hidden="true">↗</span></button>`).join('')}</div></div>`:`<div class="v4-reading-strip"><div><span class="v4-meta">CURRENT READING</span><strong>${esc(l.name)}</strong></div><p>${esc(l.statement)}</p><button type="button" data-v4-jump="selected-dossier">Continue reading ${ico('arrow',16)}</button></div>`}
    </section>`;}
   function explore(){const l=by(state.lab);return `<div class="workspace-view v4-workspace view-enter">
    ${v4Intro(l)}
