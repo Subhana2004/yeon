@@ -444,3 +444,13 @@ html{scroll-padding-top:105px}
 @media(prefers-reduced-motion:reduce){
  .ar-library *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Contextual instructions and a consistent archive-first reading order. */
+.ar-tip-mobile{display:none}
+.v4-workspace .ar-library{order:0!important}
+.v4-workspace .v4-dossier-area{order:1!important}
+@media(max-width:840px){
+ .ar-tip-mobile{display:inline}
+ .ar-tip-desktop{display:none}
+ .ar-index-tip{font-weight:500}
+}
