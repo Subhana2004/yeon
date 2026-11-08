@@ -7,7 +7,7 @@
   <meta name="description" content="YEON Fieldbook — an interactive research exploration prototype. All laboratories and publications are fictional demonstration records." />
   <meta property="og:title" content="YEON / Research Fieldbook" />
   <meta property="og:description" content="A new way to explore the questions, methods and relationships behind research. Frontend demonstration." />
-  <title>YEON — Research Reader (V4)</title>
+  <title>YEON — Research Fieldbook · Refined V4</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231c3829'/%3E%3Cpath d='M12 16 31 42 51 16' fill='none' stroke='%23d4edac' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -653,6 +653,7 @@ body{background:var(--v4-bg)}
 /* Original V4 archive refinements live in ./archive-refined.css */
 </style>
 <link rel="stylesheet" href="./archive-refined.css" />
+  <link rel="stylesheet" href="./fieldbook-refinement.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to research workspace</a>
@@ -815,7 +816,7 @@ body{background:var(--v4-bg)}
     const count=t==='All'?LABS.length:LABS.filter(x=>x.topics.includes(t)).length;
     return `<button type="button" data-v4-field="${t}" aria-pressed="${state.topic===t}" class="v4-field ${state.topic===t?'active':''}"><span class="v4-field-num">${String(i+1).padStart(2,'0')}</span><span class="v4-field-copy"><strong>${label}</strong><small>${description}</small></span><span class="v4-field-count">${count.toString().padStart(2,'0')} ↗</span></button>`;
   }).join('');}
-  function v4Evidence(l){const data=[['The question',l.statement,'01'],['The method',l.methods[0]+' · '+l.methods[1],'02'],['The boundary',l.limits[0]+'. '+l.limits[1]+'.','03']];const selected=data[state.v4Idea];return `<div class="v4-trail" aria-label="Research evidence reading lens"><div class="v4-trail-head"><span class="v4-meta">READING LENS</span><span class="v4-muted">${selected[2]} / 03</span></div><div class="v4-trail-tabs" role="group" aria-label="Inspect research perspective">${data.map(([name,,n],i)=>`<button class="v4-trail-tab ${i===state.v4Idea?'active':''}" data-v4-idea="${i}" aria-pressed="${i===state.v4Idea}">${n} ${name}</button>`).join('')}</div><div class="v4-trail-content" aria-live="polite"><span class="v4-meta">${selected[0].toUpperCase()}</span><p>${esc(selected[1])}</p></div><button class="v4-text-link" data-inspect-method type="button">Follow this through Lab DNA ${ico('arrow',15)}</button></div>`;}
+  
   function v4ArchiveCard(l,i){
     const active=state.lab===l.id;
     const kind=l.topics[0].toLowerCase();
@@ -827,17 +828,31 @@ body{background:var(--v4-bg)}
   }
   function v4ArchivePreview(l){
     const no=String(LABS.indexOf(l)+1).padStart(2,'0');
-    return `<aside id="archive-preview" class="archive-preview" aria-label="Selected laboratory preview" aria-live="polite">
-      <div class="archive-preview-top"><span>SELECTED FIELD NOTE <b>${no} / ${String(LABS.length).padStart(2,'0')}</b></span><span class="archive-preview-symbol" aria-hidden="true">✳</span></div>
+    const lenses=[
+      ['Question',l.statement,'Why does this direction matter?'],
+      ['Methods',l.methods.join(' · '),'How might the researchers approach it?'],
+      ['Limits',l.limits.join(' · '),'What would we still need to verify?']
+    ];
+    const selected=lenses[state.v4Idea]||lenses[0];
+    return `<aside id="archive-preview" class="archive-preview fieldbook-inspector" aria-label="Investigate selected laboratory">
+      <div class="archive-preview-top"><span>FIELD NOTE <b>${no} / ${String(LABS.length).padStart(2,'0')}</b></span><span>DEMONSTRATION RECORD</span></div>
       <div class="archive-preview-body">
-        <span class="archive-preview-institution">${esc(l.institution)} · ${esc(l.topics[0])}</span>
+        <span class="archive-preview-institution">${esc(l.institution)} · ${esc(l.topics.join(' / '))}</span>
         <h3 id="archive-preview-heading" tabindex="-1">${esc(l.name)}</h3>
-        <p class="archive-preview-question">${esc(l.statement)}</p>
-        <div class="archive-preview-motif" aria-hidden="true"><span></span><i></i><span></span></div>
+        <div class="fieldbook-lens" role="tablist" aria-label="Read a research perspective">
+          ${lenses.map(([title],i)=>`<button type="button" role="tab" data-v4-idea="${i}" class="fieldbook-lens-tab" aria-selected="${i===state.v4Idea}" aria-controls="fieldbook-lens-content"><span>0${i+1}</span> ${title}</button>`).join('')}
+        </div>
+        <div id="fieldbook-lens-content" class="fieldbook-lens-content" role="tabpanel" aria-live="polite">
+          <span class="fieldbook-lens-prompt">${selected[2]}</span>
+          <p class="archive-preview-question">${esc(selected[1])}</p>
+        </div>
       </div>
-      <div class="archive-preview-foot">
-        <div><span>EXPLORING</span><strong>${esc(l.focus)}</strong></div>
-        <button class="archive-preview-cta" type="button" data-v4-jump="selected-dossier">Read full dossier ${ico('arrow',16)}</button>
+      <div class="archive-preview-foot fieldbook-preview-foot">
+        <button class="archive-preview-cta" type="button" data-v4-jump="selected-dossier">Open the research dossier ${ico('arrow',16)}</button>
+        <div class="fieldbook-preview-actions">
+          <button type="button" data-compare-from="${l.id}" aria-label="Compare ${esc(l.name)} with another laboratory">Compare ${ico('arrow',13)}</button>
+          <button type="button" data-follow="${l.id}" aria-pressed="${state.follows.has(l.id)}">${state.follows.has(l.id)?'✓ Following':'+ Follow lab'}</button>
+        </div>
       </div>
     </aside>`;
   }
@@ -845,7 +860,7 @@ body{background:var(--v4-bg)}
     const found=resultLabs();
     return `<section id="lab-index" class="v4-index archive-library" aria-label="Search and explore the laboratory archive">
       <div class="archive-library-top">
-        <div class="archive-library-intro"><span class="v4-meta">THE RESEARCH COLLECTION / VOL. 01</span><h3>Find a lab worth <em>following.</em></h3><p>Browse by research field, or search for a question. Select any record to preview its research before diving deeper.</p></div>
+        <div class="archive-library-intro"><span class="v4-meta">THE RESEARCH COLLECTION / VOL. 01</span><h3>Questions worth <em>staying with.</em></h3><p>Filter the archive, choose a lab, then inspect its question, methods and limits before opening the full research trail.</p></div>
         <div class="archive-availability"><span class="archive-availability-dot" aria-hidden="true"></span><strong>${LABS.length} lab records</strong><span>Fictional interface examples</span></div>
       </div>
       <div class="archive-toolbar">
@@ -867,7 +882,7 @@ body{background:var(--v4-bg)}
     <p>${discover?'Research is not a leaderboard. Choose what you care about and follow it to a laboratory, its methods and its evolving ideas.':'A slower reading desk for the curious. Take one lab apart: the question it asks, the method it tries, and the limitations it still faces.'}</p>
     <div class="v4-top-actions"><button type="button" class="v4-primary" data-v4-jump="${discover?'lab-index':'selected-dossier'}">${discover?'Explore the collection':'Read the dossier'} ${ico('arrow',17)}</button><button class="v4-quiet" type="button" data-surprise>Show me another ${ico('refresh',15)}</button></div>
    </div>
-   <aside class="v4-live-note" aria-live="polite"><div class="v4-note-top"><span>SELECTED / <span class="v4-selected-short">${esc(l.short.toUpperCase())}</span></span><span>FIELD NOTE № 01</span></div><div class="v4-live-copy"><span class="v4-note-glyph" aria-hidden="true">“</span><blockquote class="v4-live-question">${esc(l.statement)}</blockquote></div><div class="v4-note-bottom"><span class="v4-live-focus">${esc(l.focus)}</span><span>${ico('arrow',17)}</span></div></aside>
+   <aside class="v4-live-note" aria-live="polite"><div class="v4-note-top"><span>SELECTED / <span class="v4-selected-short">${esc(l.short.toUpperCase())}</span></span><span>FIELD NOTE № 01</span></div><div class="v4-live-copy"><span class="v4-note-glyph" aria-hidden="true">“</span><blockquote class="v4-live-question">${esc(l.statement)}</blockquote></div><div class="v4-note-bottom"><span class="v4-live-focus">${esc(l.focus)}</span><button type="button" class="fieldbook-live-cta" data-v4-jump="selected-dossier">Read the record ${ico('arrow',17)}</button></div></aside>
    </div>
    <div class="v4-switch" role="group" aria-label="Choose research exploration approach"><span>YOUR APPROACH</span><div class="v4-switch-buttons"><button type="button" data-v4-mode="discover" aria-pressed="${discover}" class="${discover?'selected':''}">Discover by interest</button><button type="button" data-v4-mode="investigate" aria-pressed="${!discover}" class="${!discover?'selected':''}">Investigate a lab</button></div><span class="v4-switch-note">Two interactive directions to compare</span></div>
    ${discover?`<div class="v4-fields"><div class="v4-field-title"><span class="v4-meta">CHOOSE AN ENTRY POINT</span><span>01—05</span></div><div class="v4-fields-list">${v4FieldButtons()}</div></div>`:`<div class="v4-reading-strip"><div><span class="v4-meta">CURRENT READING</span><strong>${esc(l.name)}</strong></div><p>${esc(l.statement)}</p><button type="button" data-v4-jump="selected-dossier">Continue reading ${ico('arrow',16)}</button></div>`}
@@ -880,7 +895,7 @@ body{background:var(--v4-bg)}
    <span id="lab-selection-status" class="sr-only" role="status" aria-live="polite">Reading ${esc(l.name)}</span>
    <div class="explorer-shell v4-layout ${state.v4Mode==='investigate'?'v4-reader-layout':''} ${state.mobileIndexOpen?'browse-open':''}">
     ${v4Index(l)}
-    <div class="v4-dossier-area"><div id="v4-evidence-inspector">${v4Evidence(l)}</div><div id="selected-dossier">${dossier(l)}</div>${contextPanel(l)}</div>
+    <div class="v4-dossier-area"><div id="selected-dossier">${dossier(l)}</div>${contextPanel(l)}</div>
    </div></div>`;}
   function compareCard(l,side){const labels={directions:['Research focus',l.focus,'Related research questions',l.statement],history:['Early research',l.chapters[0][0],'Recent chapter',l.chapters[2][0]],methods:['Main approach',l.methods[0],'Other method',l.methods[1]],works:['Example publication',l.works[0],'Another example',l.works[1]]};let v=labels[state.lens];return `<article class="comparison-pane"><div class="pane-cap"><span>${side==='a'?'DOCUMENT A':'DOCUMENT B'}</span><span>DEMONSTRATION LAB</span></div><label class="sr-only" for="compare-${side}">Choose laboratory ${side.toUpperCase()}</label><select id="compare-${side}" data-compare-select="${side}" class="compare-select">${LABS.map(x=>`<option value="${x.id}" ${l.id===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><p class="pane-inst">${esc(l.institution)}</p><div class="compare-meta">${tags(l.topics)}</div><div class="comparison-analysis"><span class="micro-label">${esc(v[0])}</span><h3>${esc(v[1])}</h3><span class="micro-label">${esc(v[2])}</span><p>${esc(v[3])}</p></div><button data-open-lab="${l.id}" class="view-dossier">Open complete dossier ${ico('arrow',16)}</button></article>`;}
   function compare(){const l=by(state.compA),r=by(state.compB);return `<div class="standard-view view-enter">${pageIntro('II','LABORATORY COMPARISON','Two directions, <span class="muted-title">one question.</span>',`<p>Compare research approaches with a consistent lens. No invented leaderboards or admission predictions.</p>`)}${warning()}<section class="tool-panel"><div class="panel-toolbar"><div><span class="micro-label">COMPARISON LENS</span><div class="lens-list" role="group" aria-label="Comparison lens">${[['directions','Direction'],['history','Evolution'],['methods','Methods'],['works','Selected works']].map(([k,v])=>`<button data-lens="${k}" aria-pressed="${k===state.lens}" class="lens-button ${k===state.lens?'selected':''}">${v}</button>`).join('')}</div></div><button class="outlined-btn" data-swap>${ico('swap',15)} Swap</button></div><div class="comparison-grid">${compareCard(l,'a')}${compareCard(r,'b')}</div><div class="tool-footnote">Comparisons describe fictional fixtures. In a real release, every association will link to supporting publications and official lab sources.</div></section></div>`;}
@@ -900,7 +915,7 @@ body{background:var(--v4-bg)}
   function selectLab(id,opts={}){
     const l=LABS.find(x=>x.id===id);if(!l)return;
     if(state.view!=='explore'){state.lab=id;state.chapter=0;state.mobileIndexOpen=false;setView('explore');return;}
-    const changed=state.lab!==id;state.lab=id;state.chapter=0;
+    const changed=state.lab!==id;state.lab=id;state.chapter=0;if(changed)state.v4Idea=0;
     const dossierRoot=document.getElementById('selected-dossier');
     if(dossierRoot&&changed){
       dossierRoot.innerHTML=dossier(l);
@@ -985,8 +1000,8 @@ body{background:var(--v4-bg)}
     if(t.hasAttribute('data-surprise')){const i=LABS.findIndex(x=>x.id===state.lab);const next=LABS[(i+3)%LABS.length];state.topic='All';state.search='';selectLab(next.id);render();const target=document.getElementById('selected-lab-heading');target?.focus({preventScroll:true});toast(`Your next discovery: ${next.short}`);return;}
     if(t.dataset.fieldShelf){const field=t.dataset.fieldShelf;state.topic=state.topic===field?'All':field;state.search='';const matching=LABS.filter(x=>state.topic==='All'||x.topics.includes(state.topic));if(matching.length){state.lab=matching[0].id;state.chapter=0;}render();const target=document.querySelector(`[data-field-shelf="${field}"]`);target?.focus({preventScroll:true});return;}
     if(t.dataset.v4Mode){const mode=t.dataset.v4Mode;if(mode!==state.v4Mode){state.v4Mode=mode;state.mobileIndexOpen=false;render();document.querySelector(`[data-v4-mode="${mode}"]`)?.focus({preventScroll:true});}return;}
-    if(t.dataset.v4Field){state.topic=t.dataset.v4Field;state.search='';const matching=resultLabs();if(matching.length){state.lab=matching[0].id;state.chapter=0;state.v4Idea=0;}render();document.querySelector(`[data-v4-field="${state.topic}"]`)?.focus({preventScroll:true});return;}
-    if(t.dataset.v4Idea!==undefined){state.v4Idea=Number(t.dataset.v4Idea);const evidence=document.getElementById('v4-evidence-inspector');if(evidence)evidence.innerHTML=v4Evidence(by(state.lab));document.querySelector(`[data-v4-idea="${state.v4Idea}"]`)?.focus({preventScroll:true});return;}
+    if(t.dataset.v4Field){const fromHero=!!t.closest('.v4-fields');state.topic=t.dataset.v4Field;state.search='';const matching=resultLabs();if(matching.length){state.lab=matching[0].id;state.chapter=0;state.v4Idea=0;}render();const filter=document.querySelector('.archive-filter[data-v4-field="'+state.topic+'"]');if(fromHero){document.getElementById('lab-index')?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});filter?.focus({preventScroll:true});}else filter?.focus({preventScroll:true});return;}
+    if(t.dataset.v4Idea!==undefined){const index=Number(t.dataset.v4Idea);if(index<0||index>2)return;state.v4Idea=index;const preview=document.getElementById('archive-preview');if(preview)preview.outerHTML=v4ArchivePreview(by(state.lab));document.querySelector('#archive-preview [data-v4-idea="'+index+'"]')?.focus({preventScroll:true});return;}
     if(t.dataset.v4Jump){
       const target=t.dataset.v4Jump;
       if(target==='lab-index'&&matchMedia('(max-width: 840px)').matches&&!state.mobileIndexOpen){state.mobileIndexOpen=true;render();}
@@ -1004,7 +1019,7 @@ body{background:var(--v4-bg)}
     if(t.hasAttribute('data-reset-search')){state.search='';state.topic='All';render();document.getElementById('lab-search')?.focus();return;}
     if(t.dataset.topic){state.topic=t.dataset.topic;updateResults();return;}
     if(t.dataset.chapter!==undefined){setChapter(Number(t.dataset.chapter));return;}
-    if(t.dataset.follow){follow(t.dataset.follow);return;}
+    if(t.dataset.follow){const id=t.dataset.follow;const inPreview=!!t.closest('#archive-preview');follow(id);document.querySelector((inPreview?'#archive-preview ':'')+'[data-follow="'+id+'"]')?.focus({preventScroll:true});return;}
     if(t.dataset.lens){state.lens=t.dataset.lens;render();return;}
     if(t.hasAttribute('data-swap')){[state.compA,state.compB]=[state.compB,state.compA];render();return;}
     if(t.dataset.graphPick){graphInspectorUpdate(t.dataset.graphPick);return;}
