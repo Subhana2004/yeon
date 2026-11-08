@@ -13,11 +13,16 @@ const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const htmlPath=resolve(root,'app-v4/index.html');
 const html=readFileSync(htmlPath,'utf8');
 const css=readFileSync(resolve(root,'app-v4/archive-refined.css'),'utf8');
+const archiveCss=readFileSync(resolve(root,'app-v4/archive-reading-room.css'),'utf8');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'original V4 application script required');
 new Script(script,{filename:'original-v4.js'});
 assert.match(html,/href="\.\/archive-refined\.css"/);
 assert.match(css,/\.archive-preview/);
+assert.match(html,/href="\.\/archive-reading-room\.css"/);
+assert.match(archiveCss,/\.ar-workspace/);
+assert.match(archiveCss,/\.ar-reader/);
+assert.doesNotMatch(html,/<div id="v4-evidence-inspector">/);
 assert.match(script,/has-no-results/);
 assert.doesNotMatch(script,/max-width: 820px/);
 assert.equal((html.match(/data-nav="/g)||[]).length,7);
@@ -86,6 +91,13 @@ try {
     assert.ok(info.body>0,'archive body must have width');
     assert.notEqual(info.archiveVisible,'none','original V4 archive must remain visible');
     await page.screenshot({path:resolve(output,`original-v4-${width}.png`),fullPage:true});
+    if(width===1440||width===390||width===320){
+      await page.locator('.ar-library').screenshot({path:resolve(output,`archive-reading-room-${width}.png`)});
+    }
+    assert.equal(await page.locator('.ar-entry').count(),8);
+    assert.ok(await page.locator('.ar-reader').isVisible());
+    assert.equal(await page.locator('.ar-tabs [role="tab"]').count(),3);
+    assert.equal(await page.locator('.ar-reading-controls').isVisible(),true);
     if(width===1440){
       await page.locator('.archive-entry[data-select-lab="arbor"]').focus();
       await page.keyboard.press('ArrowRight');
@@ -93,6 +105,27 @@ try {
         'keyboard moves focus to next lab card');
       assert.match(await page.locator('#archive-preview-heading').innerText(),/Mosaic/);
       assert.equal(await page.locator('.archive-entry[data-select-lab="mosaic"]').getAttribute('aria-pressed'),'true');
+      await page.locator('#archive-preview [data-v4-idea="1"]').click();
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="1"]').getAttribute('aria-selected'),'true');
+      assert.match(await page.locator('.ar-lens-panel').innerText(),/METHODS|APPROACH|Assumptions/i);
+      await page.locator('#archive-preview [data-v4-idea="1"]').focus();
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="2"]').getAttribute('aria-selected'),'true');
+      await page.keyboard.press('Home');
+      assert.equal(await page.locator('#archive-preview [data-v4-idea="0"]').getAttribute('aria-selected'),'true');
+      await page.locator('.ar-notebook summary').click();
+      await page.locator('#ar-note-input').fill('What independent evidence supports this?');
+      assert.match(await page.locator('#ar-note-status').innerText(),/Saved locally/);
+      await page.locator('#archive-preview [data-follow="mosaic"]').click();
+      assert.equal(await page.locator('#archive-preview [data-follow="mosaic"]').getAttribute('aria-pressed'),'true');
+      await page.locator('#archive-preview [data-v4-jump="selected-dossier"]').click();
+      assert.equal(await page.locator('#ar-full-dossier').evaluate(el=>el.open),true);
+      assert.ok(await page.locator('#selected-dossier').isVisible());
+      await page.locator('#archive-preview [data-compare-from="mosaic"]').click();
+      await page.locator('.comparison-grid').waitFor();
+      assert.ok(await page.locator('.comparison-grid').isVisible());
+      await page.locator('[data-nav="explore"]').click();
+      await page.locator('.ar-reader').waitFor();
     }
     if(width===390){
       const search=page.locator('#lab-search');
@@ -107,6 +140,14 @@ try {
       await page.locator('[data-reset-search]').first().click();
       assert.ok(Number(await page.locator('.archive-match-count').innerText())>1);
       await page.locator('.archive-entry[data-select-lab="mosaic"]').click();
+      assert.ok(await page.locator('.ar-reader').isVisible());
+      await page.locator('.ar-reader [data-archive-step="1"]').click();
+      assert.match(await page.locator('.ar-reader-heading h3').innerText(),/Horizon/);
+      await page.locator('.ar-reader [data-archive-step="-1"]').click();
+      assert.match(await page.locator('.ar-reader-heading h3').innerText(),/Mosaic/);
+      await page.locator('.ar-notebook summary').click();
+      assert.equal(await page.locator('#ar-note-input').inputValue(),'What independent evidence supports this?');
+
       assert.match(await page.locator('#archive-preview-heading').innerText(),/Mosaic/);
       const bgLight=await page.locator('.archive-preview').evaluate(el=>getComputedStyle(el).backgroundColor);
       await page.locator('#theme-toggle').click();
