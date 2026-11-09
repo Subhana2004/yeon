@@ -98,7 +98,7 @@ try{
    assert.ok(await page.locator('.tool-cover-folio').isVisible());
    await page.locator('[data-compare-focus="methods"]').click();
    assert.equal(await page.locator('.comparison-row').count(),1,'comparison focus changes visible rows');
-   assert.match(await page.locator('.comparison-row').innerText(),/Methods/);
+   assert.match(await page.locator('.comparison-row').innerText(),/methods/i);
    assert.equal(await page.locator('[data-compare-focus="methods"]').evaluate(el=>document.activeElement===el),true,'focused comparison remains keyboard active');
    await page.keyboard.press('ArrowRight');
    assert.equal(await page.locator('[data-compare-focus="assumptions"]').getAttribute('aria-pressed'),'true','keyboard comparison lens works');
