@@ -103,7 +103,13 @@ function activateTrail(id,{keyboard=false}={}){
  });
  const active=deck.querySelector('[data-trail="'+id+'"]');
  active?.focus({preventScroll:true});
- if(keyboard)active?.scrollIntoView({block:'nearest',behavior:'instant'});
+ const selectedCard=active?.closest('.trail-card');
+ if(keyboard){
+  selectedCard?.scrollIntoView({block:'nearest',behavior:'instant'});
+ }else if(window.matchMedia('(max-width: 850px)').matches){
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  selectedCard?.scrollIntoView({block:'nearest',behavior:reduced?'instant':'smooth'});
+ }
 }
 function home(){
  return '<div class="view"><section class="research-hero"><div class="container">'+
