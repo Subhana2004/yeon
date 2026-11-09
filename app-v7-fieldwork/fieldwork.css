@@ -467,3 +467,12 @@ html{scroll-behavior:auto}
 .dossier-header h1{letter-spacing:-.059em}
 body{font-synthesis:none}
 @media(hover:none){.preview-row{transition:none}}
+
+/* Purposeful motion: these panels change only on explicit research actions.
+   No animation on search, scroll or high-frequency keyboard navigation. */
+@media(prefers-reduced-motion:no-preference){
+  @keyframes specimen-reveal{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .hero-feature .feature-body{animation:specimen-reveal .19s var(--ease) both}
+  #dossier-main .dossier-panel{animation:specimen-reveal .18s var(--ease) both}
+  #face-content .challenge-card{animation:specimen-reveal .18s var(--ease) both}
+}
