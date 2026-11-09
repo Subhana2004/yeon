@@ -44,6 +44,7 @@ for(const width of widths){
   await page.waitForURL('**#lab/vertex');await page.locator('.dossier-hero h1').waitFor();
   assert.match(await page.locator('.dossier-hero h1').innerText(),/Vertex/);
   assert.equal(await page.locator('.chapter').count(),3);
+  await overflow(page,width);
   await page.screenshot({path:resolve(output,'dossier-1440.png'),fullPage:true,animations:'disabled'});
   await page.locator('[data-dossier="methods"]').click();
   assert.match(await page.locator('#dossier-main').innerText(),/Knowledge structures/);
@@ -57,6 +58,7 @@ for(const width of widths){
   assert.equal(await page.locator('.saved-count').innerText(),'1');
   await page.locator('[data-compare-lab="vertex"]').click();
   await page.waitForURL('**#compare');await page.locator('.compare-stage').waitFor();
+  await overflow(page,width);
   assert.equal(await page.locator('.compare-panel').count(),2);
   await page.locator('[data-axis="methods"]').click();
   assert.match(await page.locator('.compare-stage').innerText(),/Knowledge structures/);
@@ -74,24 +76,29 @@ for(const width of widths){
   await page.locator('[data-library-topic="All"]').click();
   assert.equal(await page.locator('.lab-card').count(),8);
   await route(page,'threads');
+  await overflow(page,width);
   assert.equal(await page.locator('.topic-row').count(),4);
   await page.screenshot({path:resolve(output,'threads-1440.png'),fullPage:true,animations:'disabled'});
   await route(page,'saved');
+  await overflow(page,width);
   assert.match(await page.locator('.saved-list').innerText(),/Vertex/);
   await page.screenshot({path:resolve(output,'saved-1440.png'),fullPage:true,animations:'disabled'});
   const downloadPromise=page.waitForEvent('download');await page.locator('[data-export]').click();
   const down=await downloadPromise;assert.match(down.suggestedFilename(),/YEON-V7-research-notes.md/);
   await route(page,'doors');
+  await overflow(page,width);
   assert.match(await page.locator('.doors-zero').innerText(),/No verified roles/);
   assert.equal(await page.locator('.check-row').count(),5);
   await page.locator('[data-check="0"]').check();
   assert.match(await page.locator('#check-progress').innerText(),/1 \/ 5/);
   await page.screenshot({path:resolve(output,'doors-1440.png'),fullPage:true,animations:'disabled'});
   await route(page,'fit');
+  await overflow(page,width);
   await page.locator('[data-interest="Vision"]').click();
   assert.equal(await page.locator('.fit-entry').count(),8);
   await page.screenshot({path:resolve(output,'fit-1440.png'),fullPage:true,animations:'disabled'});
   await route(page,'faceoff');
+  await overflow(page,width);
   assert.equal(await page.locator('.face-panel').count(),2);
   await page.locator('[data-scenario="missing"]').click();
   assert.match(await page.locator('.face-question').innerText(),/missing/i);
@@ -115,6 +122,7 @@ for(const width of widths){
   await page.locator('#mobile-nav [data-nav="compare"]').click();
   await page.waitForURL('**#compare');await page.locator('.compare-stage').waitFor();
   await overflow(page,width);
+  await overflow(page,width);
   await page.screenshot({path:resolve(output,'compare-390.png'),fullPage:true,animations:'disabled'});
   await page.locator('#menu-button').click();
   await page.locator('#mobile-nav [data-nav="faceoff"]').click();
@@ -122,6 +130,7 @@ for(const width of widths){
   await overflow(page,width);
   await page.screenshot({path:resolve(output,'faceoff-390.png'),fullPage:true,animations:'disabled'});
  }
+ for(const name of ['compare','threads','saved','doors','fit','faceoff','lab/mosaic']){await route(page,name);await overflow(page,width);}
  assert.deepEqual(errors,[],`page JS errors at ${width}`);
  console.log('PASS '+width+'px: responsive, page scripts healthy');
  await page.close();
