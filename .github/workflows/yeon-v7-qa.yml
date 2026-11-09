@@ -1,0 +1,36 @@
+name: YEON V7 / Signal Room Browser QA
+on:
+  pull_request:
+    paths:
+      - "app-v7/**"
+      - "tests/v7-browser-smoke.mjs"
+      - ".github/workflows/yeon-v7-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run YEON V7 browser acceptance and visual QA
+        run: node tests/v7-browser-smoke.mjs
+      - name: Retain browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yeon-v7-viewport-screenshots
+          path: artifacts/v7
+          if-no-files-found: ignore
