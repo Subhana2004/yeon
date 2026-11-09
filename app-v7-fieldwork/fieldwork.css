@@ -782,3 +782,9 @@ p{overflow-wrap:break-word}
 @media(prefers-reduced-motion:reduce){
  .trail-deck,.trail-card,.trail-details{transition:none!important;animation:none!important}
 }
+
+/* Ensure focused/expanded cards are not concealed by sticky navigation. */
+.trail-section,.trail-card{scroll-margin-top:105px}
+@media(max-width:650px){
+ .trail-section,.trail-card{scroll-margin-top:88px}
+}
