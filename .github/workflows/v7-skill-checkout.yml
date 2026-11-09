@@ -1,0 +1,78 @@
+name: YEON V7 / Actual Design Skills Checkout and Catalog Audit
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/v7-skill-checkout.yml"
+      - "app-v7-fieldwork/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-skills:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Clone requested repositories and additional design skills
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p external-skills skill-audit
+          printf 'repository\tstatus\tcommit\tSKILL_files\n' > skill-audit/clone-manifest.tsv
+          printf '%s\n' \
+            emilkowalski/skills \
+            anthropics/skills \
+            nextlevelbuilder/ui-ux-pro-max-skill \
+            hamen/material-3-skill \
+            multica-ai/andrej-karpathy-skills \
+            delphi-ai/animate-skill \
+            kylezantos/design-motion-principles \
+            AgentsORG/design-engineering \
+            elayadesign/ai-design-skills \
+            elayadesign/redesign-skill \
+            vercel-labs/agent-skills \
+            Gabriel-Dalton/digital-accessibility-skill \
+            | while read -r repo; do
+            folder="external-skills/$(echo "$repo" | tr '/' '_')"
+            echo "::group::Cloning $repo"
+            if timeout 110 git -c credential.helper= clone --quiet --depth 1 "https://github.com/$repo.git" "$folder" 2>skill-audit/last-error.txt; then
+              commit="$(git -C "$folder" rev-parse HEAD)"
+              total="$(find "$folder" -iname SKILL.md | wc -l)"
+              printf '%s\tCLONED\t%s\t%s\n' "$repo" "$commit" "$total" >> skill-audit/clone-manifest.tsv
+            else
+              error="$(tail -c 260 skill-audit/last-error.txt | tr '\t\n' '  ')"
+              printf '%s\tFAILED\t%s\t0\n' "$repo" "$error" >> skill-audit/clone-manifest.tsv
+              rm -rf "$folder"
+            fi
+            echo "::endgroup::"
+          done
+          cat skill-audit/clone-manifest.tsv
+      - name: Run UI UX Pro Max catalog search
+        shell: bash
+        run: |
+          set -e
+          ROOT="external-skills/nextlevelbuilder_ui-ux-pro-max-skill"
+          SCRIPT="$(find "$ROOT" -path '*/scripts/search.py' -print -quit)"
+          if [ -z "$SCRIPT" ]; then
+            echo "Catalog search script not found" > skill-audit/search-status.txt
+            exit 0
+          fi
+          echo "$SCRIPT" > skill-audit/search-script.txt
+          if grep -Eq '(^|[[:space:]])(import[[:space:]]+(socket|subprocess|requests|urllib)|from[[:space:]]+(socket|subprocess|requests|urllib))' "$SCRIPT"; then
+            echo "Downloaded script contained network or subprocess imports; not executed" > skill-audit/search-status.txt
+            exit 0
+          fi
+          python3 -I -B "$SCRIPT" "editorial academic research discovery field guide clear typography accessible interaction" --design-system -f markdown > skill-audit/RESEARCH_DESIGN_SYSTEM.md 2>skill-audit/catalog-errors.txt || echo "Design system search failed; see errors" > skill-audit/search-status.txt
+          python3 -I -B "$SCRIPT" "academic research reading interface typography" --domain typography > skill-audit/TYPOGRAPHY_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
+          python3 -I -B "$SCRIPT" "focus not obscured accessible button states" --domain ux > skill-audit/ACCESSIBILITY_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
+          python3 -I -B "$SCRIPT" "html javascript responsive" --stack html-tailwind > skill-audit/WEB_STACK_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
+          wc -c skill-audit/* | tail -4
+      - name: Retain cloned source manifest and skill audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yeon-v7-actual-clones-skill-audit
+          path: skill-audit/
+          if-no-files-found: error

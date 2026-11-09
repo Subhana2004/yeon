@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f2f5f6">
+<meta name="description" content="YEON Fieldwork — a question-led research discovery prototype. Fictional demonstration profiles, no live academic data.">
+<meta name="robots" content="noindex,nofollow">
+<title>YEON / Fieldwork — Research begins with a question</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23172834'/%3E%3Cpath d='M14 18l18 25 18-25M32 43v5' stroke='%23ff7658' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fieldwork.css">
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to research content</a>
+<div class="app-shell">
+<header class="topbar">
+ <div class="topbar-inside">
+ <a href="#discover" data-route="discover" class="wordmark" aria-label="YEON, back to explore"><span class="wordmark-mark" aria-hidden="true">y<span>.</span></span><strong>yeon<span>.</span></strong><small>Research, in context.</small></a>
+ <nav class="primary-nav" aria-label="Primary">
+ <a data-route="discover" href="#discover">Explore</a>
+ <a data-route="index" href="#index">The index</a>
+ <a data-route="compare" href="#compare">Compare</a>
+ <a data-route="topics" href="#topics">Topics</a>
+ <a data-route="desk" href="#desk">My desk <span class="save-counter">0</span></a>
+ </nav>
+ <div class="top-actions">
+ <button type="button" class="search-trigger" id="quick-open" aria-label="Open quick search"><span class="search-glyph" aria-hidden="true">⌕</span><span>Search</span><kbd>⌘K</kbd></button>
+ <button type="button" class="mobile-trigger" id="mobile-trigger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav">☰</button>
+ </div>
+ </div>
+</header>
+<nav id="mobile-nav" class="mobile-nav" aria-label="Mobile sections" hidden>
+ <a data-route="discover" href="#discover">Explore</a>
+ <a data-route="index" href="#index">Research index</a>
+ <a data-route="compare" href="#compare">Compare</a>
+ <a data-route="topics" href="#topics">Topic atlas</a>
+ <a data-route="desk" href="#desk">My desk</a>
+ <a data-route="doors" href="#doors">Open Doors</a>
+ <a data-route="fit" href="#fit">Fit Lens</a>
+ <a data-route="faceoff" href="#faceoff">Face-Off</a>
+</nav>
+<main id="content" tabindex="-1"><div id="app"></div></main>
+<footer class="footer">
+ <div class="footer-inner">
+  <div class="footer-brand"><span class="footer-wordmark">yeon<span>.</span></span><span>Questions worth following.</span></div>
+  <div class="footer-links"><a data-route="index" href="#index">Research index</a><a data-route="about" href="#about">About &amp; privacy</a><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">Source code ↗</a></div>
+  <p class="footer-disclosure"><strong>Important:</strong> Eight fictional research profiles. No verified Korean university directory, faculty opportunities, live papers, or admissions predictions are connected to this prototype.</p>
+ </div>
+</footer>
+</div>
+<div class="search-overlay" id="quick-overlay" hidden>
+ <section class="search-dialog" role="dialog" aria-modal="true" aria-label="Find research or tools">
+  <div class="dialog-header"><span>Search YEON</span><button type="button" id="quick-close" aria-label="Close search">Esc ×</button></div>
+  <label class="dialog-field"><span aria-hidden="true">⌕</span><input id="quick-input" autocomplete="off" type="search" placeholder="A question, topic, lab, or tool…"></label>
+  <div id="quick-results" class="quick-results"></div>
+  <p>Use arrow keys and Enter. All eight labs are fictional examples.</p>
+ </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="./data.js"></script><script src="./fieldwork.js" defer></script>
+</body></html>
