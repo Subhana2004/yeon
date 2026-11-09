@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10121a">
+<meta name="description" content="YEON V7 — Follow the research, not just the name. A conceptual Korean research discovery experience using fictional demo laboratories.">
+<meta name="robots" content="noindex,nofollow">
+<title>YEON / Follow the question</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='17' fill='%2310121a'/%3E%3Cpath d='M13 17L32 41L51 17M32 41V51' fill='none' stroke='%23c1bbff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="site" id="site">
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="#discover" data-nav="discover" aria-label="YEON home"><span class="brand-symbol" aria-hidden="true">y<span>✳</span></span><span class="brand-name">yeon<span class="brand-period">.</span></span><span class="brand-edition">RESEARCH / V7</span></a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a data-nav="discover" href="#discover">Discover</a>
+        <a data-nav="library" href="#library">Library</a>
+        <a data-nav="compare" href="#compare">Compare</a>
+        <a data-nav="threads" href="#threads">Threads</a>
+        <a data-nav="saved" href="#saved">Saved <span class="saved-count" id="saved-count">0</span></a>
+      </nav>
+      <div class="header-actions">
+        <button class="header-search" id="search-open" aria-label="Open search" title="Search — Ctrl or Command + K" type="button"><span class="search-glyph" aria-hidden="true">⌕</span><span class="search-word">SEARCH</span><kbd>⌘ K</kbd></button>
+        <button class="theme-button" id="theme-button" aria-label="Toggle light/dark appearance" type="button"><span aria-hidden="true">◐</span></button>
+        <button class="menu-button" id="menu-button" aria-label="Open navigation menu" aria-expanded="false" type="button"><span aria-hidden="true">☰</span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-nav" id="mobile-nav" hidden><nav aria-label="Mobile navigation"><a data-nav="discover" href="#discover">Discover <span>01</span></a><a data-nav="library" href="#library">Research library <span>02</span></a><a data-nav="compare" href="#compare">Compare <span>03</span></a><a data-nav="threads" href="#threads">Research threads <span>04</span></a><a data-nav="saved" href="#saved">Saved desk <span>05</span></a><a data-nav="doors" href="#doors">Open Doors <span>06</span></a><a data-nav="fit" href="#fit">Fit Lens <span>07</span></a><a data-nav="faceoff" href="#faceoff">Face-Off <span>08</span></a></nav></div>
+  <main id="main" tabindex="-1"><div id="app"></div></main>
+  <footer class="footer"><div class="footer-main"><div class="footer-brand">yeon<span>.</span><span>Follow the question.</span></div><div class="footer-links"><a data-nav="library" href="#library">Explore the library</a><a data-nav="about" href="#about">About & privacy</a><a href="https://github.com/Subhana2004/yeon" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></div><div class="footer-bottom"><span>AN INDEPENDENT RESEARCH DISCOVERY PROJECT</span><span>V7 PROTOTYPE / FICTIONAL LAB DATA / NO LIVE OPPORTUNITIES</span></div></footer>
+</div>
+<div class="command-backdrop" id="command-backdrop" hidden><div class="command" role="dialog" aria-modal="true" aria-label="Search YEON"><div class="command-title"><span>QUICK ACCESS</span><button type="button" id="command-close" aria-label="Close search">ESC ×</button></div><label class="command-input-wrap" for="command-input"><span aria-hidden="true">⌕</span><input id="command-input" type="search" placeholder="Search a lab, research question or tool…" autocomplete="off"></label><div id="command-results" class="command-results"></div><p>Eight fictional research profiles and seven research tools. No live university data.</p></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="./data.js"></script>
+<script src="./app.js" defer></script>
+</body>
+</html>
