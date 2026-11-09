@@ -173,6 +173,10 @@ try{
    await page.locator('[data-route="about"]').click();
    await waitForRoute(page,'about');
    assert.match(await page.locator('.about-prose').innerText(),/localStorage/);
+   await page.locator('[data-back-archive]').click();
+   await waitForRoute(page,'explore');
+   const archiveOffset=await page.locator('#archive').evaluate(el=>Math.abs(el.getBoundingClientRect().top));
+   assert.ok(archiveOffset<150,'back control returns to Archive instead of dropping at homepage start');
   }
   if(width===390){
    await page.locator('#mobile-toggle').click();
@@ -193,6 +197,7 @@ try{
    await page.locator('.mobile-panel [data-route="compare"]').click();
    await waitForRoute(page,'compare');
    await page.locator('.comparison-table').waitFor();
+   assert.ok(await page.locator('.comparison-swipe-hint').isVisible(),'mobile comparison scrolling is discoverable');
    await page.screenshot({path:resolve(output,'v6-compare-390.png'),fullPage:true});
    await assertNoOverflow(page,width);
    await page.locator('#mobile-toggle').click();
