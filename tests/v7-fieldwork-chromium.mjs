@@ -45,7 +45,7 @@ try{
    assert.equal(await page.locator('#trail-deck').getAttribute('data-active'),'1');
    assert.equal(await page.locator('[data-trail="horizon"]').getAttribute('aria-pressed'),'true');
    assert.equal(await page.locator('.trail-card.is-active .trail-details:visible').count(),1);
-   assert.match(await page.locator('.trail-card.is-active .trail-evidence').innerText(),/distribution|learning/i);
+   assert.match(await page.locator('.trail-card.is-active .trail-evidence').innerText(),/Domain adaptation|deployment conditions/i);
    await page.locator('.trail-section').screenshot({path:resolve(output,'trails-horizon-1440.png')});
    await page.keyboard.press('ArrowRight');
    assert.equal(await page.locator('[data-trail="vertex"]').getAttribute('aria-pressed'),'true','arrow keys select the next research trail');
