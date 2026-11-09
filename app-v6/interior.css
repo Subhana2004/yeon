@@ -1,0 +1,459 @@
+/* YEON V6 / Inner Experience Edition
+   The cover is the design source. Research tools inherit its editorial rhythm,
+   ink, typographic contrast and quiet interaction — not a separate dashboard UI. */
+
+:root{
+ --inner-ink:var(--ink);
+ --inner-moss:var(--forest-mid);
+ --inner-paper:var(--paper);
+ --inner-border:var(--line);
+ --inner-focus:var(--focus);
+}
+
+/* Navigation becomes a transition between chapters, not a hard screen switch. */
+@keyframes yeon-page-enter{
+ from{opacity:.45;transform:translateY(10px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@keyframes yeon-page-leave{
+ from{opacity:1}
+ to{opacity:0}
+}
+@keyframes yeon-paper-appear{
+ from{opacity:.4;transform:translateY(6px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@media(prefers-reduced-motion:no-preference){
+ ::view-transition-old(root){animation:yeon-page-leave .13s cubic-bezier(.4,0,1,1) both}
+ ::view-transition-new(root){animation:yeon-page-enter .32s cubic-bezier(.22,1,.36,1) both}
+ #app.page-crossfade>.main-container{animation:yeon-page-enter .28s var(--ease) both}
+ .comparison-table,.reader-article,.face-question,.fit-grid,.connections-matches{animation:yeon-paper-appear .25s var(--ease) both}
+}
+.tool-page{padding-top:clamp(31px,4.8vw,68px)}
+/* Same split, specimen-led story as the YEON landing cover, but contextual to each tool. */
+.tool-page .tool-cover{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.65fr);
+ gap:clamp(26px,5.8vw,92px);align-items:stretch;
+ padding:0 0 clamp(36px,5vw,70px);margin-bottom:clamp(28px,4vw,54px);
+ border-bottom:1px solid var(--line);
+}
+.tool-cover-intro{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding-top:6px}
+.tool-cover-index{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;margin-bottom:clamp(40px,5vw,65px)}
+.tool-cover-index .tiny{font-size:10px}
+.tool-cover .tool-cover-intro h1{
+ max-width:720px;color:var(--ink);
+ font:500 clamp(72px,7.5vw,112px)/.91 var(--serif);
+ letter-spacing:-.067em;margin:0 0 23px;
+ text-wrap:balance;overflow-wrap:break-word
+}
+.tool-cover h1 em{color:var(--forest-mid);font-weight:400}
+.tool-cover-description{
+ font:400 clamp(15px,1.37vw,19px)/1.72 var(--sans);
+ max-width:53ch;color:var(--ink2);margin:0 0 28px!important;text-wrap:pretty
+}
+.tool-cover-back{font-size:12px;gap:14px;margin-top:auto!important;color:var(--muted)}
+.tool-cover-back:hover{color:var(--forest-mid)}
+.tool-cover-folio{
+ position:relative;display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:430px;
+ background:var(--ink);color:var(--paper);
+ border:1px solid var(--forest);box-shadow:0 18px 50px rgba(20,52,33,.075)
+}
+:root[data-theme="dark"] .tool-cover-folio{background:#304a37;color:#f2f3e6}
+.tool-cover-folio:before{
+ content:'';width:100%;height:7px;background:var(--lime);
+ position:absolute;inset:0 auto auto 0
+}
+.tool-cover-folio-head{
+ display:flex;justify-content:space-between;align-items:start;gap:10px;padding:30px 34px 20px;
+ font:600 10px/1.45 var(--mono);text-transform:uppercase;letter-spacing:.035em;
+ color:#d8e5c8
+}
+.tool-cover-id{font-weight:500;white-space:nowrap;opacity:.75}
+.tool-cover-folio-body{
+ display:flex;flex-direction:column;justify-content:space-between;flex:1;
+ padding:15px 34px 29px;position:relative;min-width:0
+}
+.tool-cover-asterisk{
+ align-self:flex-start;font:400 66px/1 var(--serif);color:#cfe4ae;
+}
+.tool-cover-folio-body blockquote{
+ font:400 clamp(27px,2.85vw,45px)/1.14 var(--serif);
+ letter-spacing:-.027em;text-wrap:pretty;overflow-wrap:anywhere;
+ margin:0;max-width:18ch;color:#f0f2df
+}
+.tool-cover-folio-foot{
+ display:flex;align-items:center;justify-content:space-between;gap:15px;
+ margin:0 34px 25px;padding-top:16px;border-top:1px solid rgba(233,239,224,.25);
+ color:#cadbc2;font:500 11px/1.45 var(--mono)
+}
+.tool-cover-folio-foot span:last-child{font-size:20px;color:#d3e2ae}
+.tool-cover[data-tool="doors"] .tool-cover-folio{background:#394536}
+.tool-cover[data-tool="fit"] .tool-cover-folio{background:#35503f}
+.tool-cover[data-tool="compare"] .tool-cover-folio{background:#2a463a}
+.tool-cover[data-tool="radar"] .tool-cover-folio{background:#304b3a}
+/* Section materials — paper-like hierarchy with legible empty states and controls. */
+.tool-page .tool-toolbar{
+ background:var(--paper);
+ border:1px solid var(--line);
+ padding:clamp(19px,2.1vw,28px) clamp(20px,2.8vw,39px);
+ gap:20px;align-items:end;margin-bottom:21px;
+ box-shadow:0 5px 16px rgba(22,43,29,.018)
+}
+.tool-page .field-label{font-size:10px;letter-spacing:.055em;margin-bottom:9px}
+.tool-page .select{
+ border:1px solid var(--line-deep);background:var(--paper-alt);
+ padding:12px 13px;height:52px;font-weight:550;font-size:13px;border-radius:4px;
+ transition:border-color .16s var(--ease),background-color .16s var(--ease)
+}
+.tool-page .select:hover{border-color:var(--forest-mid)}
+.tool-page .select:focus-visible{background:var(--paper)}
+.tool-page .paper{
+ border:1px solid var(--line);
+ background:var(--paper);
+ box-shadow:0 7px 28px rgba(15,42,27,.022);
+}
+.tool-page .paper h2{font-size:clamp(25px,2.5vw,37px);line-height:1.15}
+.tool-page .side-paper{
+ border:1px solid var(--line);
+ background:var(--paper-alt);
+ padding:clamp(22px,2.9vw,40px);
+}
+.tool-page .side-paper h2{font-family:var(--serif);font-size:clamp(26px,3vw,41px);font-weight:500;line-height:1.11}
+.tool-page .notice{
+ margin-top:22px;position:relative;padding:20px 25px 20px 30px;
+ background:var(--paper-alt);border:1px solid var(--line);
+ line-height:1.7
+}
+.tool-page .notice:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--forest-mid)}
+.tool-page .btn-main,.tool-page .btn-outline{min-height:46px}
+.tool-page .btn-main:hover{transform:none}
+.tool-page .toolbar-actions{gap:14px}
+.tool-page button:not(.btn-main):not(.btn-outline):not(.btn-text):focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.tool-page .eyebrow{letter-spacing:.065em}
+.tool-page :is(.quote-big,.face-question h2,.empty h3){color:var(--ink);letter-spacing:-.026em}
+
+/* Lab DNA: a connected folio — a reading timeline, not a numbered form. */
+.tool-page .doc-layout{gap:clamp(22px,3.2vw,48px);grid-template-columns:minmax(250px,.32fr) minmax(0,.68fr)}
+.tool-page .doc-layout .side-paper{
+ position:sticky;top:22px;align-self:start;
+ background:var(--mist);border:1px solid var(--line-deep)
+}
+.tool-page .doc-layout .quote-big{
+ font:400 clamp(26px,2.9vw,42px)/1.27 var(--serif);
+ letter-spacing:-.026em;color:var(--ink)
+}
+.tool-page .dna-timeline{
+ position:relative;border:0;padding:19px 0 5px;
+}
+.tool-page .dna-timeline:before{
+ content:'';position:absolute;top:64px;bottom:65px;left:33px;width:1px;background:var(--line-deep)
+}
+.tool-page .dna-step{
+ display:grid;grid-template-columns:68px minmax(0,1fr);
+ gap:16px;padding:26px 0 32px;border-bottom:1px solid var(--line);position:relative
+}
+.tool-page .dna-step:before{
+ content:'';position:absolute;left:30px;top:46px;width:7px;height:7px;
+ background:var(--paper);border:1.5px solid var(--forest-mid);border-radius:50%;z-index:1
+}
+.tool-page .dna-step>span{font:400 clamp(25px,3vw,39px)/1 var(--serif);color:var(--forest-mid);margin-top:4px}
+.tool-page .dna-step h3{
+ font:550 clamp(23px,2.6vw,33px)/1.2 var(--serif);
+ margin:0 0 11px;letter-spacing:-.035em;color:var(--ink)
+}
+.tool-page .dna-step p{font-size:14px;max-width:65ch;line-height:1.7}
+.tool-page .dna-step small{
+ display:inline-flex;align-items:center;margin-top:4px;
+ padding:7px 9px;background:var(--paper-alt);border:1px solid var(--line);border-radius:2px;
+ color:var(--forest-mid)
+}
+.tool-page .summary-line{grid-template-columns:minmax(115px,.23fr) minmax(0,.77fr);gap:25px;padding:26px 0}
+.tool-page .summary-line span:first-child{padding-top:5px}
+.tool-page .summary-line ul{color:var(--ink2);font-size:13px;line-height:1.65}
+.tool-page .summary-line li{margin-bottom:10px}
+
+/* Compare — two editorial document covers and an actual filtering reading lens. */
+.tool-page .compare-heads{gap:15px;margin:0 0 15px}
+.tool-page .compare-head{
+ position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:198px;
+ border:1px solid var(--line-deep);background:var(--paper);padding:29px 34px;
+ box-shadow:0 5px 18px rgba(22,43,29,.02)
+}
+.tool-page .compare-head:before{
+ content:'';width:4px;position:absolute;left:0;top:0;bottom:0;background:var(--forest-mid)
+}
+.tool-page .compare-head:nth-child(2){background:var(--paper-alt)}
+.tool-page .compare-head:nth-child(2):before{background:var(--copper)}
+.tool-page .compare-head h2{
+ font:600 clamp(23px,2.7vw,40px)/1.12 var(--sans);
+ max-width:19ch;margin:24px 0 14px;letter-spacing:-.05em
+}
+.tool-page .compare-head p{font-size:13px}
+.comparison-focus-wrap{
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+ padding:17px 22px;border:1px solid var(--line);border-bottom:0;
+ background:var(--paper-alt)
+}
+.comparison-focus{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.comparison-focus button{
+ border:1px solid transparent;background:transparent;color:var(--muted);
+ padding:8px 12px;min-height:40px;border-radius:4px;font:600 11px/1.2 var(--sans);
+ transition:background-color .17s var(--ease),color .17s var(--ease),border-color .17s var(--ease)
+}
+.comparison-focus button:hover{color:var(--ink);border-color:var(--line-deep)}
+.comparison-focus button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tool-page .comparison-table{
+ border:1px solid var(--line);background:var(--paper)
+}
+.tool-page .comparison-row{grid-template-columns:clamp(115px,12vw,164px) minmax(0,1fr) minmax(0,1fr)}
+.tool-page .comparison-row>div{
+ padding:clamp(20px,2.65vw,32px);font-size:14px;line-height:1.75;
+ color:var(--ink2)
+}
+.tool-page .comparison-row>div:first-child{
+ display:flex;align-items:flex-start;
+ background:var(--paper-alt);border-left:0;
+ font-size:10px;letter-spacing:.06em;padding-top:27px;color:var(--forest-mid)
+}
+.tool-page .comparison-row:nth-child(odd)>div:not(:first-child){background:var(--paper)}
+.tool-page .comparison-row:nth-child(even)>div:not(:first-child){background:var(--paper-alt)}
+.tool-page .comparison-row>div:nth-child(3){border-left:1px solid var(--line-deep)}
+.tool-page .comparison-row li{margin:0 0 8px}
+
+/* Relationships — proper cross-reference index, not fake orbital motion. */
+.tool-page .connections-board{border:1px solid var(--line-deep);background:var(--paper);min-height:350px}
+.tool-page .connections-source{padding:clamp(28px,3.6vw,50px);background:var(--mist)}
+.tool-page .connections-source h2{
+ font:550 clamp(27px,3.2vw,44px)/1.15 var(--serif);letter-spacing:-.041em;
+ margin:19px 0 17px
+}
+.tool-page .connections-source .quote-big{font-size:clamp(24px,2.75vw,38px);line-height:1.25}
+.tool-page .connections-matches{display:flex;flex-direction:column}
+.tool-page .connection-row{min-height:91px;padding:25px clamp(20px,3vw,40px);gap:15px}
+.tool-page .connection-row:hover{background:var(--paper-alt)}
+.tool-page .connection-row>span:first-child{font:400 32px/1 var(--serif);color:var(--forest-mid)}
+.tool-page .connection-row strong{font:650 15px var(--sans)}
+.tool-page .connection-row .relation{display:inline-flex;padding:7px 9px;border:1px solid var(--line);border-radius:3px;background:var(--paper-alt);font-size:10px;max-width:100%;overflow-wrap:anywhere}
+
+/* Radar: the reading list is a personal ledger. */
+.tool-page .radar-layout{gap:clamp(20px,3.2vw,46px);grid-template-columns:minmax(270px,.36fr) minmax(0,.64fr)}
+.tool-page .radar-layout .side-paper{
+ background:var(--mist);border-color:var(--line-deep);
+ position:sticky;top:22px
+}
+.tool-page .radar-layout .stat-large{font:400 clamp(83px,8vw,130px)/1 var(--serif);color:var(--ink);letter-spacing:-.07em}
+.tool-page .saved-list{border-top:1px solid var(--line-deep)}
+.tool-page .saved-line{padding:18px 0;border-color:var(--line-deep)}
+.tool-page .reading-feed{padding:0 clamp(18px,3vw,37px);box-shadow:0 7px 22px rgba(22,42,29,.025)}
+.tool-page .feed-line{grid-template-columns:80px minmax(0,1fr) auto;padding:23px 0;gap:24px}
+.tool-page .feed-line>span:first-child{font-size:10px;color:var(--forest-mid);letter-spacing:.025em}
+.tool-page .feed-line strong{font:550 21px/1.28 var(--serif);letter-spacing:-.017em}
+.tool-page .feed-line button{border-bottom:1px solid var(--line-deep);padding:6px 0}
+.tool-page .feed-line button:hover{border-color:var(--forest-mid);color:var(--ink)}
+
+/* Open Doors is a standards desk, never a counterfeit job board. */
+.tool-page .doors-layout{gap:clamp(19px,3.6vw,50px);grid-template-columns:minmax(0,.81fr) minmax(0,1.19fr)}
+.tool-page .doors-figure{position:relative;overflow:hidden;padding:clamp(30px,4.8vw,65px);background:var(--ink);color:var(--paper)}
+:root[data-theme="dark"] .tool-page .doors-figure{background:#304a37;color:#f3f5e9}
+.tool-page .doors-figure .eyebrow{color:#c9dfaf}
+.tool-page .doors-figure .stat-large{font-size:clamp(130px,13vw,216px);line-height:.89;color:#e6efdb}
+.tool-page .doors-figure h2{color:#f1f2e3;font:400 clamp(39px,4vw,55px)/1.1 var(--serif);letter-spacing:-.038em}
+.tool-page .doors-figure p{color:#ccdbc8;font-size:14px;line-height:1.7}
+.tool-page .doors-figure .notice{
+ background:transparent;color:#d9e8d1;border-color:rgba(230,242,219,.3);padding:19px;
+}
+.tool-page .doors-figure .notice:before{display:none}
+.tool-page .doors-figure .notice strong{color:#fff}
+.tool-page .check-list{border-color:var(--line-deep);margin-top:22px}
+.tool-page .check-line{padding:20px 0;border-color:var(--line)}
+.tool-page .check-line input{accent-color:#32634a}
+.tool-page .check-line span{color:var(--ink2);font-size:13px}
+.tool-page .check-progress{padding-top:19px}
+
+/* Fit Lens: a research index of explained matches, not eight scorecards. */
+.tool-page .topic-choices{gap:8px;margin:24px 0 12px}
+.tool-page .topic-choices button{
+ padding:12px 17px;min-height:45px;border-color:var(--line-deep);
+ border-radius:4px;font-size:13px;transition:background-color .16s var(--ease),color .16s var(--ease)
+}
+.tool-page .topic-choices button:hover{background:var(--paper-alt)}
+.tool-page .topic-choices button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tool-page .fit-grid{
+ display:grid;grid-template-columns:1fr;gap:0;
+ margin-top:21px;border:1px solid var(--line);
+ background:var(--paper)
+}
+.tool-page .fit-row{
+ display:grid;grid-template-columns:minmax(0,.82fr) minmax(190px,.65fr) auto;
+ align-items:center;gap:clamp(18px,4vw,58px);
+ min-height:156px;padding:28px clamp(22px,3.2vw,43px);
+ border:0;border-bottom:1px solid var(--line);background:transparent;
+ transition:background-color .18s var(--ease)
+}
+.tool-page .fit-row:nth-child(even){background:var(--paper-alt)}
+.tool-page .fit-row:last-child{border-bottom:0}
+.tool-page .fit-row:hover{background:var(--mist)}
+.tool-page .fit-row-head{grid-column:1;grid-row:1;align-self:start}
+.tool-page .fit-row h3{grid-column:1;grid-row:1;align-self:center;font:550 clamp(23px,2.3vw,30px)/1.22 var(--serif);letter-spacing:-.02em;margin-top:13px}
+.tool-page .fit-row>p:nth-of-type(1){grid-column:1;grid-row:1;align-self:end;margin-bottom:0;padding-top:29px}
+.tool-page .fit-row .fit-meter{grid-column:2;grid-row:1;align-self:center;height:5px;margin-top:-11px}
+.tool-page .fit-row>p:nth-of-type(2){grid-column:2;grid-row:1;align-self:center;margin-top:35px;font-size:12px;max-width:40ch}
+.tool-page .fit-row button{grid-column:3;grid-row:1;justify-self:end;align-self:center;white-space:nowrap}
+.tool-page .fit-count{color:var(--forest-mid);font:600 10px var(--mono)}
+.tool-page .fit-row>p strong{color:var(--ink)}
+
+/* Face-Off: a deliberately structured experimental challenge. */
+.tool-page .scenario-buttons{display:flex;gap:0;border-bottom:1px solid var(--line)}
+.tool-page .scenario-buttons button{
+ border:0;border-bottom:2px solid transparent;border-radius:0;
+ padding:11px 18px;background:transparent;color:var(--muted);
+ font-size:12px;transition:border-color .16s var(--ease),color .16s var(--ease);
+}
+.tool-page .scenario-buttons button[aria-pressed="true"]{background:var(--paper-alt);border-bottom-color:var(--forest-mid);color:var(--ink)}
+.tool-page .face-question{
+ background:var(--mist);border:0;border-left:3px solid var(--forest-mid);
+ padding:clamp(21px,3vw,42px);margin:27px 0
+}
+.tool-page .face-question h2{font:400 clamp(34px,4vw,56px)/1.13 var(--serif);max-width:20ch}
+.tool-page .face-question p{font-size:14px;max-width:55ch}
+.tool-page .face-columns{gap:16px;margin-top:16px}
+.tool-page .face-column{padding:clamp(25px,3.2vw,42px);border-color:var(--line-deep)}
+.tool-page .face-column:first-child{border-top:4px solid var(--forest-mid)}
+.tool-page .face-column:last-child{border-top:4px solid var(--copper);background:var(--paper-alt)}
+.tool-page .face-column h3{font:600 clamp(26px,3vw,41px)/1.15 var(--serif);letter-spacing:-.035em;margin:22px 0 16px}
+.tool-page .face-column p{line-height:1.65;font-size:14px}
+.tool-page .face-prompt{padding:20px 0;line-height:1.65;border-color:var(--line)}
+.tool-page .face-prompt strong{font:600 10px var(--mono);margin-bottom:9px;color:var(--forest-mid)}
+.tool-page .verdict{
+ margin-top:18px;background:var(--mist);
+ padding:clamp(25px,4vw,54px);
+ border:1px solid var(--line-deep);position:relative
+}
+.tool-page .verdict h2{font-size:clamp(32px,3.7vw,48px)!important;line-height:1.17}
+.tool-page .verdict>ul{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;list-style:none;padding:5px 0 24px}
+.tool-page .verdict>ul li{
+ border-top:1px solid var(--line-deep);padding:19px 8px 6px 0;
+ font:500 14px/1.65 var(--sans);color:var(--ink2)
+}
+.tool-page .verdict>strong{display:block;border-top:1px solid var(--line);padding-top:19px}
+
+/* About page, privacy and provenance follow the same rhythm. */
+.tool-page .about-prose{max-width:1040px;padding:clamp(28px,4vw,62px);background:var(--paper);border:1px solid var(--line)}
+.tool-page .about-prose h2{font:400 clamp(28px,3vw,42px)/1.2 var(--serif);margin:36px 0 12px}
+.tool-page .about-prose p{max-width:75ch;font-size:15px}
+/* Feedback on hover is purposeful; static content doesn't endlessly animate. */
+.tool-page :is(.connection-row,.directory-link,.feed-line button,.comparison-focus button,.topic-choices button,.scenario-buttons button):focus-visible{
+ outline:2px solid var(--focus);outline-offset:2px
+}
+
+@media(max-width:1180px){
+ .tool-cover .tool-cover-intro h1{font-size:clamp(64px,7.1vw,91px)}
+ .tool-cover-folio{min-height:375px}
+ .tool-cover-folio-head,.tool-cover-folio-body{padding-inline:24px}
+ .tool-cover-folio-foot{margin-inline:24px}
+ .tool-cover-folio-body blockquote{font-size:clamp(27px,3.15vw,38px)}
+ .tool-page .fit-row{grid-template-columns:minmax(0,1fr) minmax(180px,.8fr);gap:14px 30px}
+ .tool-page .fit-row button{grid-column:2;grid-row:2;justify-self:start}
+ .tool-page .fit-row .fit-meter{grid-row:1}
+ .tool-page .fit-row>p:nth-of-type(2){grid-row:1}
+}
+@media(max-width:900px){
+ .tool-page .tool-cover{grid-template-columns:1fr;gap:22px}
+ .tool-cover-index{margin-bottom:23px}
+ .tool-cover .tool-cover-intro h1{font-size:clamp(70px,10vw,98px);margin-bottom:17px}
+ .tool-cover-description{max-width:70ch}
+ .tool-cover-back{margin-top:4px!important}
+ .tool-cover-folio{min-height:230px}
+ .tool-cover-folio-head{padding:18px 26px 4px}
+ .tool-cover-folio-body{padding:5px 26px 14px;display:grid;grid-template-columns:60px minmax(0,1fr);gap:13px;align-items:center}
+ .tool-cover-asterisk{font-size:52px}
+ .tool-cover-folio-body blockquote{font-size:clamp(25px,4.7vw,38px);max-width:35ch}
+ .tool-cover-folio-foot{margin:0 26px 16px;padding-top:12px}
+ .tool-page .doc-layout{grid-template-columns:1fr}
+ .tool-page .doc-layout .side-paper{position:static}
+ .tool-page .radar-layout{grid-template-columns:1fr}
+ .tool-page .radar-layout .side-paper{position:static}
+ .tool-page .doors-layout{grid-template-columns:1fr}
+ .tool-page .doors-figure .stat-large{font-size:140px}
+ .tool-page .fit-row{grid-template-columns:minmax(0,1fr) minmax(140px,.6fr);gap:15px}
+}
+@media(max-width:620px){
+ .tool-page{padding-top:27px}
+ .tool-page .tool-cover{padding-bottom:27px;margin-bottom:23px;gap:17px}
+ .tool-cover-index{margin-bottom:28px}
+ .tool-cover-index .tiny{font-size:9px}
+ .tool-cover .tool-cover-intro h1{font-size:clamp(55px,12vw,79px);line-height:.94;margin-bottom:16px}
+ .tool-cover-description{font-size:15px;margin-bottom:13px!important}
+ .tool-cover-back{font-size:11px}
+ .tool-cover-folio{min-height:205px}
+ .tool-cover-folio-head{padding:17px 18px 4px;font-size:9px}
+ .tool-cover-folio-body{padding:5px 18px 15px;grid-template-columns:38px minmax(0,1fr);gap:10px}
+ .tool-cover-asterisk{font-size:41px}
+ .tool-cover-folio-body blockquote{font-size:clamp(24px,6.25vw,34px);line-height:1.16}
+ .tool-cover-folio-foot{margin:0 18px 13px;font-size:9px}
+ .tool-page .tool-toolbar{padding:16px;gap:13px}
+ .tool-page .tool-toolbar .select{height:48px}
+ .tool-page .doc-layout{gap:15px}
+ .tool-page .dna-step{grid-template-columns:47px minmax(0,1fr);gap:12px;padding:19px 0 24px}
+ .tool-page .dna-timeline:before{left:21px;top:55px;bottom:55px}
+ .tool-page .dna-step:before{left:18px;top:38px}
+ .tool-page .dna-step>span{font-size:29px}
+ .tool-page .dna-step h3{font-size:25px}
+ .tool-page .compare-heads{grid-template-columns:1fr;gap:10px}
+ .tool-page .compare-head{min-height:0;padding:22px}
+ .tool-page .compare-head h2{margin:13px 0 6px;font-size:29px}
+ .comparison-focus-wrap{padding:14px;gap:12px}
+ .comparison-focus{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:thin}
+ .comparison-focus button{flex:0 0 auto;padding:8px 10px}
+ .tool-page .comparison-row{grid-template-columns:1fr 1fr}
+ .tool-page .comparison-row>div:first-child{grid-column:1/-1;padding:11px 14px}
+ .tool-page .comparison-row>div{padding:17px 14px;font-size:13px}
+ .tool-page .comparison-row>div:nth-child(3){border-color:var(--line)}
+ .tool-page .connection-row{min-height:72px;padding:16px;grid-template-columns:30px minmax(0,1fr) 17px}
+ .tool-page .connection-row>span:first-child{font-size:26px}
+ .tool-page .connection-row .relation{font-size:9px;grid-row:2;grid-column:2}
+ .tool-page .radar-layout .stat-large{font-size:85px}
+ .tool-page .feed-line{grid-template-columns:1fr auto;gap:6px;padding:18px 0}
+ .tool-page .feed-line>span:first-child{grid-column:1/-1}
+ .tool-page .feed-line strong{font-size:19px}
+ .tool-page .doors-figure{padding:29px 23px}
+ .tool-page .doors-figure .stat-large{font-size:112px}
+ .tool-page .doors-figure h2{font-size:37px}
+ .tool-page .fit-grid{display:grid;gap:0}
+ .tool-page .fit-row{
+  display:grid;grid-template-columns:1fr auto;gap:8px;
+  padding:21px 18px;min-height:0
+ }
+ .tool-page .fit-row-head{grid-row:1;grid-column:1/-1}
+ .tool-page .fit-row h3{grid-row:2;grid-column:1/-1;margin:3px 0;font-size:28px}
+ .tool-page .fit-row>p:nth-of-type(1){grid-row:3;grid-column:1/-1;margin:0;padding:0}
+ .tool-page .fit-row .fit-meter{grid-row:4;grid-column:1/-1;margin:9px 0 3px}
+ .tool-page .fit-row>p:nth-of-type(2){grid-row:5;grid-column:1/-1;margin:0;align-self:auto}
+ .tool-page .fit-row button{grid-row:6;grid-column:1;justify-self:start;margin-top:4px}
+ .tool-page .scenario-buttons{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}
+ .tool-page .scenario-buttons button{flex:0 0 auto;padding-inline:11px}
+ .tool-page .face-question{padding:23px}
+ .tool-page .face-question h2{font-size:34px}
+ .tool-page .face-columns{grid-template-columns:1fr}
+ .tool-page .face-column h3{font-size:31px}
+ .tool-page .verdict{padding:23px}
+ .tool-page .verdict>ul{grid-template-columns:1fr;gap:0;padding-bottom:9px}
+ .tool-page .verdict>ul li{padding:13px 0}
+}
+@media(max-width:365px){
+ .tool-cover .tool-cover-intro h1{font-size:53px}
+ .tool-cover-folio-body blockquote{font-size:23px}
+ .tool-cover-index .tiny{display:none}
+ .tool-page .comparison-row>div{padding:14px 9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .tool-page *,#app,::view-transition-old(root),::view-transition-new(root){
+  animation:none!important;transition:none!important
+ }
+}
+
+/* Small-screen cue for horizontally overflowing comparison lens buttons. */
+.comparison-swipe-hint{display:none;font:500 9px/1.5 var(--mono);letter-spacing:.04em;color:var(--forest-mid)}
+@media(max-width:620px){
+ .comparison-swipe-hint{display:inline-flex;margin-left:auto}
+}
