@@ -34,6 +34,11 @@ assert.match(app,/function compareView/);
 const widths=[1440,1280,1024,840,768,390,320];
 const output=resolve(root,'artifacts/v6');mkdirSync(output,{recursive:true});
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+async function waitForRoute(page,route){
+ await page.waitForFunction(r=>location.hash==='#'+r,route,{timeout:5000});
+ await page.waitForFunction(r=>r==='explore'?!!document.querySelector('.cover h1'):document.querySelector('.tool-cover')?.dataset.tool===r,route,{timeout:5000});
+ await page.waitForTimeout(360); // capture settled, not an in-flight view transition
+}
 async function assertNoOverflow(page,width){
  const delta=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
  if(delta>2){
@@ -89,6 +94,7 @@ try{
    assert.equal(await page.locator('#research-note').inputValue(),'Check the evidence behind freshness.');
    assert.equal(await page.locator('#radar-count').innerText(),'1');
    await page.locator('#research-reader [data-compare-selected="mosaic"]').click();
+   await waitForRoute(page,'compare');
    await page.locator('.comparison-table').waitFor();
    assert.match(await page.locator('.compare-heads').innerText(),/Mosaic/);
    await page.locator('[data-select="compB"]').selectOption('prism');
@@ -106,6 +112,7 @@ try{
    assert.equal(await page.locator('.comparison-row').count(),4);
    await page.screenshot({path:resolve(output,'v6-compare-1440.png'),fullPage:true});
    await page.locator('[data-face-from-compare]').click();
+   await waitForRoute(page,'faceoff');
    assert.match(await page.locator('.page-heading h1').innerText(),/Research Face-Off/);
    assert.match(await page.locator('.tool-cover-folio').innerText(),/EXPERIMENT/);
    await page.screenshot({path:resolve(output,'v6-faceoff-1440.png'),fullPage:true});
@@ -113,18 +120,22 @@ try{
    assert.match(await page.locator('.face-question').innerText(),/incomplete/);
    await page.locator('[data-save-question]').click();
    await page.locator('[data-route="dna"]').first().click();
+   await waitForRoute(page,'dna');
    assert.equal(await page.locator('.dna-step').count(),3,'Lab DNA chapters');
    assert.ok(await page.locator('.tool-cover-folio').isVisible(),'lab DNA shares landing page style');
    await page.screenshot({path:resolve(output,'v6-dna-1440.png'),fullPage:true});
    await page.locator('[data-select="selected"]').selectOption('vertex');
    assert.match(await page.locator('.quote-big').innerText(),/evidence/);
    await page.locator('[data-route="connections"]').first().click();
+   await waitForRoute(page,'connections');
    assert.ok(await page.locator('.connection-row').count()>0);
    assert.ok(await page.locator('.tool-cover-folio').isVisible());
    await page.screenshot({path:resolve(output,'v6-connections-1440.png'),fullPage:true});
    await page.locator('.connection-row').first().click();
+   await waitForRoute(page,'compare');
    await page.locator('.comparison-table').waitFor();
    await page.locator('[data-route="radar"]').first().click();
+   await waitForRoute(page,'radar');
    assert.match(await page.locator('.saved-list').innerText(),/Mosaic/);
    await page.screenshot({path:resolve(output,'v6-radar-1440.png'),fullPage:true});
    const downloadPromise=page.waitForEvent('download');
@@ -133,6 +144,7 @@ try{
    assert.match(downloaded.suggestedFilename(),/YEON-V6-field-notes.md/);
    await page.locator('#more-toggle').click();
    await page.locator('.more-menu [data-route="doors"]').click();
+   await waitForRoute(page,'doors');
    assert.match(await page.locator('.doors-figure').innerText(),/No verified openings/);
    await page.screenshot({path:resolve(output,'v6-doors-1440.png'),fullPage:true});
    await page.locator('[data-check="0"]').check();
@@ -141,6 +153,7 @@ try{
    assert.match(await page.locator('.check-progress').innerText(),/0 \/ 5/);
    await page.locator('#more-toggle').click();
    await page.locator('.more-menu [data-route="fit"]').click();
+   await waitForRoute(page,'fit');
    assert.ok(await page.locator('.fit-row').count()>0);
    await page.screenshot({path:resolve(output,'v6-fit-1440.png'),fullPage:true});
    await page.locator('[data-interest="Multimodal"]').click();
@@ -153,32 +166,38 @@ try{
    await page.locator('#theme-toggle').click();
    assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
    await page.locator('[data-route="explore"]').first().click();
+   await waitForRoute(page,'explore');
    await page.locator('.archive-shell').waitFor();
    await assertNoOverflow(page,width);
    await page.screenshot({path:resolve(output,'v6-dark-1440.png'),fullPage:false});
    await page.locator('[data-route="about"]').click();
+   await waitForRoute(page,'about');
    assert.match(await page.locator('.about-prose').innerText(),/localStorage/);
   }
   if(width===390){
    await page.locator('#mobile-toggle').click();
    assert.equal(await page.locator('#mobile-toggle').getAttribute('aria-expanded'),'true');
    await page.locator('.mobile-panel [data-route="fit"]').click();
+   await waitForRoute(page,'fit');
    await page.locator('.fit-row').first().waitFor();
    await assertNoOverflow(page,width);
    await page.screenshot({path:resolve(output,'v6-fit-390.png'),fullPage:true});
    assert.ok(await page.locator('.tool-cover-folio').isVisible());
    await page.locator('#mobile-toggle').click();
    await page.locator('.mobile-panel [data-route="dna"]').click();
+   await waitForRoute(page,'dna');
    await page.locator('.dna-step').first().waitFor();
    await assertNoOverflow(page,width);
    await page.screenshot({path:resolve(output,'v6-dna-390.png'),fullPage:true});
    await page.locator('#mobile-toggle').click();
    await page.locator('.mobile-panel [data-route="compare"]').click();
+   await waitForRoute(page,'compare');
    await page.locator('.comparison-table').waitFor();
    await page.screenshot({path:resolve(output,'v6-compare-390.png'),fullPage:true});
    await assertNoOverflow(page,width);
    await page.locator('#mobile-toggle').click();
    await page.locator('.mobile-panel [data-route="explore"]').click();
+   await waitForRoute(page,'explore');
    await page.locator('.archive-row[data-pick="prism"]').click();
    assert.match(await page.locator('#reader-heading').innerText(),/Prism/);
    await page.locator('[data-lens="limits"]').click();
@@ -190,6 +209,7 @@ try{
    assert.equal(await page.locator('#research-note').inputValue(),'A question from the mobile research desk.');
    await page.locator('#mobile-toggle').click();
    await page.locator('.mobile-panel [data-route="radar"]').click();
+   await waitForRoute(page,'radar');
    await page.locator('.radar-layout').waitFor();
    await assertNoOverflow(page,width);
   }
