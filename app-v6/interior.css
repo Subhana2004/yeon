@@ -451,3 +451,9 @@
   animation:none!important;transition:none!important
  }
 }
+
+/* Small-screen cue for horizontally overflowing comparison lens buttons. */
+.comparison-swipe-hint{display:none;font:500 9px/1.5 var(--mono);letter-spacing:.04em;color:var(--forest-mid)}
+@media(max-width:620px){
+ .comparison-swipe-hint{display:inline-flex;margin-left:auto}
+}
