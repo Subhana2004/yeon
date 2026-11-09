@@ -403,15 +403,15 @@ document.addEventListener('click',function(e){
  if(b.dataset.follow){toggleFollow(b.dataset.follow);return;}
  if(b.dataset.compareSelected){state.compA=b.dataset.compareSelected;if(state.compB===state.compA){state.compB=LABS.find(function(x){return x.id!==state.compA;})?.id||state.compB;}navigate('compare');return;}
  if(b.dataset.openDna){inspect(b.dataset.openDna);return;}
- if(b.dataset.clear!==undefined||b.hasAttribute('data-clear')){state.search='';state.topic='All';render();document.getElementById('archive-search')?.focus({preventScroll:true});return;}
- if(b.dataset.topic){state.topic=b.dataset.topic;render();document.querySelector('.filter-line [data-topic="'+state.topic+'"]')?.focus({preventScroll:true});return;}
+ if(b.dataset.clear!==undefined||b.hasAttribute('data-clear')){state.search='';state.topic='All';refreshView('#archive-search');return;}
+ if(b.dataset.topic){state.topic=b.dataset.topic;refreshView('.filter-line [data-topic="'+state.topic+'"]');return;}
  if(b.dataset.compareFocus){state.compareFocus=b.dataset.compareFocus;refreshView('[data-compare-focus="'+state.compareFocus+'"]');return;}
- if(b.hasAttribute('data-swap')){var a=state.compA;state.compA=state.compB;state.compB=a;render();return;}
+ if(b.hasAttribute('data-swap')){var a=state.compA;state.compA=state.compB;state.compB=a;refreshView('[data-swap]');return;}
  if(b.dataset.related){state.compA=state.selected;state.compB=b.dataset.related;navigate('compare');return;}
- if(b.dataset.radar){state.radarFilter=b.dataset.radar;render();return;}
+ if(b.dataset.radar){state.radarFilter=b.dataset.radar;refreshView('[data-radar="'+state.radarFilter+'"]');return;}
  if(b.dataset.inspect){inspect(b.dataset.inspect);return;}
- if(b.dataset.interest){var t=b.dataset.interest;if(state.interests.has(t))state.interests.delete(t);else state.interests.add(t);save('yeon_v6_interests',Array.from(state.interests));render();document.querySelector('[data-interest="'+t+'"]')?.focus({preventScroll:true});return;}
- if(b.dataset.scenario){state.scenario=b.dataset.scenario;render();document.querySelector('[data-scenario="'+state.scenario+'"]')?.focus({preventScroll:true});return;}
+ if(b.dataset.interest){var t=b.dataset.interest;if(state.interests.has(t))state.interests.delete(t);else state.interests.add(t);save('yeon_v6_interests',Array.from(state.interests));refreshView('[data-interest="'+t+'"]');return;}
+ if(b.dataset.scenario){state.scenario=b.dataset.scenario;refreshView('[data-scenario="'+state.scenario+'"]');return;}
  if(b.hasAttribute('data-clear-checks')){state.checks.clear();save('yeon_v6_checks',[]);render();return;}
  if(b.hasAttribute('data-export')){exportNotes();return;}
  if(b.hasAttribute('data-face-from-compare')){state.faceA=state.compA;state.faceB=state.compB;navigate('faceoff');return;}
@@ -436,9 +436,9 @@ document.addEventListener('change',function(e){
   var field=e.target.dataset.select;
   if(field==='selected')choose(e.target.value);
   else if(['compA','compB','faceA','faceB'].includes(field)&&valid(e.target.value))state[field]=e.target.value;
-  render();return;
+  refreshView('[data-select="'+field+'"]');return;
  }
- if(e.target.dataset.check!==undefined){var id=Number(e.target.dataset.check);if(e.target.checked)state.checks.add(id);else state.checks.delete(id);save('yeon_v6_checks',Array.from(state.checks));render();document.querySelector('[data-check="'+id+'"]')?.focus({preventScroll:true});}
+ if(e.target.dataset.check!==undefined){var id=Number(e.target.dataset.check);if(e.target.checked)state.checks.add(id);else state.checks.delete(id);save('yeon_v6_checks',Array.from(state.checks));refreshView('[data-check="'+id+'"]');}
 });
 document.addEventListener('keydown',function(e){
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();if(state.commandOpen)closeCommand();else openCommand();return;}
