@@ -67,7 +67,7 @@ jobs:
           python3 -I -B "$SCRIPT" "editorial academic research discovery field guide clear typography accessible interaction" --design-system -f markdown > skill-audit/RESEARCH_DESIGN_SYSTEM.md 2>skill-audit/catalog-errors.txt || echo "Design system search failed; see errors" > skill-audit/search-status.txt
           python3 -I -B "$SCRIPT" "academic research reading interface typography" --domain typography > skill-audit/TYPOGRAPHY_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
           python3 -I -B "$SCRIPT" "focus not obscured accessible button states" --domain ux > skill-audit/ACCESSIBILITY_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
-          python3 -I -B "$SCRIPT" "html javascript responsive" --stack html > skill-audit/WEB_STACK_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
+          python3 -I -B "$SCRIPT" "html javascript responsive" --stack html-tailwind > skill-audit/WEB_STACK_GUIDANCE.txt 2>>skill-audit/catalog-errors.txt || true
           wc -c skill-audit/* | tail -4
       - name: Retain cloned source manifest and skill audit
         if: always()
