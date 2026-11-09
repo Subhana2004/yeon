@@ -100,7 +100,7 @@ function pageTop(kicker,title,description,index){
  return '<header class="page-heading tool-cover" data-tool="'+escapeHtml(current)+'">'+
  '<div class="tool-cover-intro"><div class="tool-cover-index"><span class="eyebrow dot">'+escapeHtml(kicker)+'</span><span class="tiny">FIELD EDITION / '+escapeHtml(index)+'</span></div>'+
  '<h1>'+display+'</h1><p class="tool-cover-description">'+escapeHtml(description)+'</p>'+
- '<button class="btn-text tool-cover-back" type="button" data-go="explore"><span aria-hidden="true">←</span> Back to the research index</button></div>'+
+ '<button class="btn-text tool-cover-back" type="button" data-back-archive><span aria-hidden="true">←</span> Back to the research index</button></div>'+
  '<aside class="tool-cover-folio" aria-label="Current research context"><div class="tool-cover-folio-head"><span>'+escapeHtml(folio.head)+'</span><span class="tool-cover-id">'+escapeHtml(index)+' / 09</span></div>'+
  '<div class="tool-cover-folio-body"><span class="tool-cover-asterisk" aria-hidden="true">✳</span><blockquote>'+escapeHtml(folio.body)+'</blockquote></div>'+
  '<div class="tool-cover-folio-foot"><span>'+escapeHtml(folio.foot)+'</span><span aria-hidden="true">↗</span></div></aside>'+
@@ -290,14 +290,15 @@ function render(){
  document.getElementById('theme-toggle').setAttribute('aria-label',document.documentElement.dataset.theme==='dark'?'Switch to light appearance':'Switch to dark appearance');
  document.title=(state.route==='explore'?'Research Reader':state.route==='about'?'About':TOOLS.find(function(t){return t.id===state.route;})?.title||'YEON')+' / YEON V6';
 }
-function navigate(next,scroll){
+function navigate(next,scroll,anchor){
  if(!ROUTES.includes(next))next='explore';
  var previous=state.route;
  function applyRoute(){
   state.route=next;
   if(location.hash!=='#'+next)history.pushState(null,'','#'+next);
   closeMenu();render();
-  if(scroll!==false)window.scrollTo({top:0,behavior:'instant'});
+  if(anchor){document.getElementById(anchor)?.scrollIntoView({block:'start',behavior:'instant'});}
+  else if(scroll!==false)window.scrollTo({top:0,behavior:'instant'});
  }
  if(previous!==next&&typeof document.startViewTransition==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   document.startViewTransition(applyRoute);
@@ -388,6 +389,7 @@ document.addEventListener('click',function(e){
  if(b.dataset.commandId){var id=b.dataset.commandId,type=b.dataset.commandType;closeCommand();if(type==='lab')inspect(id);else navigate(id);return;}
  if(b.dataset.feature){choose(b.dataset.feature);render();document.querySelector('[data-feature="'+b.dataset.feature+'"]')?.focus({preventScroll:true});return;}
  if(b.dataset.scroll){var target=document.getElementById(b.dataset.scroll);if(target)target.scrollIntoView({block:'start',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});return;}
+ if(b.hasAttribute('data-back-archive')){navigate('explore',false,'archive');return;}
  if(b.dataset.go){navigate(b.dataset.go);return;}
  if(b.dataset.pick){selectInExplore(b.dataset.pick,e.detail===0);return;}
  if(b.dataset.lens){
