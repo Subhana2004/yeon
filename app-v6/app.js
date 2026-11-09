@@ -47,7 +47,7 @@ var state={
  search:'',topic:'All',lens:'question',
  follows:new Set(Array.isArray(storedFollows)?storedFollows.filter(valid):[]),
  notes:noteData&&typeof noteData==='object'&&!Array.isArray(noteData)?noteData:{},
- compA:'mosaic',compB:'vertex',radarFilter:'following',
+ compA:'mosaic',compB:'vertex',compareFocus:'all',radarFilter:'following',
  interests:new Set(Array.isArray(storedInterests)?storedInterests.filter(function(t){return TOPICS.includes(t);}):[]),
  checks:new Set(Array.isArray(storedChecks)?storedChecks.filter(function(i){return Number.isInteger(i)&&i>=0&&i<CHECKS.length;}):[]),
  scenario:'shift',faceA:'horizon',faceB:'vertex',
@@ -86,7 +86,25 @@ function matches(){
 }
 function overlapping(a,b){return a.topics.filter(function(x){return b.topics.includes(x);});}
 function pageTop(kicker,title,description,index){
- return '<header class="page-heading"><div><span class="eyebrow dot">'+escapeHtml(kicker)+'</span><h1>'+escapeHtml(title)+'</h1></div><div><div class="page-number">YEON / '+escapeHtml(index)+'</div><p style="margin-top:16px">'+escapeHtml(description)+'</p></div></header>';
+ var current=state.route,l=lab(state.selected),folio={head:'',body:'',foot:''};
+ if(current==='dna')folio={head:'CURRENT FIELD NOTE / '+l.short.toUpperCase(),body:l.statement,foot:'03 research chapters · methods & boundaries'};
+ else if(current==='compare')folio={head:'SIDE BY SIDE / A + B',body:lab(state.compA).short+' meets '+lab(state.compB).short+'. What would make their results comparable?',foot:'Same questions · no invented scores'};
+ else if(current==='connections')folio={head:'CROSS-REFERENCE / '+l.short.toUpperCase(),body:'The same question may lead to a very different research approach.',foot:'Shared topics are not collaborations'};
+ else if(current==='radar')folio={head:'YOUR READING DESK',body:n2(state.follows.size)+' research '+(state.follows.size===1?'thread':'threads')+' on your personal list.',foot:'Local watchlist · no live notifications'};
+ else if(current==='doors')folio={head:'EVIDENCE STANDARD / 00',body:'A real opportunity begins with a verifiable source.',foot:'Zero live openings connected'};
+ else if(current==='fit')folio={head:'A RESEARCH DIRECTION, NOT A SCORE',body:Array.from(state.interests).join(' / ')||'Choose the questions that interest you.',foot:'Your selected topics · transparent overlap'};
+ else if(current==='faceoff')folio={head:'THE CURRENT EXPERIMENT',body:SCENARIOS[state.scenario].title,foot:'Questions before conclusions'};
+ else folio={head:'WHY YEON EXISTS',body:'Research deserves a closer reading.',foot:'Question · method · uncertainty'};
+ var parts=title.split(' '),ending=parts.pop(),opening=parts.join(' ');
+ var display=(opening?escapeHtml(opening)+' ':'')+'<em>'+escapeHtml(ending)+'</em>';
+ return '<header class="page-heading tool-cover" data-tool="'+escapeHtml(current)+'">'+
+ '<div class="tool-cover-intro"><div class="tool-cover-index"><span class="eyebrow dot">'+escapeHtml(kicker)+'</span><span class="tiny">FIELD EDITION / '+escapeHtml(index)+'</span></div>'+
+ '<h1>'+display+'</h1><p class="tool-cover-description">'+escapeHtml(description)+'</p>'+
+ '<button class="btn-text tool-cover-back" type="button" data-go="explore"><span aria-hidden="true">←</span> Back to the research index</button></div>'+
+ '<aside class="tool-cover-folio" aria-label="Current research context"><div class="tool-cover-folio-head"><span>'+escapeHtml(folio.head)+'</span><span class="tool-cover-id">'+escapeHtml(index)+' / 09</span></div>'+
+ '<div class="tool-cover-folio-body"><span class="tool-cover-asterisk" aria-hidden="true">✳</span><blockquote>'+escapeHtml(folio.body)+'</blockquote></div>'+
+ '<div class="tool-cover-folio-foot"><span>'+escapeHtml(folio.foot)+'</span><span aria-hidden="true">↗</span></div></aside>'+
+ '</header>';
 }
 function intro(id){
  var l=lab(id);
@@ -170,14 +188,15 @@ function dnaView(){
 }
 function compareView(){
  var a=lab(state.compA),b=lab(state.compB),common=overlapping(a,b);
- var rows=[['The question',escapeHtml(a.statement),escapeHtml(b.statement)],['Methods',list(a.methods),list(b.methods)],['Assumptions',list(a.assumptions),list(b.assumptions)],['Limitations',list(a.limits),list(b.limits)]];
+ var rows=[['question','The question',escapeHtml(a.statement),escapeHtml(b.statement)],['methods','Methods',list(a.methods),list(b.methods)],['assumptions','Assumptions',list(a.assumptions),list(b.assumptions)],['limits','Limitations',list(a.limits),list(b.limits)]];
  return '<div class="main-container tool-page">'+pageTop('ONE LENS / TWO DIRECTIONS','Compare','Examine research approaches through the same questions. The purpose is to find meaningful differences, not to declare a winner.','03')+
  '<div class="tool-toolbar"><label><span class="field-label">First research lab</span><select class="select" data-select="compA">'+opts(a.id)+'</select></label>'+
  '<label><span class="field-label">Second research lab</span><select class="select" data-select="compB">'+opts(b.id)+'</select></label>'+
  '<button type="button" class="btn-outline" data-swap style="margin-bottom:1px">⇄ Swap</button></div>'+
  '<div class="compare-heads"><article class="compare-head"><span class="eyebrow">DOCUMENT A</span><h2>'+escapeHtml(a.name)+'</h2><p>'+escapeHtml(a.focus)+'</p></article>'+
  '<article class="compare-head"><span class="eyebrow">DOCUMENT B</span><h2>'+escapeHtml(b.name)+'</h2><p>'+escapeHtml(b.focus)+'</p></article></div>'+
- '<div class="comparison-table">'+rows.map(function(row){return '<div class="comparison-row"><div>'+row[0]+'</div><div>'+row[1]+'</div><div>'+row[2]+'</div></div>';}).join('')+'</div>'+
+ '<div class="comparison-focus-wrap"><span class="eyebrow">READ WITH A SINGLE LENS</span><div class="comparison-focus" role="group" aria-label="Comparison perspective">'+[['all','All evidence'],['question','Questions'],['methods','Methods'],['assumptions','Assumptions'],['limits','Boundaries']].map(function(x){return '<button type="button" data-compare-focus="'+x[0]+'" aria-pressed="'+(state.compareFocus===x[0])+'">'+x[1]+'</button>';}).join('')+'</div></div>'+
+ '<div class="comparison-table">'+rows.filter(function(row){return state.compareFocus==='all'||row[0]===state.compareFocus;}).map(function(row){return '<div class="comparison-row"><div>'+row[1]+'</div><div>'+row[2]+'</div><div>'+row[3]+'</div></div>';}).join('')+'</div>'+
  '<p class="notice" style="margin-top:18px"><strong>Shared labels are not proof.</strong> '+(common.length?'The sample labs both reference '+escapeHtml(common.join(' and '))+'.':'These sample labs share no field label.')+' This does not establish direct collaboration, comparable experiments or research quality.</p>'+
  '<div class="toolbar-actions" style="margin-top:21px"><button class="btn-main" type="button" data-face-from-compare>Challenge these two approaches ↗</button></div></div>';
 }
@@ -273,10 +292,31 @@ function render(){
 }
 function navigate(next,scroll){
  if(!ROUTES.includes(next))next='explore';
- state.route=next;
- if(location.hash!=='#'+next)history.pushState(null,'','#'+next);
- closeMenu();render();
- if(scroll!==false)window.scrollTo({top:0,behavior:'instant'});
+ var previous=state.route;
+ function applyRoute(){
+  state.route=next;
+  if(location.hash!=='#'+next)history.pushState(null,'','#'+next);
+  closeMenu();render();
+  if(scroll!==false)window.scrollTo({top:0,behavior:'instant'});
+ }
+ if(previous!==next&&typeof document.startViewTransition==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  document.startViewTransition(applyRoute);
+ }else{
+  applyRoute();
+  if(previous!==next&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+   app.classList.remove('page-crossfade');
+   void app.offsetWidth;
+   app.classList.add('page-crossfade');
+  }
+ }
+}
+function refreshView(selector){
+ var previousY=window.scrollY,focused=document.activeElement;
+ render();
+ window.scrollTo({top:previousY,behavior:'instant'});
+ var target=selector&&document.querySelector(selector);
+ if(target)target.focus({preventScroll:true});
+ else if(focused&&focused.id){var replacement=document.getElementById(focused.id);if(replacement)replacement.focus({preventScroll:true});}
 }
 function inspect(id){choose(id);navigate('dna');}
 function selectInExplore(id,focus){
@@ -365,6 +405,7 @@ document.addEventListener('click',function(e){
  if(b.dataset.openDna){inspect(b.dataset.openDna);return;}
  if(b.dataset.clear!==undefined||b.hasAttribute('data-clear')){state.search='';state.topic='All';render();document.getElementById('archive-search')?.focus({preventScroll:true});return;}
  if(b.dataset.topic){state.topic=b.dataset.topic;render();document.querySelector('.filter-line [data-topic="'+state.topic+'"]')?.focus({preventScroll:true});return;}
+ if(b.dataset.compareFocus){state.compareFocus=b.dataset.compareFocus;refreshView('[data-compare-focus="'+state.compareFocus+'"]');return;}
  if(b.hasAttribute('data-swap')){var a=state.compA;state.compA=state.compB;state.compB=a;render();return;}
  if(b.dataset.related){state.compA=state.selected;state.compB=b.dataset.related;navigate('compare');return;}
  if(b.dataset.radar){state.radarFilter=b.dataset.radar;render();return;}
@@ -413,6 +454,11 @@ document.addEventListener('keydown',function(e){
   }
   if(e.key==='Enter'&&document.activeElement.id==='command-input'){var first=document.querySelector('#command-results button');if(first){e.preventDefault();first.click();}}
   return;
+ }
+ var compareTab=e.target.closest?.('[data-compare-focus]');
+ if(compareTab&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){
+  e.preventDefault();var items=Array.from(document.querySelectorAll('[data-compare-focus]'));var pos=items.indexOf(compareTab),next=e.key==='Home'?0:e.key==='End'?items.length-1:(pos+(e.key==='ArrowRight'?1:-1)+items.length)%items.length;
+  items[next].click();return;
  }
  var currentTab=e.target.closest?.('.reader-tabs [data-lens]');
  if(currentTab&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){
