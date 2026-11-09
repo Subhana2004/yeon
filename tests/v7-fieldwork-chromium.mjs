@@ -24,6 +24,16 @@ async function noOverflow(page,width){
  if(d>2)console.log('OVERFLOW',width,d,await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).slice(0,6).map(e=>e.className)));
  assert.ok(d<=2,'unexpected page overflow at '+width+'px: '+d);
 }
+async function captureTrails(page,filename){
+ await page.evaluate(()=>{
+  const section=document.querySelector('.trail-section');
+  const top=section.getBoundingClientRect().top+window.scrollY;
+  const nav=document.querySelector('.topbar').getBoundingClientRect().height;
+  window.scrollTo({top:Math.max(0,top-nav-12),behavior:'instant'});
+ });
+ await page.waitForTimeout(440); // settled state, never a mid-transition capture
+ await page.screenshot({path:resolve(output,filename)});
+}
 try{
  for(const width of widths){
   const page=await browser.newPage({viewport:{width,height:940},deviceScaleFactor:1,acceptDownloads:true});
@@ -31,11 +41,30 @@ try{
   await page.goto(pathToFileURL(resolve(folder,'index.html')).href,{waitUntil:'domcontentloaded'});
   await page.locator('.hero-feature').waitFor();
   assert.match(await page.locator('.hero-left h1').innerText(),/better questions/);
-  assert.equal(await page.locator('.preview-row').count(),4);
+  assert.equal(await page.locator('.trail-card').count(),4,'four research trails replace the flat list');
+  assert.equal(await page.locator('.trail-card.is-active').count(),1,'one active research trail');
+  assert.equal(await page.locator('.trail-details:visible').count(),1,'only selected evidence is displayed');
+  const postHeroGap=await page.evaluate(()=>document.querySelector('.trail-heading').getBoundingClientRect().top-document.querySelector('.trust-band').getBoundingClientRect().bottom);
+  assert.ok(postHeroGap<82,'post-hero section starts without excessive whitespace');
   assert.match(await page.locator('.footer-disclosure').innerText(),/fictional/);
   await noOverflow(page,width);
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+  await page.waitForTimeout(120);
   await page.screenshot({path:resolve(output,'home-'+width+'.png'),fullPage:true});
+  if([1440,390].includes(width))await captureTrails(page,'trails-default-'+width+'.png');
   if(width===1440){
+   await page.locator('[data-trail="horizon"]').click();
+   assert.equal(await page.locator('#trail-deck').getAttribute('data-active'),'1');
+   assert.equal(await page.locator('[data-trail="horizon"]').getAttribute('aria-pressed'),'true');
+   assert.equal(await page.locator('.trail-card.is-active .trail-details:visible').count(),1);
+   assert.match(await page.locator('.trail-card.is-active .trail-evidence').innerText(),/Domain adaptation|deployment conditions/i);
+   await captureTrails(page,'trails-horizon-1440.png');
+   await page.keyboard.press('ArrowRight');
+   assert.equal(await page.locator('[data-trail="vertex"]').getAttribute('aria-pressed'),'true','arrow keys select the next research trail');
+   await captureTrails(page,'trails-vertex-1440.png');
+   await page.locator('.trail-card.is-active [data-lab="vertex"]').click();
+   assert.match(await page.locator('.dossier-header h1').innerText(),/Vertex/,'trail details open the selected dossier');
+   await page.locator('.primary-nav [data-route="discover"]').click();
    await page.locator('[data-feature="horizon"]').click();
    assert.match(await page.locator('.feature-body h2').innerText(),/world changes/);
    await page.locator('.primary-nav [data-route="index"]').click();
@@ -116,6 +145,12 @@ try{
    await noOverflow(page,width);
   }
   if(width===390){
+   await page.locator('[data-trail="dialogue"]').click();
+   assert.equal(await page.locator('#trail-deck').getAttribute('data-active'),'3');
+   assert.equal(await page.locator('.trail-card.is-active').count(),1);
+   assert.equal(await page.locator('.trail-details:visible').count(),1);
+   await captureTrails(page,'trails-dialogue-390.png');
+   await noOverflow(page,width);
    await page.locator('#mobile-trigger').click();
    assert.equal(await page.locator('#mobile-trigger').getAttribute('aria-expanded'),'true');
    await page.locator('.mobile-nav [data-route="index"]').click();

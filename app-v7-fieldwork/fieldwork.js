@@ -36,7 +36,7 @@ const savedFromStore=load('yeon_fieldwork_saved',[]);
 const topicFromStore=load('yeon_fieldwork_interests',['Language','Systems']);
 const checksFromStore=load('yeon_fieldwork_checks',[]);
 const notesFromStore=load('yeon_fieldwork_notes',{});
-const S={route:'discover',feature:'mosaic',search:'',topic:'All',selected:'mosaic',tab:'story',a:'mosaic',b:'vertex',axis:'question',
+const S={route:'discover',feature:'mosaic',trail:'mosaic',search:'',topic:'All',selected:'mosaic',tab:'story',a:'mosaic',b:'vertex',axis:'question',
  saved:new Set(Array.isArray(savedFromStore)?savedFromStore.filter(valid):[]),
  notes:notesFromStore&&typeof notesFromStore==='object'&&!Array.isArray(notesFromStore)?notesFromStore:{},
  interests:new Set(Array.isArray(topicFromStore)?topicFromStore.filter(x=>TOPICS.includes(x)):[]),
@@ -63,9 +63,55 @@ function featured(){
  '<button class="text-action" type="button" data-lab="'+l.id+'">Explore this question <span class="arrow">↗</span></button></div>'+
  '<div class="feature-bottom" role="group" aria-label="Choose featured question">'+featured.map((id,i)=>{let x=lab(id);return '<button type="button" data-feature="'+x.id+'" class="'+(x.id===S.feature?'active':'')+'" aria-pressed="'+(x.id===S.feature)+'"><span>'+n(i+1)+' / '+esc(x.focus.split(' ')[0])+'</span><strong>'+esc(x.short)+'</strong></button>'}).join('')+'</div></aside>';
 }
-function previewRow(l){return '<button type="button" class="preview-row" data-lab="'+l.id+'"><span class="number">'+esc(l.number)+'</span><span><strong>'+esc(l.question)+'</strong><small>'+esc(l.name)+' · '+esc(l.focus)+'</small></span><span class="preview-arrow" aria-hidden="true">↗</span></button>'}
+
+/* Research trails: one deliberately interactive editorial sequence.
+ * The selected example opens its evidence beneath the question without
+ * navigating away or making the user scan a static four-row list. */
+const HOME_TRAILS=['mosaic','horizon','vertex','dialogue'];
+function trailCard(id,index){
+ const l=lab(id),isActive=S.trail===id;
+ return '<article class="trail-card'+(isActive?' is-active':'')+'" data-trail-card="'+esc(id)+'">'+
+  '<button class="trail-select" type="button" data-trail="'+esc(id)+'" aria-pressed="'+isActive+'" aria-label="Select research question '+(index+1)+': '+esc(l.question)+'">'+
+   '<span class="trail-card-top"><span class="trail-numeral">'+n(index+1)+' <span>/ 04</span></span><span class="trail-state" aria-hidden="true">'+(isActive?'SELECTED':'EXPLORE ↗')+'</span></span>'+
+   '<span class="trail-card-middle"><span class="trail-field">'+esc(l.field)+'</span><span class="trail-question">'+esc(l.question)+'</span></span>'+
+   '<span class="trail-card-bottom"><span>'+esc(l.name)+'</span><span class="trail-card-mark" aria-hidden="true">'+(isActive?'↓':'↗')+'</span></span>'+
+  '</button>'+
+  '<div class="trail-details" data-trail-details="'+esc(id)+'" '+(isActive?'':'hidden')+'>'+
+   '<div class="trail-evidence"><div><span class="micro">THE APPROACH</span><strong>'+esc(l.methods[0])+'</strong></div><div><span class="micro">THE LIMIT</span><strong>'+esc(l.limits[0])+'</strong></div></div>'+
+   '<button type="button" class="trail-open" data-lab="'+esc(id)+'"><span>Read the complete research dossier</span><span aria-hidden="true">↗</span></button>'+
+  '</div></article>';
+}
+function trailDeck(){
+ if(!HOME_TRAILS.includes(S.trail))S.trail=HOME_TRAILS[0];
+ return '<div class="trail-deck" id="trail-deck" data-active="'+HOME_TRAILS.indexOf(S.trail)+'" role="group" aria-label="Select one of four research trails">'+
+  HOME_TRAILS.map(trailCard).join('')+'</div>';
+}
+function activateTrail(id,{keyboard=false}={}){
+ if(!HOME_TRAILS.includes(id))return;
+ S.trail=id;
+ const deck=document.getElementById('trail-deck');
+ if(!deck)return;
+ deck.dataset.active=String(HOME_TRAILS.indexOf(id));
+ deck.classList.toggle('instant-trails',keyboard);
+ deck.querySelectorAll('[data-trail-card]').forEach(card=>{
+  const selected=card.dataset.trailCard===id;
+  card.classList.toggle('is-active',selected);
+  card.querySelector('[data-trail]').setAttribute('aria-pressed',String(selected));
+  card.querySelector('.trail-state').textContent=selected?'SELECTED':'EXPLORE ↗';
+  card.querySelector('.trail-card-mark').textContent=selected?'↓':'↗';
+  card.querySelector('[data-trail-details]').hidden=!selected;
+ });
+ const active=deck.querySelector('[data-trail="'+id+'"]');
+ active?.focus({preventScroll:true});
+ const selectedCard=active?.closest('.trail-card');
+ if(keyboard){
+  selectedCard?.scrollIntoView({block:'nearest',behavior:'instant'});
+ }else if(window.matchMedia('(max-width: 850px)').matches){
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  selectedCard?.scrollIntoView({block:'nearest',behavior:reduced?'instant':'smooth'});
+ }
+}
 function home(){
- const list=['mosaic','horizon','vertex','dialogue'].map(lab);
  return '<div class="view"><section class="research-hero"><div class="container">'+
  '<div class="issue-line"><span class="micro"><i class="issue-dot" aria-hidden="true"></i> YEON / RESEARCH FIELD GUIDE</span><span class="micro">ISSUE 01 — DISCOVER WITH INTENT</span></div>'+
  '<div class="hero-layout"><div class="hero-left"><h1>Good research starts with <span class="insight">better questions.</span></h1>'+
@@ -75,8 +121,14 @@ function home(){
  '<div class="hero-mini"><span class="mini-icon" aria-hidden="true">↘</span><span>A working research reading room. Sample labs are fictional; conclusions always need primary sources.</span></div></div>'+
  featured()+'</div></div></section>'+
  '<div class="trust-band"><div class="container"><div class="trust-item"><span>01.</span><span>Questions before reputations</span></div><div class="trust-item"><span>02.</span><span>Methods before claims</span></div><div class="trust-item"><span>03.</span><span>Limits before conclusions</span></div></div></div>'+
- '<div class="container home-content"><section class="home-sections"><div><span class="micro accent">START WITH CURIOSITY</span><h2 class="section-title">Four questions worth investigating.</h2><p class="section-lead">Open a complete research dossier. Compare approaches or save an open question to your reading desk.</p><button class="text-action" type="button" data-nav-button="index">Browse every question ↗</button></div>'+
- '<div class="research-preview">'+list.map(previewRow).join('')+'</div></section>'+
+ '<div class="container home-content"><section class="trail-section" aria-labelledby="trails-heading">'+
+ '<div class="trail-heading"><div><span class="micro accent">THE RESEARCH TRAILS / 01—04</span>'+
+ '<h2 id="trails-heading">Pick a question.<br>Follow the evidence.</h2></div>'+
+ '<div class="trail-intro"><p>Select a trail to reveal its method and limitation. Open a complete dossier when a question catches your interest.</p>'+
+ '<button type="button" class="text-action" data-nav-button="index">Explore all eight examples ↗</button></div></div>'+
+ trailDeck()+
+ '<div class="trail-footnote"><span class="micro subdued">01 / DISCOVER THE QUESTION</span><span class="micro subdued">02 / EXAMINE THE METHOD</span><span class="micro subdued">03 / UNDERSTAND THE LIMIT</span></div>'+
+ '</section>'+
  '<section class="home-secondary"><div class="secondary-feature"><span class="micro">LAB DNA / KNOW THE STORY</span><h2>A research direction is a story, not a score.</h2><button class="text-action" type="button" data-lab="horizon">Follow an idea through three chapters ↗</button></div>'+
  '<div class="secondary-aside"><span class="micro accent">YOUR PERSONAL READING DESK</span><h3>Save questions. Make connections. Keep your evidence.</h3><p>Follow sample labs, write private notes, and export your questions as a Markdown file. No accounts or fabricated live alerts.</p><button class="text-action" type="button" data-nav-button="desk">Open my desk ↗</button></div></section></div></div>';
 }
@@ -252,6 +304,7 @@ document.addEventListener('click',function(ev){
  if(b.dataset.quickId){const to=b.dataset.quickType==='lab'?'lab/'+b.dataset.quickId:b.dataset.quickId;closeQuick();route(to);return;}
  if(b.dataset.navButton){route(b.dataset.navButton);return;}
  if(b.dataset.lab){route('lab/'+b.dataset.lab);return;}
+ if(b.dataset.trail){activateTrail(b.dataset.trail);return;}
  if(b.dataset.feature){S.feature=b.dataset.feature;const old=document.querySelector('.hero-feature');if(old)old.outerHTML=featured();document.querySelector('[data-feature="'+S.feature+'"]')?.focus({preventScroll:true});return;}
  if(b.dataset.indexTopic){S.topic=b.dataset.indexTopic;document.querySelectorAll('[data-index-topic]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.indexTopic===S.topic)));updateIndexResults();return;}
  if(b.hasAttribute('data-reset-index')){S.search='';S.topic='All';document.getElementById('index-query').value='';document.querySelectorAll('[data-index-topic]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.indexTopic==='All')));updateIndexResults();document.getElementById('index-query')?.focus({preventScroll:true});return;}
@@ -290,6 +343,12 @@ document.addEventListener('keydown',function(ev){
   if(ev.key==='Tab'){const at=controls.indexOf(document.activeElement);if(at>=0){ev.preventDefault();controls[(at+(ev.shiftKey?-1:1)+controls.length)%controls.length].focus();}}
   if(ev.key==='Enter'&&document.activeElement===inputQuick){const first=document.querySelector('#quick-results button');if(first){ev.preventDefault();first.click();}}
   return;
+ }
+ const trail=ev.target.closest?.('[data-trail]');
+ if(trail&&['ArrowLeft','ArrowRight','Home','End'].includes(ev.key)){
+  ev.preventDefault();const at=HOME_TRAILS.indexOf(trail.dataset.trail);
+  const next=ev.key==='Home'?0:ev.key==='End'?HOME_TRAILS.length-1:(at+(ev.key==='ArrowRight'?1:-1)+HOME_TRAILS.length)%HOME_TRAILS.length;
+  activateTrail(HOME_TRAILS[next],{keyboard:true});return;
  }
  const tab=ev.target.closest?.('[data-dossier-tab]');
  if(tab&&['ArrowLeft','ArrowRight','Home','End'].includes(ev.key)){ev.preventDefault();const tabs=[...document.querySelectorAll('[data-dossier-tab]')],at=tabs.indexOf(tab),next=ev.key==='Home'?0:ev.key==='End'?tabs.length-1:(at+(ev.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[next].click();return;}
