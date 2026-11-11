@@ -67,49 +67,61 @@ function featured(){
 /* Research trails: one deliberately interactive editorial sequence.
  * The selected example opens its evidence beneath the question without
  * navigating away or making the user scan a static four-row list. */
+
+/* Guided research explorer.
+   Make the first action obvious: choose one question, preview its evidence,
+   then choose whether to read the complete research story. */
 const HOME_TRAILS=['mosaic','horizon','vertex','dialogue'];
-function trailCard(id,index){
- const l=lab(id),isActive=S.trail===id;
- return '<article class="trail-card'+(isActive?' is-active':'')+'" data-trail-card="'+esc(id)+'">'+
-  '<button class="trail-select" type="button" data-trail="'+esc(id)+'" aria-pressed="'+isActive+'" aria-label="Select research question '+(index+1)+': '+esc(l.question)+'">'+
-   '<span class="trail-card-top"><span class="trail-numeral">'+n(index+1)+' <span>/ 04</span></span><span class="trail-state" aria-hidden="true">'+(isActive?'SELECTED':'EXPLORE ↗')+'</span></span>'+
-   '<span class="trail-card-middle"><span class="trail-field">'+esc(l.field)+'</span><span class="trail-question">'+esc(l.question)+'</span></span>'+
-   '<span class="trail-card-bottom"><span>'+esc(l.name)+'</span><span class="trail-card-mark" aria-hidden="true">'+(isActive?'↓':'↗')+'</span></span>'+
-  '</button>'+
-  '<div class="trail-details" data-trail-details="'+esc(id)+'" '+(isActive?'':'hidden')+'>'+
-   '<div class="trail-evidence"><div><span class="micro">THE APPROACH</span><strong>'+esc(l.methods[0])+'</strong></div><div><span class="micro">THE LIMIT</span><strong>'+esc(l.limits[0])+'</strong></div></div>'+
-   '<button type="button" class="trail-open" data-lab="'+esc(id)+'"><span>Read the complete research dossier</span><span aria-hidden="true">↗</span></button>'+
-  '</div></article>';
+const TRAIL_LABELS={
+ mosaic:{title:'Reliable answers',hint:'Fresh information'},
+ horizon:{title:'Learning to adapt',hint:'Changing conditions'},
+ vertex:{title:'Tracing evidence',hint:'Check sources'},
+ dialogue:{title:'Explaining AI',hint:'Clear explanations'}
+};
+function guidedChoice(id,index){
+ const l=lab(id),title=TRAIL_LABELS[id],active=S.trail===id;
+ return '<button class="guided-choice'+(active?' is-active':'')+'" type="button" data-trail="'+esc(id)+'" aria-pressed="'+active+'" aria-controls="guided-preview-content">'+
+  '<span class="guided-choice-index">'+n(index+1)+' <span>/ 04</span></span>'+
+  '<span class="guided-choice-title">'+esc(title.title)+'</span>'+
+  '<span class="guided-choice-hint">'+esc(title.hint)+'</span>'+
+  '<span class="guided-choice-indicator" aria-hidden="true">'+(active?'✓':'↗')+'</span>'+
+  '</button>';
 }
-function trailDeck(){
+function guidedPreview(id){
+ const l=lab(id),position=HOME_TRAILS.indexOf(id)+1;
+ return '<div class="guided-preview-body"><div class="guided-preview-main">'+
+  '<span class="micro">YOU SELECTED · QUESTION '+n(position)+' OF 04</span>'+
+  '<h3>'+esc(l.question)+'</h3>'+
+  '<p>'+esc(l.thesis)+'</p>'+
+  '<button type="button" class="btn primary guided-read" data-lab="'+esc(id)+'">Read the full research story <span aria-hidden="true">↗</span></button>'+
+  '</div><div class="guided-preview-facts">'+
+  '<div class="guided-fact"><span class="guided-fact-number">01</span><div><span class="micro">HOW THEY EXPLORE IT</span><p>'+esc(l.methods[0])+'</p></div></div>'+
+  '<div class="guided-fact"><span class="guided-fact-number">02</span><div><span class="micro">WHAT TO QUESTION</span><p>'+esc(l.limits[0])+'</p></div></div>'+
+  '<p class="guided-prototype-note">Illustrative research profile, not a verified laboratory.</p>'+
+  '</div></div>';
+}
+function guidedExplorer(){
  if(!HOME_TRAILS.includes(S.trail))S.trail=HOME_TRAILS[0];
- return '<div class="trail-deck" id="trail-deck" data-active="'+HOME_TRAILS.indexOf(S.trail)+'" role="group" aria-label="Select one of four research trails">'+
-  HOME_TRAILS.map(trailCard).join('')+'</div>';
+ return '<div class="guided-explorer">'+
+  '<div class="guided-options" role="group" aria-label="Choose one research question">'+HOME_TRAILS.map(guidedChoice).join('')+'</div>'+
+  '<section class="guided-preview" id="guided-preview" aria-label="Selected question preview">'+
+   '<div id="guided-preview-content" aria-live="polite" aria-atomic="true">'+guidedPreview(S.trail)+'</div>'+
+  '</section></div>';
 }
 function activateTrail(id,{keyboard=false}={}){
  if(!HOME_TRAILS.includes(id))return;
  S.trail=id;
- const deck=document.getElementById('trail-deck');
- if(!deck)return;
- deck.dataset.active=String(HOME_TRAILS.indexOf(id));
- deck.classList.toggle('instant-trails',keyboard);
- deck.querySelectorAll('[data-trail-card]').forEach(card=>{
-  const selected=card.dataset.trailCard===id;
-  card.classList.toggle('is-active',selected);
-  card.querySelector('[data-trail]').setAttribute('aria-pressed',String(selected));
-  card.querySelector('.trail-state').textContent=selected?'SELECTED':'EXPLORE ↗';
-  card.querySelector('.trail-card-mark').textContent=selected?'↓':'↗';
-  card.querySelector('[data-trail-details]').hidden=!selected;
+ document.querySelectorAll('[data-trail]').forEach(btn=>{
+  const active=btn.dataset.trail===id;btn.classList.toggle('is-active',active);
+  btn.setAttribute('aria-pressed',String(active));
+  const icon=btn.querySelector('.guided-choice-indicator');
+  if(icon)icon.textContent=active?'✓':'↗';
  });
- const active=deck.querySelector('[data-trail="'+id+'"]');
- active?.focus({preventScroll:true});
- const selectedCard=active?.closest('.trail-card');
- if(keyboard){
-  selectedCard?.scrollIntoView({block:'nearest',behavior:'instant'});
- }else if(window.matchMedia('(max-width: 850px)').matches){
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  selectedCard?.scrollIntoView({block:'nearest',behavior:reduced?'instant':'smooth'});
- }
+ const preview=document.getElementById('guided-preview-content');
+ if(preview)preview.innerHTML=guidedPreview(id);
+ const current=document.querySelector('[data-trail="'+id+'"]');
+ current?.focus({preventScroll:true});
+ // A repeated selection is immediate: no expanding grid, scroll jumps, or delayed keyboard motion.
 }
 function home(){
  return '<div class="view"><section class="research-hero"><div class="container">'+
@@ -121,13 +133,12 @@ function home(){
  '<div class="hero-mini"><span class="mini-icon" aria-hidden="true">↘</span><span>A working research reading room. Sample labs are fictional; conclusions always need primary sources.</span></div></div>'+
  featured()+'</div></div></section>'+
  '<div class="trust-band"><div class="container"><div class="trust-item"><span>01.</span><span>Questions before reputations</span></div><div class="trust-item"><span>02.</span><span>Methods before claims</span></div><div class="trust-item"><span>03.</span><span>Limits before conclusions</span></div></div></div>'+
- '<div class="container home-content"><section class="trail-section" aria-labelledby="trails-heading">'+
- '<div class="trail-heading"><div><span class="micro accent">THE RESEARCH TRAILS / 01—04</span>'+
- '<h2 id="trails-heading">Pick a question.<br>Follow the evidence.</h2></div>'+
- '<div class="trail-intro"><p>Select a trail to reveal its method and limitation. Open a complete dossier when a question catches your interest.</p>'+
- '<button type="button" class="text-action" data-nav-button="index">Explore all eight examples ↗</button></div></div>'+
- trailDeck()+
- '<div class="trail-footnote"><span class="micro subdued">01 / DISCOVER THE QUESTION</span><span class="micro subdued">02 / EXAMINE THE METHOD</span><span class="micro subdued">03 / UNDERSTAND THE LIMIT</span></div>'+
+ '<div class="container home-content"><section class="guided-section" aria-labelledby="trails-heading">'+
+ '<div class="guided-heading"><div><span class="micro accent">START HERE · FOUR EXAMPLE QUESTIONS</span>'+
+ '<h2 id="trails-heading">What interests you?</h2></div>'+
+ '<div class="guided-intro"><p>Choose a topic below. You’ll see the question, the approach, and what to investigate next.</p>'+
+ '<button type="button" class="text-action" data-nav-button="index">Browse all eight examples ↗</button></div></div>'+
+ guidedExplorer()+
  '</section>'+
  '<section class="home-secondary"><div class="secondary-feature"><span class="micro">LAB DNA / KNOW THE STORY</span><h2>A research direction is a story, not a score.</h2><button class="text-action" type="button" data-lab="horizon">Follow an idea through three chapters ↗</button></div>'+
  '<div class="secondary-aside"><span class="micro accent">YOUR PERSONAL READING DESK</span><h3>Save questions. Make connections. Keep your evidence.</h3><p>Follow sample labs, write private notes, and export your questions as a Markdown file. No accounts or fabricated live alerts.</p><button class="text-action" type="button" data-nav-button="desk">Open my desk ↗</button></div></section></div></div>';

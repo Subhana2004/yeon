@@ -601,190 +601,165 @@ p{overflow-wrap:break-word}
 @media(prefers-reduced-motion:reduce){.view{animation:none!important} }
 
 
+
 /* =========================================================================
-   THE RESEARCH TRAILS — interactive section immediately after the hero
-   Source principles:
-   Anthropic frontend-design: ground interaction in actual research content.
-   Emil design engineering: purposeful state feedback, no always-on movement.
-   UI/UX Pro Max: legible hierarchy and intentional touch/keyboard states.
-   One ink, paper, sea-glass and coral grammar with the existing Fieldwork UI.
+   GUIDED RESEARCH EXPLORER (post-hero)
+   One task per step: choose a plain-language topic, preview its evidence,
+   read the story. No resizing columns, nested accordions, or scrolling.
    ========================================================================= */
-.home-content{padding-top:clamp(38px,4.6vw,64px)}
-.trail-section{min-width:0}
-.trail-heading{
- display:grid;grid-template-columns:minmax(0,1fr) minmax(245px,365px);
- align-items:end;gap:clamp(28px,5vw,75px);margin-bottom:29px
+.home-content{padding-top:clamp(34px,4.2vw,58px)}
+.guided-section{min-width:0}
+.guided-heading{
+ display:flex;align-items:flex-end;justify-content:space-between;
+ gap:40px;margin-bottom:25px
 }
-.trail-heading h2{
- max-width:760px;margin:11px 0 0;font:700 clamp(35px,3.9vw,54px)/1.12 var(--font);
- letter-spacing:-.06em;color:var(--ink);text-wrap:balance
+.guided-heading>div:first-child{min-width:0}
+.guided-heading h2{
+ margin:10px 0 0;
+ font:700 clamp(32px,3.6vw,48px)/1.14 var(--font);
+ letter-spacing:-.055em;color:var(--ink);
+ text-wrap:balance
 }
-.trail-intro{align-self:end;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
-.trail-intro p{
- font-size:14px;line-height:1.72;color:var(--mid);max-width:44ch;margin:0
+.guided-intro{display:flex;flex-direction:column;align-items:flex-start;gap:7px;max-width:360px}
+.guided-intro p{font:500 13px/1.75 var(--font);color:var(--mid);margin:0}
+.guided-intro .text-action{font-size:12px;min-height:39px}
+.guided-explorer{min-width:0}
+.guided-options{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:12px;margin:0 0 12px
 }
-.trail-intro .text-action{margin:0;font-size:12px}
-.trail-deck{
- display:grid;gap:12px;min-width:0;
- grid-template-columns:2.45fr 1fr 1fr 1fr;
- transition:grid-template-columns .30s var(--ease)
+.guided-choice{
+ display:grid;grid-template-columns:minmax(0,1fr) 25px;
+ grid-template-rows:20px auto 21px;
+ column-gap:8px;row-gap:10px;
+ min-width:0;min-height:145px;
+ padding:18px 19px;
+ text-align:left;border:1px solid var(--rule);
+ border-radius:var(--radius-lg);
+ background:var(--white);color:var(--ink);
+ transition:background-color .15s ease,border-color .15s ease;
+ position:relative
 }
-.trail-deck[data-active="1"]{grid-template-columns:1fr 2.45fr 1fr 1fr}
-.trail-deck[data-active="2"]{grid-template-columns:1fr 1fr 2.45fr 1fr}
-.trail-deck[data-active="3"]{grid-template-columns:1fr 1fr 1fr 2.45fr}
-.trail-deck.instant-trails{transition:none}
-.trail-card{
- display:flex;flex-direction:column;min-width:0;height:470px;
+.guided-choice:before{content:'';position:absolute;top:0;left:16px;right:16px;height:3px;background:transparent}
+.guided-choice:hover{background:var(--paper);border-color:var(--line-strong)}
+.guided-choice.is-active{background:var(--mist);border-color:var(--line-strong)}
+.guided-choice.is-active:before{background:var(--accent)}
+.guided-choice-index{grid-column:1;grid-row:1;font:600 10px/1.5 var(--mono);color:var(--accent-ink)}
+.guided-choice-index span{color:var(--mid);font-weight:400}
+.guided-choice-title{
+ grid-column:1 / 3;grid-row:2;
+ font:700 clamp(17px,1.55vw,22px)/1.24 var(--font);
+ letter-spacing:-.037em;text-wrap:balance;overflow-wrap:break-word
+}
+.guided-choice-hint{
+ grid-column:1;grid-row:3;
+ color:var(--mid);font:500 11px/1.45 var(--font);
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.guided-choice-indicator{
+ grid-column:2;grid-row:3;justify-self:end;
+ display:grid;place-items:center;width:25px;height:25px;margin-top:-4px;
+ border:1px solid var(--line-strong);border-radius:50%;
+ color:var(--ink-soft);font:700 12px/1 var(--font)
+}
+.guided-choice.is-active .guided-choice-indicator{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.guided-choice:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.guided-preview{
  border:1px solid var(--line-strong);border-radius:var(--radius-lg);
- background:var(--white);color:var(--ink);overflow:hidden;
- transition:background-color .23s ease,border-color .23s ease;
+ overflow:hidden;background:var(--white);color:var(--ink);
+ scroll-margin-top:100px
 }
-.trail-card.is-active{
- background:var(--dark);color:#f5f8f5;border-color:var(--dark)
+.guided-preview-body{
+ display:grid;grid-template-columns:minmax(0,1.35fr) minmax(295px,.65fr);
+ min-height:315px
 }
-.trail-select{
- display:flex;flex-direction:column;flex:1;min-height:0;
- width:100%;text-align:left;gap:0;
- padding:25px clamp(16px,2vw,28px) 18px;background:transparent;
- color:inherit;border:0;border-radius:0;
+.guided-preview-main{
+ display:flex;flex-direction:column;align-items:flex-start;
+ padding:clamp(27px,3.3vw,43px);
+ min-width:0
 }
-.trail-select:focus-visible{
- outline:3px solid var(--accent);outline-offset:-5px;border-radius:5px;
+.guided-preview-main>.micro{color:var(--accent-ink)}
+.guided-preview-main h3{
+ font:700 clamp(25px,2.8vw,38px)/1.24 var(--font);
+ letter-spacing:-.048em;
+ margin:19px 0 13px;
+ max-width:30ch;text-wrap:pretty;overflow-wrap:break-word
 }
-.trail-card:not(.is-active) .trail-select:hover{background:var(--pale)}
-.trail-card-top,.trail-card-bottom{
- display:flex;justify-content:space-between;align-items:center;
- gap:8px;min-width:0
+.guided-preview-main>p{font:500 13px/1.8 var(--font);max-width:60ch;color:var(--mid);margin:0 0 22px}
+.guided-read{margin-top:auto;min-height:48px}
+.guided-preview-facts{
+ display:flex;flex-direction:column;justify-content:center;gap:0;
+ min-width:0;background:var(--pale);
+ padding:clamp(22px,2.8vw,38px);
+ border-left:1px solid var(--rule)
 }
-.trail-numeral{font:600 12px/1.3 var(--mono);color:var(--accent-ink);white-space:nowrap}
-.trail-numeral span{font-size:10px;color:var(--mid);font-weight:500}
-.trail-card.is-active .trail-numeral{color:#f5bbad}
-.trail-card.is-active .trail-numeral span{color:#a9c5bd}
-.trail-state{
- font:600 9px/1.3 var(--mono);letter-spacing:.045em;
- color:var(--quiet);white-space:nowrap
+.guided-fact{
+ display:grid;grid-template-columns:28px minmax(0,1fr);gap:13px;
+ padding:17px 0;border-bottom:1px solid var(--line-strong)
 }
-.trail-card.is-active .trail-state{color:#d9e9e2}
-.trail-card-middle{
- display:flex;flex-direction:column;gap:14px;
- margin-top:auto;min-width:0;padding:17px 0 20px
+.guided-fact:first-child{padding-top:0}
+.guided-fact-number{font:600 11px/1.5 var(--mono);color:var(--accent-ink)}
+.guided-fact .micro{font-size:10px;color:var(--mid)}
+.guided-fact p{
+ font:700 14px/1.5 var(--font);
+ letter-spacing:-.02em;margin:6px 0 0;color:var(--ink)
 }
-.trail-field{
- font:600 10px/1.4 var(--mono);letter-spacing:.048em;color:var(--mid)
+.guided-prototype-note{font:500 10px/1.55 var(--font);color:var(--mid);margin:20px 0 0}
+.home-secondary{margin-top:clamp(52px,6vw,80px)}
+/* Small screens: the same flow, with four obvious tap targets and one preview. */
+@media(max-width:1000px){
+ .guided-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .guided-choice{min-height:126px}
+ .guided-choice-title{font-size:20px}
+ .guided-preview-body{grid-template-columns:minmax(0,1fr) minmax(245px,.68fr)}
 }
-.trail-card.is-active .trail-field{color:#a7c7bc}
-.trail-question{
- display:block;font:700 clamp(17px,1.48vw,21px)/1.35 var(--font);
- letter-spacing:-.039em;overflow-wrap:break-word;text-wrap:pretty
-}
-.trail-card.is-active .trail-question{
- max-width:26ch;font-size:clamp(26px,2.52vw,36px);
- line-height:1.2;letter-spacing:-.051em
-}
-.trail-card-bottom{
- min-height:34px;padding-top:12px;border-top:1px solid var(--rule);
- color:var(--mid);font-size:11px;font-weight:650;line-height:1.3;
-}
-.trail-card.is-active .trail-card-bottom{border-color:#536e75;color:#c5dad4}
-.trail-card-mark{
- display:grid;place-items:center;border-radius:50%;
- border:1px solid var(--rule);min-width:30px;width:30px;height:30px;
- font-size:15px;color:var(--ink)
-}
-.trail-card.is-active .trail-card-mark{border-color:#64818a;color:#ecf4ec}
-.trail-details{
- flex:0 0 auto;display:flex;flex-direction:column;gap:0;
- margin:0 clamp(16px,2vw,28px) 24px;min-width:0;
- border-top:1px solid #5d7981;padding-top:16px
-}
-.trail-details[hidden]{display:none!important}
-.trail-evidence{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-bottom:18px}
-.trail-evidence>div{min-width:0}
-.trail-evidence .micro{display:block;color:#a9c4ba;margin-bottom:8px;font-size:9px}
-.trail-evidence strong{display:block;color:#f3f7f5;font-size:12px;font-weight:650;line-height:1.5}
-.trail-open{
- display:flex;align-items:center;justify-content:space-between;gap:15px;
- min-height:44px;padding:10px 13px;border:1px solid #a7beb6;
- border-radius:var(--radius);background:var(--paper);color:var(--ink);
- font-size:12px;font-weight:700;text-align:left
-}
-.trail-open:hover{background:#e2eee7;border-color:#e2eee7}
-.trail-open span:last-child{font-size:17px}
-.trail-open:focus-visible{outline:3px solid #f3b9a6;outline-offset:2px}
-.trail-footnote{
- display:flex;align-items:center;justify-content:space-between;gap:13px;
- padding:17px 1px 0;color:var(--mid);flex-wrap:wrap
-}
-.trail-footnote .micro{font-size:9px;font-weight:500;letter-spacing:.01em}
-.home-secondary{margin-top:clamp(52px,6vw,86px)}
-@media(prefers-reduced-motion:no-preference){
- @keyframes trail-detail-in{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
- .trail-card.is-active .trail-details{animation:trail-detail-in .20s var(--ease) both}
- .trail-deck.instant-trails .trail-details{animation:none}
-}
-@media(max-width:1070px) and (min-width:851px){
- .trail-deck{grid-template-columns:2.25fr 1fr 1fr 1fr}
- .trail-deck[data-active="1"]{grid-template-columns:1fr 2.25fr 1fr 1fr}
- .trail-deck[data-active="2"]{grid-template-columns:1fr 1fr 2.25fr 1fr}
- .trail-deck[data-active="3"]{grid-template-columns:1fr 1fr 1fr 2.25fr}
- .trail-card{height:495px}
- .trail-select{padding-inline:16px}
- .trail-details{margin-inline:16px}
- .trail-card.is-active .trail-question{font-size:27px}
- .trail-question{font-size:17px}
-}
-@media(max-width:850px){
- .trail-heading{grid-template-columns:1fr;gap:12px;margin-bottom:20px}
- .trail-heading h2{max-width:780px}
- .trail-intro{gap:7px;align-self:auto}
- .trail-intro p{max-width:70ch}
- .trail-deck,.trail-deck[data-active="0"],.trail-deck[data-active="1"],.trail-deck[data-active="2"],.trail-deck[data-active="3"]{
-  grid-template-columns:1fr;gap:10px;transition:none
+@media(max-width:760px){
+ .guided-heading{display:block;margin-bottom:20px}
+ .guided-heading h2{font-size:clamp(31px,5.7vw,42px)}
+ .guided-intro{margin-top:11px;max-width:65ch;gap:0}
+ .guided-options{gap:9px}
+ .guided-choice{padding:16px;min-height:115px;row-gap:7px}
+ .guided-choice-title{font-size:18px}
+ .guided-preview-body{display:flex;flex-direction:column;min-height:0}
+ .guided-preview-main{padding:28px 25px}
+ .guided-preview-main h3{font-size:clamp(25px,4.9vw,32px);margin-top:13px}
+ .guided-read{margin-top:5px}
+ .guided-preview-facts{
+  padding:22px 25px;
+  border-top:1px solid var(--rule);border-left:0;
+  display:grid;grid-template-columns:1fr 1fr;gap:18px
  }
- .trail-card{height:auto;min-height:112px}
- .trail-card.is-active{min-height:0}
- .trail-select{
-  min-height:130px;padding:18px 22px;
- }
- .trail-card.is-active .trail-select{min-height:225px}
- .trail-card-middle{padding:9px 0 13px;margin-top:0;gap:7px}
- .trail-question,.trail-card.is-active .trail-question{font-size:clamp(19px,3.4vw,26px);line-height:1.3;max-width:68ch}
- .trail-card:not(.is-active) .trail-card-middle{padding:7px 0}
- .trail-card:not(.is-active) .trail-field{display:none}
- .trail-card:not(.is-active) .trail-card-bottom{display:none}
- .trail-card.is-active .trail-card-bottom{margin-top:auto}
- .trail-details{margin:0 22px 20px}
- .trail-evidence{gap:16px}
- .trail-footnote{gap:8px}
- .home-secondary{margin-top:55px}
+ .guided-fact{padding:0;border-bottom:0}
+ .guided-fact:first-child{padding:0}
+ .guided-prototype-note{grid-column:1/-1;border-top:1px solid var(--line-strong);margin:0;padding-top:12px}
 }
-@media(max-width:600px){
- .home-content{padding-top:34px}
- .trail-heading{margin-bottom:19px}
- .trail-heading h2{font-size:clamp(31px,8.1vw,44px);letter-spacing:-.056em}
- .trail-intro p{font-size:13px}
- .trail-select{padding:17px 17px 15px;min-height:112px}
- .trail-card.is-active .trail-select{min-height:215px}
- .trail-card .trail-numeral{font-size:10px}
- .trail-question,.trail-card.is-active .trail-question{font-size:clamp(19px,5.15vw,25px);line-height:1.32}
- .trail-field{font-size:9px}
- .trail-details{margin:0 17px 17px}
- .trail-evidence{grid-template-columns:1fr 1fr;gap:15px}
- .trail-evidence strong{font-size:11px}
- .trail-open{font-size:11px}
- .trail-footnote{display:none}
- .home-secondary{margin-top:43px}
+@media(max-width:430px){
+ .home-content{padding-top:30px}
+ .guided-heading h2{font-size:33px}
+ .guided-intro p{font-size:12px}
+ .guided-options{gap:8px;margin-bottom:9px}
+ .guided-choice{min-height:115px;padding:13px;row-gap:6px}
+ .guided-choice-title{font-size:16px;letter-spacing:-.025em}
+ .guided-choice-hint{font-size:10px}
+ .guided-choice-index{font-size:9px}
+ .guided-choice-indicator{width:23px;height:23px}
+ .guided-preview-main{padding:24px 20px}
+ .guided-preview-main h3{font-size:26px;line-height:1.26}
+ .guided-preview-main>p{font-size:12px}
+ .guided-read{width:100%;white-space:normal;text-align:center}
+ .guided-preview-facts{padding:20px;gap:13px}
+ .guided-fact{grid-template-columns:20px minmax(0,1fr);gap:7px}
+ .guided-fact p{font-size:12px}
+ .guided-fact .micro{font-size:9px}
+ .home-secondary{margin-top:44px}
 }
-@media(max-width:355px){
- .trail-evidence{grid-template-columns:1fr;gap:9px}
- .trail-question,.trail-card.is-active .trail-question{font-size:19px}
+@media(max-width:345px){
+ .guided-choice{padding:11px}
+ .guided-choice-title{font-size:15px}
+ .guided-choice-hint{font-size:9px}
+ .guided-preview-facts{grid-template-columns:1fr}
+ .guided-prototype-note{grid-column:1}
 }
 @media(prefers-reduced-motion:reduce){
- .trail-deck,.trail-card,.trail-details{transition:none!important;animation:none!important}
-}
-
-/* Ensure focused/expanded cards are not concealed by sticky navigation. */
-.trail-section,.trail-card{scroll-margin-top:105px}
-@media(max-width:650px){
- .trail-section,.trail-card{scroll-margin-top:88px}
+ .guided-choice{transition:none}
 }
