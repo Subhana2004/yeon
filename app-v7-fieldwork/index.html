@@ -60,6 +60,14 @@
     <a href="#faceoff" data-route="faceoff"><small>04 / TEST</small><strong>Face-Off</strong><span>→</span></a>
   </div>
 </nav>
+<section id="nav-command" class="nav-command" aria-label="Command search for tools" hidden>
+  <div class="nav-command-inner">
+    <div class="nav-command-heading"><span>⌘</span><strong>Where do you want to go?</strong><button type="button" id="nav-command-close" aria-label="Close command navigation">✕</button></div>
+    <label class="nav-command-input"><span aria-hidden="true">⌕</span><input id="nav-command-query" type="search" autocomplete="off" placeholder="Try “compare”, “language”, or “research notes”…" aria-label="Search YEON destinations"></label>
+    <div id="nav-command-results" class="nav-command-results" role="list" aria-label="Matching destinations"></div>
+    <p>Use ↑ ↓ to choose, Enter to open, Esc to close. These profiles are fictional examples.</p>
+  </div>
+</section>
 </header>
 <section id="nav-lab-switcher" class="nav-lab-switcher" aria-labelledby="nav-lab-title">
   <div class="nav-lab-inner">
@@ -74,14 +82,7 @@
   </div>
 </section>
 
-<section id="nav-command" class="nav-command" aria-label="Command search for tools" hidden>
-  <div class="nav-command-inner">
-    <div class="nav-command-heading"><span>⌘</span><strong>Where do you want to go?</strong><button type="button" id="nav-command-close" aria-label="Close command navigation">✕</button></div>
-    <label class="nav-command-input"><span aria-hidden="true">⌕</span><input id="nav-command-query" type="search" autocomplete="off" placeholder="Try “compare”, “language”, or “research notes”…" aria-label="Search YEON destinations"></label>
-    <div id="nav-command-results" class="nav-command-results" role="list" aria-label="Matching destinations"></div>
-    <p>Use ↑ ↓ to choose, Enter to open, Esc to close. These profiles are fictional examples.</p>
-  </div>
-</section>
+
 <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden>
  <span class="micro accent">EXPLORE YEON</span>
  <a data-route="discover" href="#discover">Explore <span>01</span></a>
@@ -95,7 +96,7 @@
  <a data-route="faceoff" href="#faceoff">Research Face-Off <span>↗</span></a>
  <a data-route="about" href="#about">About YEON <span>↗</span></a>
  </nav>
- <nav class="mobile-bottom-nav" aria-label="Mobile quick navigation">
+ <nav id="mobile-quick-nav" class="mobile-bottom-nav" aria-label="Mobile quick navigation">
   <a href="#discover" data-route="discover"><span aria-hidden="true">⌂</span><small>Explore</small></a>
   <a href="#index" data-route="index"><span aria-hidden="true">▤</span><small>Index</small></a>
   <a href="#compare" data-route="compare"><span aria-hidden="true">⇄</span><small>Compare</small></a>
