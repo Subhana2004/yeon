@@ -17,8 +17,8 @@ async function noOverflow(page,width,label){
  assert.ok(extra<=2,label+' overflows by '+extra+'px at '+width);
 }
 async function choose(page,name){
- await page.locator('[data-nav-mode="'+name+'"]').click();
- assert.equal(await page.locator('[data-nav-mode="'+name+'"]').getAttribute('aria-pressed'),'true');
+ await page.locator('button[data-nav-mode="'+name+'"]').click();
+ assert.equal(await page.locator('button[data-nav-mode="'+name+'"]').getAttribute('aria-pressed'),'true');
  assert.equal(await page.locator('body').getAttribute('data-nav-mode'),name);
 }
 async function home(page){await page.locator('.wordmark').click();assert.equal(new URL(page.url()).hash,'#discover')}
@@ -33,8 +33,8 @@ try{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.goto(url,{waitUntil:'domcontentloaded'});
   await page.locator('#nav-lab-switcher').waitFor();
-  assert.equal(await page.locator('[data-nav-mode]').count(),4);
-  assert.equal(await page.locator('[data-nav-mode="morph"]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('#nav-lab-switcher button[data-nav-mode]').count(),4);
+  assert.equal(await page.locator('button[data-nav-mode="morph"]').getAttribute('aria-pressed'),'true');
   assert.ok(await page.locator('#tools-trigger').isVisible());
   await noOverflow(page,width,'initial');
   await choose(page,'morph');await page.locator('#tools-trigger').click();
@@ -91,7 +91,7 @@ try{
   await page.locator('#nav-side [data-route="doors"]').click();
   assert.equal(new URL(page.url()).hash,'#doors');assert.equal(await page.locator('#nav-side').isHidden(),true);
   await page.reload({waitUntil:'domcontentloaded'});
-  assert.equal(await page.locator('[data-nav-mode="side"]').getAttribute('aria-pressed'),'true','choice persists after reload');
+  assert.equal(await page.locator('button[data-nav-mode="side"]').getAttribute('aria-pressed'),'true','choice persists after reload');
   await noOverflow(page,width,'final');
   assert.deepEqual(errors,[],'unexpected browser errors');
   console.log('PASS '+width+'px / four navigation mechanisms, focus, routing, persistence and no overflow');
