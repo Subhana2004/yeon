@@ -45,6 +45,7 @@ function storeMode(m){try{localStorage.setItem('yeon_nav_studio_choice',m)}catch
 function esc(value){return String(value).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
 function applyMobileMorph(){
  if(!mobileDock)return;
+ if(mode==='morph')trigger.setAttribute('aria-controls',mobile.matches?'mobile-quick-nav':'nav-morph');
  const shouldSwap=open&&mode==='morph'&&mobile.matches;
  if(shouldSwap&&!mobileSwapped){
   mobileDock.innerHTML=[
@@ -81,7 +82,7 @@ function setMode(newMode){
  mode=newMode;
  root.dataset.navMode=newMode;
  toggles.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.navMode===newMode)));
- trigger.setAttribute('aria-controls',IDS[newMode]);
+ trigger.setAttribute('aria-controls',newMode==='morph'&&mobile.matches?'mobile-quick-nav':IDS[newMode]);
  trigger.setAttribute('aria-label','Open '+LABELS[newMode]+' navigation tools');
  trigger.innerHTML=mode==='command'
   ? '<span aria-hidden="true">⌕</span> Tools <span class="tools-chevron" aria-hidden="true">↗</span>'
