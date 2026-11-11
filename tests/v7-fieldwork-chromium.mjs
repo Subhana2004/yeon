@@ -114,7 +114,7 @@ try{
    assert.equal(await page.locator('[data-select="a"]').inputValue(),'prism');
    await page.screenshot({path:resolve(output,'compare-1440.png'),fullPage:true});
    assert.equal(await page.locator('#nav-lab-switcher button[data-nav-mode]').count(),4,'four navigation variations available on same site');
-   await page.locator('[data-nav-mode="morph"]').click();
+   await page.locator('#nav-lab-switcher button[data-nav-mode="morph"]').click();
    await page.locator('#tools-trigger').click();
    assert.equal(await page.locator('#tools-trigger').getAttribute('aria-expanded'),'true','morph navigation opens');
    assert.equal(await page.locator('#nav-morph').isVisible(),true,'primary links morph into research tools');
