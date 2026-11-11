@@ -1,0 +1,161 @@
+/* YEON NAVIGATION STUDIO — four actual mechanisms, one coherent visual language.
+   Only navigation is experimental; the research product is unchanged.
+   Variants: morphing nav / expanding header ribbon / searchable command / side index. */
+body.nav-lab-enabled{--navlab-ink:#203e46;--navlab-orange:#bd492f;--navlab-edge:#d5e3dc;--navlab-soft:#eff5f0}
+body.nav-lab-enabled #tools-panel{display:none!important}
+body.nav-lab-enabled .topbar{height:auto;min-height:78px;overflow:visible;z-index:72}
+body.nav-lab-enabled .topbar-inside{height:78px}
+body.nav-lab-enabled .topbar .tools-trigger{min-width:88px;gap:8px}
+body.nav-lab-enabled .topbar .tools-trigger .tools-chevron{transform:none;font-size:17px}
+body.nav-lab-enabled .topbar .tools-trigger[aria-expanded=true]{background:var(--navlab-ink);border-color:var(--navlab-ink);color:#fff}
+body.nav-lab-enabled .topbar .tools-trigger:focus-visible{outline:3px solid var(--navlab-orange);outline-offset:2px}
+body.nav-lab-enabled .topbar .tools-trigger:hover:not([aria-expanded=true]){border-color:var(--navlab-ink)}
+/* Always-in-site A/B/C/D selector, contextual rather than a new page. */
+.nav-lab-switcher{display:block;position:relative;z-index:34;background:#f7faf7;border-bottom:1px solid var(--navlab-edge)}
+.nav-lab-inner{max-width:1510px;margin:auto;padding:9px 44px;min-height:59px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-lab-name{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;font:600 10px var(--mono);color:var(--navlab-ink);letter-spacing:.045em}
+.nav-lab-signal{width:8px;height:8px;border-radius:50%;background:var(--navlab-orange);box-shadow:0 0 0 3px #f9e7df}
+.nav-lab-variants{display:flex;gap:5px;align-items:center;background:#e8f0eb;border:1px solid #dae7df;border-radius:999px;padding:4px;min-width:0}
+.nav-lab-variants button{min-width:94px;min-height:37px;padding:7px 12px;border:0;border-radius:999px;background:transparent;color:#4c6569;font:700 11px var(--font);white-space:nowrap;display:flex;justify-content:center;align-items:center;gap:8px}
+.nav-lab-variants button:hover{background:rgba(255,255,255,.75);color:var(--navlab-ink)}
+.nav-lab-variants button[aria-pressed=true]{background:var(--navlab-ink);color:#fff;box-shadow:0 2px 7px rgba(25,59,53,.11)}
+.nav-lab-variants button span{font:600 9px var(--mono);opacity:.7}
+.nav-lab-variants button:focus-visible{outline:3px solid var(--navlab-orange);outline-offset:2px}
+.nav-lab-hint{font:500 11px var(--font);color:#70817f;white-space:nowrap}
+.nav-lab-hint strong{color:var(--navlab-ink)}
+/* 1. MORPH — original nav actually turns into research tools. */
+.nav-morph{display:none;align-items:center;justify-content:center;gap:3px;min-height:46px;margin:auto;padding:4px;border:1px solid #c6dbd1;background:#ddece4;border-radius:999px}
+.nav-morph a{min-height:37px;display:flex;align-items:center;gap:7px;padding:0 clamp(8px,.9vw,15px);border-radius:99px;font-size:11px;font-weight:750;color:var(--navlab-ink);white-space:nowrap}
+.nav-morph a:hover,.nav-morph a:focus-visible{background:#fff}
+.nav-morph a.active{background:var(--navlab-ink);color:white}
+.nav-morph-num{font:600 9px var(--mono);opacity:.55}
+body.nav-lab-enabled.nav-lab-open[data-nav-mode=morph] .topbar .primary-nav{display:none}
+body.nav-lab-enabled.nav-lab-open[data-nav-mode=morph] .topbar .nav-morph{display:flex}
+/* 2. RIBBON — in-flow under the main header, pushes the page below. */
+.nav-ribbon{display:block;background:var(--navlab-ink);color:#fff;border-top:1px solid #48626c}
+.nav-ribbon[hidden]{display:none!important}
+.nav-ribbon-inner{max-width:1510px;margin:auto;padding:18px 44px;display:grid;grid-template-columns:minmax(200px,1.2fr) repeat(4,minmax(130px,1fr));gap:10px;align-items:stretch}
+.nav-ribbon-heading{display:flex;align-items:center;gap:13px;padding:8px 14px 8px 0}
+.nav-ribbon-burst{font-size:29px;color:#f1b4a1;align-self:center}
+.nav-ribbon-heading>span:last-child{display:flex;flex-direction:column;gap:3px}
+.nav-ribbon-heading small{font:600 9px var(--mono);color:#bcd4ca}
+.nav-ribbon-heading strong{font-size:22px;font-weight:700;letter-spacing:-.06em}
+.nav-ribbon a{display:grid;grid-template-columns:minmax(0,1fr) 14px;grid-template-rows:15px 27px;gap:4px;padding:11px 15px;background:#2c4c55;border:1px solid #4b6870;border-radius:8px}
+.nav-ribbon a small{grid-column:1/3;font:500 9px var(--mono);letter-spacing:.015em;color:#b8d3c8}
+.nav-ribbon a strong{font-size:13px;align-self:center}
+.nav-ribbon a>span{align-self:center;color:#f2b7a5}
+.nav-ribbon a:hover,.nav-ribbon a:focus-visible{background:#3a6269;border-color:#9cb7b1;outline-offset:2px}
+/* 3. COMMAND — in-header search palette, context-aware filtering. */
+.nav-command{display:block;position:absolute;top:100%;right:clamp(20px,4vw,70px);width:min(610px,calc(100vw - 36px));background:var(--surface);border:1px solid #bfd4ca;border-radius:0 0 14px 14px;box-shadow:0 25px 65px rgba(19,50,48,.2);z-index:90}
+.nav-command[hidden]{display:none!important}
+.nav-command-inner{padding:22px}
+.nav-command-heading{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--navlab-ink);margin-bottom:17px}
+.nav-command-heading>span{width:36px;height:36px;background:var(--navlab-ink);border-radius:8px;display:grid;place-items:center;font-size:23px;color:white}
+.nav-command-heading>strong{font-weight:750;flex:1}
+.nav-command-heading button{border:0;background:#eff5f0;border-radius:6px;width:34px;height:34px}
+.nav-command-input{height:55px;border:1px solid #bbcec6;border-radius:9px;background:#f9fbf9;display:flex;gap:10px;align-items:center;padding:0 14px}
+.nav-command-input>span{font-size:25px;color:#647c74}
+.nav-command-input input{width:100%;height:100%;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:var(--navlab-ink)}
+.nav-command-results{max-height:min(42vh,410px);overflow:auto;margin-top:10px}
+.nav-command-results :is(a,button){width:100%;min-height:54px;border:0;border-bottom:1px solid #e5eee9;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:11px 12px;text-align:left;border-radius:5px}
+.nav-command-results :is(a,button):hover,.nav-command-results :is(a,button):focus-visible,.nav-command-results :is(a,button).is-result-active{background:#edf4ee;outline-offset:0}
+.nav-command-results :is(a,button)>span:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.nav-command-results strong{font-size:12px;font-weight:750;color:var(--navlab-ink)}
+.nav-command-results small{font-size:10px;color:#6c817c;line-height:1.35}
+.nav-command-results :is(a,button)>span:last-child{font-size:15px;color:var(--navlab-orange)}
+.nav-command-results .nav-empty{padding:17px;color:#5e7571;font-size:12px}
+.nav-command-inner>p{font-size:10px;color:#667d75;margin:15px 1px 0;line-height:1.5}
+/* 4. INDEX — dedicated immersive, tactile side rail. */
+.nav-side-shade{position:fixed;inset:0;background:rgba(14,40,40,.48);z-index:96}
+.nav-side-shade[hidden]{display:none!important}
+.nav-side{display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;width:min(465px,calc(100vw - 28px));height:100dvh;background:#f7faf6;z-index:97;overflow-y:auto;box-shadow:20px 0 60px rgba(20,48,51,.2)}
+.nav-side[hidden]{display:none!important}
+.nav-side-head{display:flex;justify-content:space-between;align-items:center;padding:22px 30px;border-bottom:1px solid #d6e3da}
+.nav-side-wordmark{font-size:30px;font-weight:800;letter-spacing:-.08em;color:#203e46}
+.nav-side-wordmark span{color:var(--navlab-orange)}
+.nav-side-head button{width:40px;height:40px;border-radius:8px;border:1px solid var(--navlab-edge);background:#fff;font-size:17px}
+.nav-side-intro{padding:33px 30px 23px}
+.nav-side-eyebrow{font:600 10px var(--mono);color:var(--navlab-orange)}
+.nav-side-intro h2{font-size:clamp(31px,3vw,43px);line-height:1.16;letter-spacing:-.065em;margin:17px 0 12px;color:#203e46}
+.nav-side-intro p{font-size:12px;color:#61766f;line-height:1.7}
+.nav-side-items{padding:0 30px}
+.nav-side-items a{display:grid;grid-template-columns:27px minmax(0,1fr) 22px;gap:17px;align-items:center;min-height:74px;border-top:1px solid #d6e3da}
+.nav-side-items a>span:first-child{font:600 10px var(--mono);color:var(--navlab-orange);align-self:center}
+.nav-side-items a>span:nth-child(2){display:flex;flex-direction:column;gap:2px}
+.nav-side-items a strong{font-size:15px;font-weight:700;color:#203e46}
+.nav-side-items a small{font-size:10px;color:#68807a}
+.nav-side-items a>span:last-child{font-size:19px;color:#203e46;justify-self:end}
+.nav-side-items a:hover{background:#e9f1eb;margin-inline:-8px;padding-inline:8px}
+.nav-side-items a:focus-visible{outline-offset:-3px}
+.nav-side-footer{display:flex;align-items:center;gap:16px;margin-top:auto;padding:24px 30px;background:#e5eee7}
+.nav-side-point{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--navlab-ink);color:#f5e5d8;font-size:26px}
+.nav-side-footer p{font-size:11px;line-height:1.6;color:#42615d;margin:0}
+body.nav-lab-side-open{overflow:hidden}
+/* Responsive behavior and touch targets. */
+@media(max-width:1250px){
+ .nav-lab-inner{padding-inline:27px}
+ .nav-lab-hint{display:none}
+ .nav-ribbon-inner{padding-inline:27px;grid-template-columns:repeat(4,minmax(130px,1fr))}
+ .nav-ribbon-heading{grid-column:1/-1;padding:0 0 7px}
+}
+@media(max-width:980px){
+ body.nav-lab-enabled .topbar{min-height:71px}
+ body.nav-lab-enabled .topbar-inside{height:71px}
+ body.nav-lab-enabled .topbar .tools-trigger{display:flex!important;min-width:73px;height:43px;padding-inline:9px;font-size:11px}
+ body.nav-lab-enabled .topbar .tools-trigger .tools-chevron{font-size:14px}
+ body.nav-lab-enabled .topbar .nav-morph{display:none!important}
+ .nav-lab-inner{padding:10px 22px;gap:10px}
+ .nav-lab-name{font-size:9px}
+ .nav-lab-variants button{min-width:84px}
+ .nav-ribbon-inner{grid-template-columns:repeat(2,minmax(0,1fr));padding:15px 22px;gap:8px}
+ .nav-ribbon-heading{grid-column:1/-1}
+ .nav-ribbon a{min-height:64px}
+ .nav-command{top:100%;right:12px}
+ .nav-side{width:min(430px,calc(100vw - 20px))}
+ body.nav-lab-enabled[data-nav-mode=morph].nav-lab-open .mobile-bottom-nav{background:#e8f2eb;border-top:2px solid var(--navlab-orange)}
+}
+@media(max-width:650px){
+ .nav-lab-inner{padding-inline:14px;min-height:55px}
+ .nav-lab-name{display:none}
+ .nav-lab-variants{width:100%;justify-content:space-between;gap:2px;padding:3px}
+ .nav-lab-variants button{flex:1;min-width:0;min-height:39px;padding:7px 5px;font-size:10px;gap:5px}
+ .nav-lab-variants button span{font-size:8px}
+ .nav-ribbon-inner{padding:12px 14px}
+ .nav-ribbon a{padding:10px}
+ .nav-ribbon-heading strong{font-size:19px}
+ .nav-command{right:8px;width:calc(100vw - 16px)}
+ .nav-command-inner{padding:14px}
+ .nav-command-results{max-height:45vh}
+ .nav-side-head{padding:17px 20px}
+ .nav-side-intro{padding:27px 20px 19px}
+ .nav-side-items{padding:0 20px}
+ .nav-side-footer{padding:18px 20px}
+}
+@media(max-width:395px){
+ body.nav-lab-enabled .wordmark-type small{display:none}
+ body.nav-lab-enabled .topbar-inside{padding-inline:12px;gap:7px}
+ body.nav-lab-enabled .topbar .tools-trigger{min-width:62px;padding-inline:6px}
+ body.nav-lab-enabled .topbar .tools-trigger .tools-chevron{display:none}
+ body.nav-lab-enabled #quick-open{width:37px;min-width:37px}
+ body.nav-lab-enabled #mobile-trigger{width:39px}
+ .nav-lab-variants button{font-size:9.5px}
+}
+@media(max-width:340px){
+ body.nav-lab-enabled .topbar .wordmark-type strong{font-size:23px}
+ body.nav-lab-enabled .topbar .wordmark-mark{width:30px;height:30px;flex-basis:30px}
+ body.nav-lab-enabled #quick-open{display:none}
+}
+@media(prefers-reduced-motion:no-preference){
+ .nav-ribbon{animation:nav-ribbon-in .22s cubic-bezier(.22,1,.36,1) both}
+ .nav-command{animation:nav-pop-in .19s cubic-bezier(.22,1,.36,1) both}
+ .nav-side{animation:nav-side-in .25s cubic-bezier(.22,1,.36,1) both}
+ .nav-side-shade{animation:nav-shade-in .19s ease both}
+ @keyframes nav-ribbon-in{from{opacity:.55;transform:translateY(-7px)}to{opacity:1;transform:none}}
+ @keyframes nav-pop-in{from{opacity:.6;transform:translateY(-8px)}to{opacity:1;transform:none}}
+ @keyframes nav-side-in{from{transform:translateX(-22px);opacity:.6}to{transform:translateX(0);opacity:1}}
+ @keyframes nav-shade-in{from{opacity:0}to{opacity:1}}
+}
+@media(prefers-reduced-motion:reduce){
+ .nav-side,.nav-side-shade,.nav-ribbon,.nav-command{animation:none!important;transition:none!important}
+ .nav-lab-switcher *{transition:none!important}
+}

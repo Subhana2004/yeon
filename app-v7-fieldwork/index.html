@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./fieldwork.css">
 <link rel="stylesheet" href="./cohesive.css">
+<link rel="stylesheet" href="./nav-lab.css">
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to research content</a>
@@ -26,6 +27,12 @@
     <a data-route="index" href="#index"><span class="nav-index">02</span> Research index</a>
     <a data-route="compare" href="#compare"><span class="nav-index">03</span> Compare</a>
     <a data-route="desk" href="#desk"><span class="nav-index">04</span> My desk <span class="save-counter">0</span></a>
+  </nav>
+  <nav id="nav-morph" class="nav-morph" aria-label="Morphing research tools" hidden>
+    <a href="#topics" data-route="topics"><span class="nav-morph-num">01</span> Topics</a>
+    <a href="#doors" data-route="doors"><span class="nav-morph-num">02</span> Open Doors</a>
+    <a href="#fit" data-route="fit"><span class="nav-morph-num">03</span> Fit Lens</a>
+    <a href="#faceoff" data-route="faceoff"><span class="nav-morph-num">04</span> Face-Off</a>
   </nav>
   <div class="top-actions">
    <button type="button" class="tools-trigger" id="tools-trigger" aria-expanded="false" aria-controls="tools-panel" aria-haspopup="true">
@@ -44,7 +51,38 @@
     <a href="#faceoff" data-route="faceoff"><span class="tools-icon" aria-hidden="true">⇄</span><span><strong>Research Face-Off</strong><small>Challenge method claims</small></span><span aria-hidden="true">↗</span></a>
    </div>
  </nav>
+<nav id="nav-ribbon" class="nav-ribbon" aria-label="Expanded research ribbon" hidden>
+  <div class="nav-ribbon-inner">
+    <div class="nav-ribbon-heading"><span class="nav-ribbon-burst" aria-hidden="true">✳</span><span><small>YOUR RESEARCH TOOLKIT</small><strong>Go further.</strong></span></div>
+    <a href="#topics" data-route="topics"><small>01 / DISCOVER</small><strong>Topic atlas</strong><span>→</span></a>
+    <a href="#doors" data-route="doors"><small>02 / VERIFY</small><strong>Open Doors</strong><span>→</span></a>
+    <a href="#fit" data-route="fit"><small>03 / EXPLORE</small><strong>Fit Lens</strong><span>→</span></a>
+    <a href="#faceoff" data-route="faceoff"><small>04 / TEST</small><strong>Face-Off</strong><span>→</span></a>
+  </div>
+</nav>
+<section id="nav-command" class="nav-command" aria-label="Command search for tools" hidden>
+  <div class="nav-command-inner">
+    <div class="nav-command-heading"><span>⌘</span><strong>Where do you want to go?</strong><button type="button" id="nav-command-close" aria-label="Close command navigation">✕</button></div>
+    <label class="nav-command-input"><span aria-hidden="true">⌕</span><input id="nav-command-query" type="search" autocomplete="off" placeholder="Try “compare”, “language”, or “research notes”…" aria-label="Search YEON destinations"></label>
+    <div id="nav-command-results" class="nav-command-results" role="list" aria-label="Matching destinations"></div>
+    <p>Use ↑ ↓ to choose, Enter to open, Esc to close. These profiles are fictional examples.</p>
+  </div>
+</section>
 </header>
+<section id="nav-lab-switcher" class="nav-lab-switcher" aria-labelledby="nav-lab-title">
+  <div class="nav-lab-inner">
+    <div class="nav-lab-name"><span class="nav-lab-signal" aria-hidden="true"></span><span id="nav-lab-title">NAVIGATION STUDIO</span></div>
+    <div class="nav-lab-variants" role="group" aria-label="Choose navigation variation">
+      <button type="button" data-nav-mode="morph" aria-pressed="true"><span>01</span> Morph</button>
+      <button type="button" data-nav-mode="ribbon" aria-pressed="false"><span>02</span> Ribbon</button>
+      <button type="button" data-nav-mode="command" aria-pressed="false"><span>03</span> Command</button>
+      <button type="button" data-nav-mode="side" aria-pressed="false"><span>04</span> Index</button>
+    </div>
+    <span class="nav-lab-hint">Choose a style, then open <strong>Tools ↗</strong></span>
+  </div>
+</section>
+
+
 <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden>
  <span class="micro accent">EXPLORE YEON</span>
  <a data-route="discover" href="#discover">Explore <span>01</span></a>
@@ -58,7 +96,7 @@
  <a data-route="faceoff" href="#faceoff">Research Face-Off <span>↗</span></a>
  <a data-route="about" href="#about">About YEON <span>↗</span></a>
  </nav>
- <nav class="mobile-bottom-nav" aria-label="Mobile quick navigation">
+ <nav id="mobile-quick-nav" class="mobile-bottom-nav" aria-label="Mobile quick navigation">
   <a href="#discover" data-route="discover"><span aria-hidden="true">⌂</span><small>Explore</small></a>
   <a href="#index" data-route="index"><span aria-hidden="true">▤</span><small>Index</small></a>
   <a href="#compare" data-route="compare"><span aria-hidden="true">⇄</span><small>Compare</small></a>
@@ -73,6 +111,23 @@
  </div>
 </footer>
 </div>
+<div id="nav-side-shade" class="nav-side-shade" hidden></div>
+<aside id="nav-side" class="nav-side" role="dialog" aria-modal="true" aria-labelledby="nav-side-title" hidden>
+  <div class="nav-side-head">
+    <span class="nav-side-wordmark">yeon<span>.</span></span>
+    <button id="nav-side-close" type="button" aria-label="Close research index">✕</button>
+  </div>
+  <div class="nav-side-intro"><span class="nav-side-eyebrow">FIELD GUIDE / INDEX</span><h2 id="nav-side-title">Find your way<br>through research.</h2><p>A quiet index of things worth exploring.</p></div>
+  <nav class="nav-side-items" aria-label="Research index destinations">
+    <a href="#index" data-route="index"><span>01</span><span><strong>All research</strong><small>Browse questions and laboratories</small></span><span>↗</span></a>
+    <a href="#topics" data-route="topics"><span>02</span><span><strong>Topic atlas</strong><small>See what research areas connect</small></span><span>↗</span></a>
+    <a href="#doors" data-route="doors"><span>03</span><span><strong>Open Doors</strong><small>Verify opportunity evidence</small></span><span>↗</span></a>
+    <a href="#fit" data-route="fit"><span>04</span><span><strong>Fit Lens</strong><small>Explore your research interests</small></span><span>↗</span></a>
+    <a href="#faceoff" data-route="faceoff"><span>05</span><span><strong>Research Face-Off</strong><small>Challenge assumptions</small></span><span>↗</span></a>
+    <a href="#desk" data-route="desk"><span>06</span><span><strong>My desk</strong><small>Your notes and saved questions</small></span><span>↗</span></a>
+  </nav>
+  <div class="nav-side-footer"><span class="nav-side-point" aria-hidden="true">✳</span><p>Questions before reputations.<br>Evidence before conclusions.</p></div>
+</aside>
 <div class="search-overlay" id="quick-overlay" hidden>
  <section class="search-dialog" role="dialog" aria-modal="true" aria-label="Find research or tools">
   <div class="dialog-header"><span>Search YEON</span><button type="button" id="quick-close" aria-label="Close search">Esc ×</button></div>
@@ -82,5 +137,5 @@
  </section>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="./data.js"></script><script src="./fieldwork.js" defer></script>
+<script src="./data.js"></script><script src="./fieldwork.js" defer></script><script src="./nav-lab.js" defer></script>
 </body></html>
