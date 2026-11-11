@@ -1,0 +1,29 @@
+name: YEON V7 / Source snapshot for visual QA
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/v7-source-snapshot.yml"
+      - "app-v7-fieldwork/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Package exact source and test suite for local visual QA
+        run: |
+          mkdir -p export
+          cp -R app-v7-fieldwork export/
+          mkdir -p export/tests
+          cp tests/v7-fieldwork*.mjs export/tests/
+          printf '%s\n' "$GITHUB_SHA" > export/COMMIT.txt
+          find export -type f | sort | head -40
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yeon-cohesive-source-snapshot
+          path: export/
+          retention-days: 3

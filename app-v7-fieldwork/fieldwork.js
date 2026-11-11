@@ -46,28 +46,33 @@ const S={route:'discover',feature:'mosaic',trail:'mosaic',search:'',topic:'All',
 let toastTimer=null,previousFocus=null;
 function tell(message){let t=document.getElementById('toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2300)}
 function updateNavigation(){
- document.querySelectorAll('[data-route]').forEach(x=>{let on=x.dataset.route===S.route;x.classList.toggle('active',on);on?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current')});
+ const active=S.route.startsWith('lab/')?'index':S.route;
+ document.querySelectorAll('[data-route]').forEach(x=>{const on=x.dataset.route===active;x.classList.toggle('active',on);on?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current')});
  document.querySelectorAll('.save-counter').forEach(x=>x.textContent=S.saved.size);
+ const isTool=['topics','doors','fit','faceoff'].includes(active);
+ document.getElementById('tools-trigger')?.classList.toggle('active',isTool);
  let label=(S.route.startsWith('lab/')?lab(S.route.slice(4)).name:VIEWS.find(x=>x[0]===S.route)?.[1]||'Fieldwork');
  document.title=label+' / YEON Fieldwork';
 }
 function headline(id,title,description,number){
- return '<header class="page-header"><div><span class="micro accent">YEON / FIELDWORK '+esc(number)+'</span><h1>'+esc(title)+'</h1><p>'+esc(description)+'</p></div>'+
- '<div class="page-header-right"><span>RESEARCH FIELD GUIDE</span><button type="button" data-nav-button="discover">Back to explore ↗</button></div></header>';
+ const hints={'02':'Search the index · Open a profile · Save what matters','03':'Choose two labs · Pick one lens · Compare evidence','04':'Choose a research field · Follow a related question','05':'Your saved questions and notes, in one place','06':'Check official sources before contacting a lab','07':'Select your interests · Explore related labs','08':'Select a challenge · Test your assumptions','09':'How YEON handles examples, sources and privacy'};
+ const hint=hints[number]||'Read · Question · Save';
+ return '<header class="page-header"><div class="page-header-breadcrumb"><a href="#discover" data-route="discover">Home</a><span aria-hidden="true">/</span><span>'+esc(title.replace(/[.!]$/,''))+'</span><span class="page-chapter">FIELD NOTE '+esc(number)+'</span></div>'+
+ '<div class="page-header-content"><div class="page-header-copy"><h1>'+esc(title)+'</h1><p>'+esc(description)+'</p></div>'+
+ '<div class="page-header-guide"><span class="micro accent">HOW TO USE THIS PAGE</span><p>'+esc(hint)+'</p></div></div></header>';
 }
 function prototypeNote(){return '<p class="notice"><strong>Prototype disclosure:</strong> All eight laboratories and their research records are fictional. Topic overlap does not prove collaboration. No actual research opportunities, faculty details or admissions information have been verified.</p>'}
 function featured(){
- const l=lab(S.feature);const featured=['mosaic','horizon','vertex'];
- return '<aside class="hero-feature" aria-label="Interactive research selection"><div class="feature-top"><span class="micro">FEATURED QUESTION / '+esc(l.number)+'</span><span>EXAMPLE LAB</span></div>'+
- '<div class="feature-body"><span class="micro accent">'+esc(l.field)+'</span><h2>'+esc(l.question)+'</h2><p>'+esc(l.focus)+' · '+esc(l.thesis)+'</p>'+
- '<button class="text-action" type="button" data-lab="'+l.id+'">Explore this question <span class="arrow">↗</span></button></div>'+
- '<div class="feature-bottom" role="group" aria-label="Choose featured question">'+featured.map((id,i)=>{let x=lab(id);return '<button type="button" data-feature="'+x.id+'" class="'+(x.id===S.feature?'active':'')+'" aria-pressed="'+(x.id===S.feature)+'"><span>'+n(i+1)+' / '+esc(x.focus.split(' ')[0])+'</span><strong>'+esc(x.short)+'</strong></button>'}).join('')+'</div></aside>';
+ const l=lab('mosaic');
+ return '<aside class="hero-feature" aria-label="Example research field note">'+
+ '<div class="feature-top"><span class="micro">FIELD NOTE / 02</span><span class="feature-status">ILLUSTRATIVE RESEARCH</span></div>'+
+ '<div class="feature-body"><span class="micro accent">A QUESTION WORTH OPENING</span>'+
+ '<h2>'+esc(l.question)+'</h2>'+
+ '<p>'+esc(l.thesis)+'</p>'+
+ '<div class="feature-insights"><div><span class="micro">THE APPROACH</span><strong>'+esc(l.methods[0])+'</strong></div><div><span class="micro">THE UNCERTAINTY</span><strong>'+esc(l.limits[0])+'</strong></div></div>'+
+ '<button class="feature-open" type="button" data-lab="'+l.id+'"><span>Read this field note</span><span aria-hidden="true">↗</span></button></div>'+
+ '<div class="feature-bottom"><span>QUESTION</span><span class="feature-connection" aria-hidden="true">───────</span><span>EVIDENCE</span><span class="feature-connection" aria-hidden="true">───────</span><span>LIMITS</span></div></aside>';
 }
-
-/* Research trails: one deliberately interactive editorial sequence.
- * The selected example opens its evidence beneath the question without
- * navigating away or making the user scan a static four-row list. */
-
 /* Guided research explorer.
    Make the first action obvious: choose one question, preview its evidence,
    then choose whether to read the complete research story. */
@@ -124,24 +129,28 @@ function activateTrail(id,{keyboard=false}={}){
  // A repeated selection is immediate: no expanding grid, scroll jumps, or delayed keyboard motion.
 }
 function home(){
- return '<div class="view"><section class="research-hero"><div class="container">'+
- '<div class="issue-line"><span class="micro"><i class="issue-dot" aria-hidden="true"></i> YEON / RESEARCH FIELD GUIDE</span><span class="micro">ISSUE 01 — DISCOVER WITH INTENT</span></div>'+
- '<div class="hero-layout"><div class="hero-left"><h1>Good research starts with <span class="insight">better questions.</span></h1>'+
- '<p>Find the work behind a laboratory name. <strong>Read the question, examine the method, and understand its limits</strong> before deciding what matters to you.</p>'+
- '<div class="hero-cta"><button class="btn primary" type="button" data-nav-button="index">Explore the research index <span class="arrow">↗</span></button>'+
- '<button class="btn ghost" type="button" data-nav-button="compare">Compare approaches <span class="arrow">→</span></button></div>'+
- '<div class="hero-mini"><span class="mini-icon" aria-hidden="true">↘</span><span>A working research reading room. Sample labs are fictional; conclusions always need primary sources.</span></div></div>'+
+ return '<div class="view home-view"><section class="research-hero"><div class="container">'+
+ '<div class="issue-line"><span class="micro"><i class="issue-dot" aria-hidden="true"></i> YEON / RESEARCH FIELD GUIDE</span><span class="micro">READ BETTER · RESEARCH BETTER</span></div>'+
+ '<div class="hero-layout"><div class="hero-left"><div class="hero-prelude"><span class="prelude-line"></span><span>RESEARCH WITHOUT THE NOISE</span></div>'+
+ '<h1>Good research starts with <span class="insight">better questions.</span></h1>'+
+ '<p>Go beyond laboratory names. Understand <strong>what researchers investigate, how they approach a problem, and where their claims stop.</strong></p>'+
+ '<div class="hero-cta"><button class="btn primary" type="button" data-nav-button="index">Explore research <span class="arrow">↗</span></button>'+
+ '<button class="btn ghost" type="button" data-nav-button="compare">See how Compare works <span class="arrow">→</span></button></div>'+
+ '<div class="hero-mini"><span class="mini-icon" aria-hidden="true">↘</span><span>A reading-first research guide. Example labs are fictional and clearly marked.</span></div></div>'+
  featured()+'</div></div></section>'+
- '<div class="trust-band"><div class="container"><div class="trust-item"><span>01.</span><span>Questions before reputations</span></div><div class="trust-item"><span>02.</span><span>Methods before claims</span></div><div class="trust-item"><span>03.</span><span>Limits before conclusions</span></div></div></div>'+
+ '<div class="trust-band"><div class="container"><div class="trust-item"><span>01</span><span>Find an interesting question</span></div><div class="trust-item"><span>02</span><span>Understand the evidence</span></div><div class="trust-item"><span>03</span><span>Save your next step</span></div></div></div>'+
  '<div class="container home-content"><section class="guided-section" aria-labelledby="trails-heading">'+
- '<div class="guided-heading"><div><span class="micro accent">START HERE · FOUR EXAMPLE QUESTIONS</span>'+
- '<h2 id="trails-heading">What interests you?</h2></div>'+
- '<div class="guided-intro"><p>Choose a topic below. You’ll see the question, the approach, and what to investigate next.</p>'+
- '<button type="button" class="text-action" data-nav-button="index">Browse all eight examples ↗</button></div></div>'+
+ '<div class="guided-heading"><div><span class="micro accent">EXPLORE BY CURIOSITY</span><h2 id="trails-heading">Where would you start?</h2></div>'+
+ '<div class="guided-intro"><p>Pick a topic. Get the question, an example approach, and what needs checking—all in one place.</p>'+
+ '<button type="button" class="text-action" data-nav-button="index">See all eight examples ↗</button></div></div>'+
  guidedExplorer()+
  '</section>'+
- '<section class="home-secondary"><div class="secondary-feature"><span class="micro">LAB DNA / KNOW THE STORY</span><h2>A research direction is a story, not a score.</h2><button class="text-action" type="button" data-lab="horizon">Follow an idea through three chapters ↗</button></div>'+
- '<div class="secondary-aside"><span class="micro accent">YOUR PERSONAL READING DESK</span><h3>Save questions. Make connections. Keep your evidence.</h3><p>Follow sample labs, write private notes, and export your questions as a Markdown file. No accounts or fabricated live alerts.</p><button class="text-action" type="button" data-nav-button="desk">Open my desk ↗</button></div></section></div></div>';
+ '<section class="home-pathways" aria-labelledby="paths-heading"><div class="pathways-heading"><div><span class="micro accent">WHEN YOU ARE READY TO GO DEEPER</span><h2 id="paths-heading">Make research your own.</h2></div><p>Use the same research thread to compare ideas, examine limitations and keep a record of what you find.</p></div>'+
+ '<div class="pathways-grid">'+
+ '<button type="button" class="pathway" data-nav-button="compare"><span class="pathway-top"><span>01 / COMPARE</span><span aria-hidden="true">↗</span></span><strong>Different methods.<br>One clear view.</strong><span class="pathway-bottom">Compare questions, assumptions and limitations.</span></button>'+
+ '<button type="button" class="pathway" data-nav-button="topics"><span class="pathway-top"><span>02 / EXPLORE</span><span aria-hidden="true">↗</span></span><strong>Follow a topic.<br>Find a connection.</strong><span class="pathway-bottom">See where research directions overlap.</span></button>'+
+ '<button type="button" class="pathway" data-nav-button="desk"><span class="pathway-top"><span>03 / COLLECT</span><span aria-hidden="true">↗</span></span><strong>A space for<br>your questions.</strong><span class="pathway-bottom">Save labs and export your reading notes.</span></button>'+
+ '</div></section></div></div>';
 }
 function matched(){
  const q=S.search.trim().toLowerCase();
@@ -200,29 +209,30 @@ function compare(){
  '<div id="compare-content">'+compareBody()+'</div>'+prototypeNote()+'</div>';
 }
 function topics(){
- return '<div class="view container tool-page">'+headline('04','Follow a topic across the index.','Related topics help with discovery. They do not imply that these sample labs collaborate or publish together.','04')+
- '<div class="topic-lanes">'+TOPICS.map((topic,i)=>{const related=labs.filter(l=>l.topics.includes(topic));return '<section class="topic-lane"><header><div><span class="micro accent">FIELD '+n(i+1)+'</span><h2>'+topic+'</h2></div><span class="count">'+n(related.length)+' LABS</span></header>'+
- '<div>'+related.map(l=>'<button type="button" data-lab="'+l.id+'"><span>'+esc(l.name)+'</span><span aria-hidden="true">↗</span></button>').join('')+'</div></section>';}).join('')+'</div>'+prototypeNote()+'</div>';
+ const briefs={Vision:'How systems interpret the visual world.',Language:'How models process and explain human language.',Multimodal:'How text, images and signals connect.',Systems:'How information systems stay reliable.'};
+ return '<div class="view container tool-page">'+headline('04','Follow a topic across the index.','Explore research fields and follow a question that interests you. These are conceptual groupings, not claims of real lab collaboration.','04')+
+ '<div class="topic-lanes">'+TOPICS.map((topic,i)=>{const related=labs.filter(l=>l.topics.includes(topic));return '<section class="topic-lane"><header><div class="topic-heading-label"><span class="micro accent">FIELD '+n(i+1)+'</span><h2>'+topic+'</h2><p>'+esc(briefs[topic])+'</p></div><span class="count">'+n(related.length)+' EXAMPLES</span></header>'+
+ '<div class="topic-members">'+related.map(l=>'<button type="button" data-lab="'+l.id+'"><span><strong>'+esc(l.name)+'</strong><small>'+esc(l.focus)+'</small></span><span aria-hidden="true">↗</span></button>').join('')+'</div></section>';}).join('')+'</div>'+prototypeNote()+'</div>';
 }
 function desk(){
  let followed=labs.filter(l=>S.saved.has(l.id)),hasNotes=labs.filter(l=>S.notes[l.id]?.trim());
- return '<div class="view container tool-page">'+headline('05','Your research desk.','Save the questions you want to revisit, write private notes, and export your investigation as Markdown.','05')+
- '<div class="desk-layout"><aside class="desk-summary"><span class="micro">PRIVATE READING COLLECTION</span><div class="desk-number">'+n(followed.length)+'</div><strong>Research directions followed</strong><p>No account or real-time notifications. Saved selections live only in this browser.</p>'+
- '<button class="btn ink-on-dark small" type="button" data-nav-button="index">Explore more questions ↗</button></aside>'+
- '<section><div class="section-heading"><div><span class="micro accent">MY JOURNAL</span><h2 class="section-title">Saved questions</h2></div><p>'+hasNotes.length+' lab note'+(hasNotes.length===1?'':'s')+' currently saved.</p></div>'+
- (followed.length?'<div class="desk-journal">'+followed.map(l=>'<article class="journal-entry"><span class="index-num">'+esc(l.number)+'</span><div><h3>'+esc(l.name)+'</h3><p>'+esc(l.question)+'</p></div><button type="button" class="text-action" data-lab="'+l.id+'">Read ↗</button></article>').join('')+'</div>':
- '<div class="blank"><h3>Your reading desk is empty.</h3><p>Explore the index and save a research question. This space becomes your personal reading list.</p><button class="btn primary small" type="button" data-nav-button="index">Browse research ↗</button></div>')+
- '<div class="desk-export"><button type="button" class="btn ghost" data-export-notes>↓ Export research notes</button><p>Downloads a local Markdown file. No account required.</p></div></section></div>'+prototypeNote()+'</div>';
+ return '<div class="view container tool-page">'+headline('05','Your research desk.','Your saved questions, reading notes and next steps in one quiet workspace. Nothing is uploaded to a server.','05')+
+ '<div class="desk-layout"><aside class="desk-summary"><span class="micro">YOUR COLLECTION</span><div class="desk-number">'+n(followed.length)+'</div><strong>Questions saved</strong><p>'+hasNotes.length+' private note'+(hasNotes.length===1?'':'s')+' in this browser.</p>'+
+ '<button class="btn ink-on-dark small" type="button" data-nav-button="index">Find more research ↗</button></aside>'+
+ '<section class="desk-main"><div class="section-heading"><div><span class="micro accent">YOUR READING LIST</span><h2 class="section-title">Pick up where you left off.</h2></div></div>'+
+ (followed.length?'<div class="desk-journal">'+followed.map(l=>'<article class="journal-entry"><span class="index-num">'+esc(l.number)+'</span><div><h3>'+esc(l.name)+'</h3><p>'+esc(l.question)+'</p></div><button type="button" class="text-action" data-lab="'+l.id+'">Continue reading ↗</button></article>').join('')+'</div>':
+ '<div class="blank desk-empty"><span class="empty-symbol" aria-hidden="true">✳</span><h3>A good reading list starts with a question.</h3><p>Find a research example that interests you, then save it here to revisit later.</p><button class="btn primary small" type="button" data-nav-button="index">Explore the index ↗</button></div>')+
+ '<div class="desk-export"><button type="button" class="btn ghost" data-export-notes>↓ Export my notes</button><p>Local Markdown file, whenever you need it.</p></div></section></div>'+prototypeNote()+'</div>';
 }
 function doors(){
- return '<div class="view container tool-page">'+headline('06','Opportunities need evidence.','YEON has no verified live vacancy feed. Rather than manufacture internships, use a simple checklist before contacting a lab.','06')+
- '<div class="doors-layout"><section class="doors-stat"><span class="micro">VERIFIED LIVE RESEARCH OPENINGS</span><strong>0</strong><h2>No verified positions are connected.</h2>'+
- '<p>Future entries must link to official lab or university announcements with dates, eligibility, funding and a current status.</p></section>'+
- '<section class="doors-checklist"><span class="micro accent">A FIVE POINT EVIDENCE CHECK</span><h2>Before following any opportunity</h2>'+
- '<p class="section-lead">A private practice checklist. Marking a step here does not verify any real posting.</p>'+
+ return '<div class="view container tool-page">'+headline('06','Opportunities need evidence.','A simple way to check whether a research opportunity is real before you reach out. YEON does not currently verify live openings.','06')+
+ '<div class="doors-layout"><section class="doors-stat"><span class="micro">LIVE OPPORTUNITY STATUS</span><span class="doors-status-icon" aria-hidden="true">◎</span><h2>No verified openings yet.</h2>'+
+ '<p>YEON does not currently connect to an official opportunities feed. Always verify details from a lab or university source.</p><div class="doors-status-foot"><strong>0</strong><span>verified listings connected</span></div></section>'+
+ '<section class="doors-checklist"><span class="micro accent">BEFORE YOU APPLY</span><h2>A five-step source check</h2>'+
+ '<p class="section-lead">Use this checklist while reviewing an official announcement. Checking a box here does not validate any real listing.</p>'+
  CHECKS.map((c,i)=>'<label class="check-item"><input type="checkbox" data-check="'+i+'" '+(S.checks.has(i)?'checked':'')+'><span>'+esc(c)+'</span></label>').join('')+
- '<p class="check-status" id="check-status">'+S.checks.size+' / '+CHECKS.length+' STEPS MARKED · PRACTICE ONLY</p>'+
- '<button class="text-action" type="button" data-reset-checks>Reset checklist ↺</button></section></div></div>';
+ '<div class="check-foot"><p class="check-status" id="check-status">'+S.checks.size+' / '+CHECKS.length+' STEPS MARKED · PRACTICE ONLY</p>'+
+ '<button class="text-action" type="button" data-reset-checks>Reset checklist ↺</button></div></section></div>'+prototypeNote()+'</div>';
 }
 function fitRows(){
  const wanted=[...S.interests];if(!wanted.length)return '<div class="blank"><h3>Choose a research interest.</h3><p>Without any selected topics there is no basis for an overlap explanation.</p></div>';
@@ -277,6 +287,7 @@ function route(to){
  S.route=to;if(location.hash!=='#'+to)history.pushState({},'', '#'+to);
  document.getElementById('mobile-nav').hidden=true;
  document.getElementById('mobile-trigger').setAttribute('aria-expanded','false');S.mobileOpen=false;
+ closeTools();
  render();window.scrollTo({top:0,behavior:'instant'});
 }
 function redrawPreserve(selector){
@@ -303,9 +314,22 @@ function quickEntries(q){
  const box=document.getElementById('quick-results');
  box.innerHTML=items.slice(0,14).map(x=>'<button type="button" data-quick-type="'+x.type+'" data-quick-id="'+x.id+'"><span>'+esc(x.title)+'</span><small>'+x.type.toUpperCase()+' ↗</small></button>').join('')||'<div class="blank"><p>No sample records matched. Try a broader topic.</p></div>';
 }
-function openQuick(){previousFocus=document.activeElement;overlay.hidden=false;S.commandOpen=true;inputQuick.value='';quickEntries('');inputQuick.focus();}
+function closeTools(){
+ const panel=document.getElementById('tools-panel'),button=document.getElementById('tools-trigger');
+ if(panel)panel.hidden=true;
+ if(button)button.setAttribute('aria-expanded','false');
+}
+function toggleTools(){
+ const panel=document.getElementById('tools-panel'),button=document.getElementById('tools-trigger');
+ if(!panel||!button)return;
+ panel.hidden=!panel.hidden;
+ button.setAttribute('aria-expanded',String(!panel.hidden));
+}
+function openQuick(){closeTools();previousFocus=document.activeElement;overlay.hidden=false;S.commandOpen=true;inputQuick.value='';quickEntries('');inputQuick.focus();}
 function closeQuick(){overlay.hidden=true;S.commandOpen=false;previousFocus?.focus?.({preventScroll:true})}
 document.addEventListener('click',function(ev){
+ if(ev.target.closest('#tools-trigger')){toggleTools();return;}
+ if(!ev.target.closest('#tools-panel'))closeTools();
  const link=ev.target.closest('a[data-route]');if(link){ev.preventDefault();route(link.dataset.route);return;}
  if(ev.target===overlay){closeQuick();return;}
  const b=ev.target.closest('button');if(!b)return;
@@ -348,7 +372,7 @@ document.addEventListener('change',function(ev){
 });
 document.addEventListener('keydown',function(ev){
  if((ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==='k'){ev.preventDefault();S.commandOpen?closeQuick():openQuick();return;}
- if(ev.key==='Escape'){if(S.commandOpen){closeQuick();return;}const menu=document.getElementById('mobile-nav');menu.hidden=true;document.getElementById('mobile-trigger').setAttribute('aria-expanded','false');return;}
+ if(ev.key==='Escape'){if(S.commandOpen){closeQuick();return;}closeTools();const menu=document.getElementById('mobile-nav');menu.hidden=true;document.getElementById('mobile-trigger').setAttribute('aria-expanded','false');return;}
  if(S.commandOpen){
   const controls=[inputQuick,...document.querySelectorAll('#quick-results button')];
   if(ev.key==='Tab'){const at=controls.indexOf(document.activeElement);if(at>=0){ev.preventDefault();controls[(at+(ev.shiftKey?-1:1)+controls.length)%controls.length].focus();}}

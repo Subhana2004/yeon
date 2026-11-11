@@ -11,6 +11,9 @@ const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const dir=resolve(root,'app-v7-fieldwork');
 const src=readFileSync(resolve(dir,'fieldwork.css'),'utf8');
 const html=readFileSync(resolve(dir,'index.html'),'utf8');
+const cohesive=readFileSync(resolve(dir,'cohesive.css'),'utf8');
+assert.match(cohesive,/topbar-inside/);
+assert.match(cohesive,/mobile-bottom-nav/);
 assert.match(src,/Cross-page grammar/);
 assert.match(src,/--radius-lg:/);
 assert.match(src,/--control-h:/);
@@ -51,7 +54,7 @@ try{
       ink:props.getPropertyValue('--ink').trim(),
       accent:props.getPropertyValue('--accent').trim(),
       radius:props.getPropertyValue('--radius-lg').trim(),
-      feature:bg('.hero-feature'),secondary:bg('.secondary-feature'),
+      feature:bg('.hero-feature'),reading:bg('.guided-preview'),pathways:bg('.pathways-grid'),
       topics:[...document.querySelectorAll('.topic-lane')].map(e=>getComputedStyle(e).backgroundColor),
       compare:[...document.querySelectorAll('.compared')].map(e=>getComputedStyle(e).backgroundColor),
       challenges:[...document.querySelectorAll('.challenge-paper')].map(e=>getComputedStyle(e).backgroundColor),
@@ -64,7 +67,7 @@ try{
    assert.equal(info.accent,'#bd492f',route+' unexpectedly changed accent token');
    if(typeSystem&&info.headingFont)assert.equal(info.headingFont,typeSystem.headingFont,'font changes across '+route);
    if(!typeSystem&&info.headingFont)typeSystem=info;
-   if(route==='discover')assert.equal(info.feature,info.secondary,'homepage uses disparate decorative surfaces');
+   if(route==='discover'){assert.equal(info.reading,info.pathways,'homepage reading surfaces should match');assert.ok(info.feature!==info.reading,'featured research note must remain a distinct semantic surface');}
    if(route==='topics')assert.equal(new Set(info.topics).size,1,'topics must share one surface material');
    if(route==='compare'){
      assert.equal(new Set(info.compare).size,1,'comparison background should not imply a winner');

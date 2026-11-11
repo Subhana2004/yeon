@@ -64,8 +64,11 @@ try{
    await page.locator('.guided-preview [data-lab="vertex"]').click();
    assert.match(await page.locator('.dossier-header h1').innerText(),/Vertex/,'preview opens dossier');
    await page.locator('.primary-nav [data-route="discover"]').click();
-   await page.locator('[data-feature="horizon"]').click();
-   assert.match(await page.locator('.feature-body h2').innerText(),/world changes/);
+   assert.equal(await page.locator('.pathway').count(),3,'three clear follow-up pathways on home');
+   assert.match(await page.locator('.feature-body h2').innerText(),/knowledge changes/);
+   await page.locator('.feature-open').click();
+   assert.match(await page.locator('.dossier-header h1').innerText(),/Mosaic/);
+   await page.locator('.dossier-back').click();
    await page.locator('.primary-nav [data-route="index"]').click();
    assert.equal(await page.locator('.index-record').count(),8);
    await page.locator('#index-query').fill('citation');
@@ -105,8 +108,12 @@ try{
    await page.locator('[data-swap]').click();
    assert.equal(await page.locator('[data-select="a"]').inputValue(),'prism');
    await page.screenshot({path:resolve(output,'compare-1440.png'),fullPage:true});
-   await page.locator('.primary-nav [data-route="topics"]').click();
+   await page.locator('#tools-trigger').click();
+   assert.equal(await page.locator('#tools-trigger').getAttribute('aria-expanded'),'true','top tools menu opens');
+   await page.locator('#tools-panel [data-route="topics"]').click();
+   assert.equal(await page.locator('#tools-trigger').getAttribute('aria-expanded'),'false','tools menu closes after navigation');
    assert.equal(await page.locator('.topic-lane').count(),4);
+   assert.equal(await page.locator('.topic-members').count(),4,'topic groups expose readable related research');
    await page.screenshot({path:resolve(output,'topics-1440.png'),fullPage:true});
    await page.locator('.primary-nav [data-route="desk"]').click();
    assert.match(await page.locator('.desk-journal').innerText(),/Mosaic/);
@@ -150,6 +157,7 @@ try{
    assert.match(await page.locator('.guided-preview').innerText(),/Instruction-tuned dialogue/);
    await captureExplorer(page,'explorer-dialogue-390.png');
    await noOverflow(page,width);
+   assert.equal(await page.locator('.mobile-bottom-nav a').count(),4,'clear mobile quick navigation');
    await page.locator('#mobile-trigger').click();
    assert.equal(await page.locator('#mobile-trigger').getAttribute('aria-expanded'),'true');
    await page.locator('.mobile-nav [data-route="index"]').click();
