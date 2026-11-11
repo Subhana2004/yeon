@@ -46,8 +46,11 @@ const S={route:'discover',feature:'mosaic',trail:'mosaic',search:'',topic:'All',
 let toastTimer=null,previousFocus=null;
 function tell(message){let t=document.getElementById('toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2300)}
 function updateNavigation(){
- document.querySelectorAll('[data-route]').forEach(x=>{let on=x.dataset.route===S.route;x.classList.toggle('active',on);on?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current')});
+ const active=S.route.startsWith('lab/')?'index':S.route;
+ document.querySelectorAll('[data-route]').forEach(x=>{const on=x.dataset.route===active;x.classList.toggle('active',on);on?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current')});
  document.querySelectorAll('.save-counter').forEach(x=>x.textContent=S.saved.size);
+ const isTool=['topics','doors','fit','faceoff'].includes(active);
+ document.getElementById('tools-trigger')?.classList.toggle('active',isTool);
  let label=(S.route.startsWith('lab/')?lab(S.route.slice(4)).name:VIEWS.find(x=>x[0]===S.route)?.[1]||'Fieldwork');
  document.title=label+' / YEON Fieldwork';
 }
@@ -284,6 +287,7 @@ function route(to){
  S.route=to;if(location.hash!=='#'+to)history.pushState({},'', '#'+to);
  document.getElementById('mobile-nav').hidden=true;
  document.getElementById('mobile-trigger').setAttribute('aria-expanded','false');S.mobileOpen=false;
+ closeTools();
  render();window.scrollTo({top:0,behavior:'instant'});
 }
 function redrawPreserve(selector){
@@ -310,9 +314,22 @@ function quickEntries(q){
  const box=document.getElementById('quick-results');
  box.innerHTML=items.slice(0,14).map(x=>'<button type="button" data-quick-type="'+x.type+'" data-quick-id="'+x.id+'"><span>'+esc(x.title)+'</span><small>'+x.type.toUpperCase()+' ↗</small></button>').join('')||'<div class="blank"><p>No sample records matched. Try a broader topic.</p></div>';
 }
-function openQuick(){previousFocus=document.activeElement;overlay.hidden=false;S.commandOpen=true;inputQuick.value='';quickEntries('');inputQuick.focus();}
+function closeTools(){
+ const panel=document.getElementById('tools-panel'),button=document.getElementById('tools-trigger');
+ if(panel)panel.hidden=true;
+ if(button)button.setAttribute('aria-expanded','false');
+}
+function toggleTools(){
+ const panel=document.getElementById('tools-panel'),button=document.getElementById('tools-trigger');
+ if(!panel||!button)return;
+ panel.hidden=!panel.hidden;
+ button.setAttribute('aria-expanded',String(!panel.hidden));
+}
+function openQuick(){closeTools();previousFocus=document.activeElement;overlay.hidden=false;S.commandOpen=true;inputQuick.value='';quickEntries('');inputQuick.focus();}
 function closeQuick(){overlay.hidden=true;S.commandOpen=false;previousFocus?.focus?.({preventScroll:true})}
 document.addEventListener('click',function(ev){
+ if(ev.target.closest('#tools-trigger')){toggleTools();return;}
+ if(!ev.target.closest('#tools-panel'))closeTools();
  const link=ev.target.closest('a[data-route]');if(link){ev.preventDefault();route(link.dataset.route);return;}
  if(ev.target===overlay){closeQuick();return;}
  const b=ev.target.closest('button');if(!b)return;
@@ -355,7 +372,7 @@ document.addEventListener('change',function(ev){
 });
 document.addEventListener('keydown',function(ev){
  if((ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==='k'){ev.preventDefault();S.commandOpen?closeQuick():openQuick();return;}
- if(ev.key==='Escape'){if(S.commandOpen){closeQuick();return;}const menu=document.getElementById('mobile-nav');menu.hidden=true;document.getElementById('mobile-trigger').setAttribute('aria-expanded','false');return;}
+ if(ev.key==='Escape'){if(S.commandOpen){closeQuick();return;}closeTools();const menu=document.getElementById('mobile-nav');menu.hidden=true;document.getElementById('mobile-trigger').setAttribute('aria-expanded','false');return;}
  if(S.commandOpen){
   const controls=[inputQuick,...document.querySelectorAll('#quick-results button')];
   if(ev.key==='Tab'){const at=controls.indexOf(document.activeElement);if(at>=0){ev.preventDefault();controls[(at+(ev.shiftKey?-1:1)+controls.length)%controls.length].focus();}}
