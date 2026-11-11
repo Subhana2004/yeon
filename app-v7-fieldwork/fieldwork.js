@@ -55,7 +55,7 @@ function updateNavigation(){
  document.title=label+' / YEON Fieldwork';
 }
 function headline(id,title,description,number){
- const hints={02:'Search the index · Open a profile · Save what matters',03:'Choose two labs · Pick one lens · Compare evidence',04:'Choose a research field · Follow a related question',05:'Your saved questions and notes, in one place',06:'Check official sources before contacting a lab',07:'Select your interests · Explore related labs',08:'Select a challenge · Test your assumptions',09:'How YEON handles examples, sources and privacy'};
+ const hints={'02':'Search the index · Open a profile · Save what matters','03':'Choose two labs · Pick one lens · Compare evidence','04':'Choose a research field · Follow a related question','05':'Your saved questions and notes, in one place','06':'Check official sources before contacting a lab','07':'Select your interests · Explore related labs','08':'Select a challenge · Test your assumptions','09':'How YEON handles examples, sources and privacy'};
  const hint=hints[number]||'Read · Question · Save';
  return '<header class="page-header"><div class="page-header-breadcrumb"><a href="#discover" data-route="discover">Home</a><span aria-hidden="true">/</span><span>'+esc(title.replace(/[.!]$/,''))+'</span><span class="page-chapter">FIELD NOTE '+esc(number)+'</span></div>'+
  '<div class="page-header-content"><div class="page-header-copy"><h1>'+esc(title)+'</h1><p>'+esc(description)+'</p></div>'+
@@ -145,7 +145,7 @@ function home(){
  '<button type="button" class="text-action" data-nav-button="index">See all eight examples ↗</button></div></div>'+
  guidedExplorer()+
  '</section>'+
- '<section class="home-pathways" aria-labelledby="paths-heading"><div class="pathways-heading"><div><span class="micro accent">WHEN YOU'RE READY TO GO DEEPER</span><h2 id="paths-heading">Make research your own.</h2></div><p>Use the same research thread to compare ideas, examine limitations and keep a record of what you find.</p></div>'+
+ '<section class="home-pathways" aria-labelledby="paths-heading"><div class="pathways-heading"><div><span class="micro accent">WHEN YOU ARE READY TO GO DEEPER</span><h2 id="paths-heading">Make research your own.</h2></div><p>Use the same research thread to compare ideas, examine limitations and keep a record of what you find.</p></div>'+
  '<div class="pathways-grid">'+
  '<button type="button" class="pathway" data-nav-button="compare"><span class="pathway-top"><span>01 / COMPARE</span><span aria-hidden="true">↗</span></span><strong>Different methods.<br>One clear view.</strong><span class="pathway-bottom">Compare questions, assumptions and limitations.</span></button>'+
  '<button type="button" class="pathway" data-nav-button="topics"><span class="pathway-top"><span>02 / EXPLORE</span><span aria-hidden="true">↗</span></span><strong>Follow a topic.<br>Find a connection.</strong><span class="pathway-bottom">See where research directions overlap.</span></button>'+
