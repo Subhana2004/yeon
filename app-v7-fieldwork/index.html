@@ -10,36 +10,60 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./fieldwork.css">
+<link rel="stylesheet" href="./cohesive.css">
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to research content</a>
 <div class="app-shell">
 <header class="topbar">
  <div class="topbar-inside">
- <a href="#discover" data-route="discover" class="wordmark" aria-label="YEON, back to explore"><span class="wordmark-mark" aria-hidden="true">y<span>.</span></span><strong>yeon<span>.</span></strong><small>Research, in context.</small></a>
- <nav class="primary-nav" aria-label="Primary">
- <a data-route="discover" href="#discover">Explore</a>
- <a data-route="index" href="#index">The index</a>
- <a data-route="compare" href="#compare">Compare</a>
- <a data-route="topics" href="#topics">Topics</a>
- <a data-route="desk" href="#desk">My desk <span class="save-counter">0</span></a>
+  <a href="#discover" data-route="discover" class="wordmark" aria-label="YEON, home">
+    <span class="wordmark-mark" aria-hidden="true"><span class="mark-line"></span><span class="mark-dot"></span></span>
+    <span class="wordmark-type"><strong>yeon<span>.</span></strong><small>RESEARCH FIELD GUIDE</small></span>
+  </a>
+  <nav class="primary-nav" aria-label="Primary navigation">
+    <a data-route="discover" href="#discover"><span class="nav-index">01</span> Explore</a>
+    <a data-route="index" href="#index"><span class="nav-index">02</span> Research index</a>
+    <a data-route="compare" href="#compare"><span class="nav-index">03</span> Compare</a>
+    <a data-route="desk" href="#desk"><span class="nav-index">04</span> My desk <span class="save-counter">0</span></a>
+  </nav>
+  <div class="top-actions">
+   <button type="button" class="tools-trigger" id="tools-trigger" aria-expanded="false" aria-controls="tools-panel" aria-haspopup="true">
+     Tools <span class="tools-chevron" aria-hidden="true">⌄</span>
+   </button>
+   <button type="button" class="search-trigger" id="quick-open" aria-label="Search research and tools"><span class="search-glyph" aria-hidden="true">⌕</span><span>Search anything</span><kbd>Ctrl K</kbd></button>
+   <button type="button" class="mobile-trigger" id="mobile-trigger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav"><span aria-hidden="true">☰</span></button>
+  </div>
+ </div>
+ <nav id="tools-panel" class="tools-panel" aria-label="Research tools" hidden>
+   <div class="tools-panel-inner">
+    <div class="tools-panel-heading"><span class="micro accent">GO DEEPER</span><strong>Research tools</strong><p>Make sense of methods, opportunities and research fit.</p></div>
+    <a href="#topics" data-route="topics"><span class="tools-icon" aria-hidden="true">⌘</span><span><strong>Topic atlas</strong><small>See related research areas</small></span><span aria-hidden="true">↗</span></a>
+    <a href="#doors" data-route="doors"><span class="tools-icon" aria-hidden="true">◎</span><span><strong>Open Doors</strong><small>Check opportunity evidence</small></span><span aria-hidden="true">↗</span></a>
+    <a href="#fit" data-route="fit"><span class="tools-icon" aria-hidden="true">✳</span><span><strong>Fit Lens</strong><small>Find overlapping interests</small></span><span aria-hidden="true">↗</span></a>
+    <a href="#faceoff" data-route="faceoff"><span class="tools-icon" aria-hidden="true">⇄</span><span><strong>Research Face-Off</strong><small>Challenge method claims</small></span><span aria-hidden="true">↗</span></a>
+   </div>
  </nav>
- <div class="top-actions">
- <button type="button" class="search-trigger" id="quick-open" aria-label="Open quick search"><span class="search-glyph" aria-hidden="true">⌕</span><span>Search</span><kbd>⌘K</kbd></button>
- <button type="button" class="mobile-trigger" id="mobile-trigger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav">☰</button>
- </div>
- </div>
 </header>
-<nav id="mobile-nav" class="mobile-nav" aria-label="Mobile sections" hidden>
- <a data-route="discover" href="#discover">Explore</a>
- <a data-route="index" href="#index">Research index</a>
- <a data-route="compare" href="#compare">Compare</a>
- <a data-route="topics" href="#topics">Topic atlas</a>
- <a data-route="desk" href="#desk">My desk</a>
- <a data-route="doors" href="#doors">Open Doors</a>
- <a data-route="fit" href="#fit">Fit Lens</a>
- <a data-route="faceoff" href="#faceoff">Face-Off</a>
-</nav>
+<nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden>
+ <span class="micro accent">EXPLORE YEON</span>
+ <a data-route="discover" href="#discover">Explore <span>01</span></a>
+ <a data-route="index" href="#index">Research index <span>02</span></a>
+ <a data-route="compare" href="#compare">Compare <span>03</span></a>
+ <a data-route="desk" href="#desk">My desk <span class="save-counter">0</span></a>
+ <span class="micro accent mobile-nav-subtitle">RESEARCH TOOLS</span>
+ <a data-route="topics" href="#topics">Topic atlas <span>↗</span></a>
+ <a data-route="doors" href="#doors">Open Doors <span>↗</span></a>
+ <a data-route="fit" href="#fit">Fit Lens <span>↗</span></a>
+ <a data-route="faceoff" href="#faceoff">Research Face-Off <span>↗</span></a>
+ <a data-route="about" href="#about">About YEON <span>↗</span></a>
+ </nav>
+ <nav class="mobile-bottom-nav" aria-label="Mobile quick navigation">
+  <a href="#discover" data-route="discover"><span aria-hidden="true">⌂</span><small>Explore</small></a>
+  <a href="#index" data-route="index"><span aria-hidden="true">▤</span><small>Index</small></a>
+  <a href="#compare" data-route="compare"><span aria-hidden="true">⇄</span><small>Compare</small></a>
+  <a href="#desk" data-route="desk"><span aria-hidden="true">◫</span><small>My desk</small></a>
+ </nav>
 <main id="content" tabindex="-1"><div id="app"></div></main>
 <footer class="footer">
  <div class="footer-inner">
