@@ -73,10 +73,10 @@ function featured(){
    then choose whether to read the complete research story. */
 const HOME_TRAILS=['mosaic','horizon','vertex','dialogue'];
 const TRAIL_LABELS={
- mosaic:{title:'Reliable answers',hint:'When knowledge changes'},
- horizon:{title:'Learning to adapt',hint:'When the world changes'},
- vertex:{title:'Tracing evidence',hint:'Where answers come from'},
- dialogue:{title:'Explaining AI',hint:'Making ideas understandable'}
+ mosaic:{title:'Reliable answers',hint:'Fresh information'},
+ horizon:{title:'Learning to adapt',hint:'Changing conditions'},
+ vertex:{title:'Tracing evidence',hint:'Check sources'},
+ dialogue:{title:'Explaining AI',hint:'Clear explanations'}
 };
 function guidedChoice(id,index){
  const l=lab(id),title=TRAIL_LABELS[id],active=S.trail===id;
