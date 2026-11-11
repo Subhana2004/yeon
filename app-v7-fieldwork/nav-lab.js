@@ -21,7 +21,7 @@ const PAGES=[
 const root=document.body;
 const trigger=document.getElementById('tools-trigger');
 const studio=document.getElementById('nav-lab-switcher');
-const toggles=[...document.querySelectorAll('[data-nav-mode]')];
+const toggles=[...document.querySelectorAll('#nav-lab-switcher button[data-nav-mode]')];
 const primary=document.querySelector('.primary-nav');
 const morph=document.getElementById('nav-morph');
 const ribbon=document.getElementById('nav-ribbon');
@@ -151,7 +151,7 @@ function trapSideKey(event){
  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
 }
 document.addEventListener('click',event=>{
- const variant=event.target.closest('[data-nav-mode]');
+ const variant=event.target.closest('#nav-lab-switcher button[data-nav-mode]');
  if(variant){
   event.preventDefault();event.stopImmediatePropagation();
   setMode(variant.dataset.navMode);variant.focus({preventScroll:true});return;
