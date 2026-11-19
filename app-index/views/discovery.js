@@ -52,9 +52,43 @@ export function results(p) {
  ${!found.length && !works.length ? empty("No matching records", "Try a broader term or choose another field.", link("explore", {}, "Clear filters")) : ""}`;
 }
 export function explore(p) {
-  return `<div class="hero"><div class="herocopy"><div class="kicker"><i></i> Independent research index</div><h1>Research is more<br>than <em>a paper.</em></h1><p>Explore research questions, compare methods and follow the evidence through a collection of fictional laboratory dossiers and published papers.</p><div class="heroactions"><a class="button primary" href="#collection" data-scroll="collection">${icon("index")} Browse laboratories</a>${link("tools", {}, "Research tools", "button quiet")}</div></div>
- <a class="plate" href="#dna?lab=arbor"><div class="platehead"><span>Method plate</span><span>Multimodal learning</span></div><img src="./assets/representation.webp" alt="Folded blue and amber wire mesh, an illustration of a representation space." width="1100" height="620"><div class="platefoot"><div><span class="meta">Arbor Intelligence Lab · Fictional dossier</span><strong>Representation space</strong></div><span class="plateopen">Read dossier</span></div></a></div>
- <section class="collection" id="collection" tabindex="-1"><div class="sectionhead"><div><div class="kicker">Explore the collection</div><h2>Laboratory index</h2></div><label class="search">${icon("search")}<input type="search" data-query="q" aria-label="Search labs, methods and papers" placeholder="Search labs, methods, papers…" value="${esc(p.q)}"></label></div>${fieldTabs("explore", p)}<div id="results">${results(p)}</div></section>`;
+  return `<div class="hero a1-hero"><div class="herocopy"><div class="kicker"><i></i> Independent research atlas <span class="a1-series">/ Edition 01</span></div><h1>Ideas don’t exist<br><em>in isolation.</em></h1><p>See the connections behind discovery. Move between questions, methods and published ideas in an evidence-first research atlas. Eight lab dossiers are fictional demonstrations.</p><div class="heroactions"><a class="button primary" href="#collection" data-scroll="collection">${icon("index")} Explore the atlas</a>${link("tools", {}, "Research tools", "button quiet")}</div></div>
+ <a class="plate a1-visual" href="#constellation?root=lab-arbor" aria-label="Explore research connections in Constellation">
+ <div class="platehead"><span>YEON / THE RESEARCH FIELD</span><span>INTERACTIVE ATLAS · 001</span></div>
+ <div class="a1-artwork" aria-hidden="true">
+ <svg viewBox="0 0 600 526" xmlns="http://www.w3.org/2000/svg">
+  <defs><radialGradient id="a1disc"><stop offset="0" stop-color="#285d70" stop-opacity=".9"/><stop offset=".65" stop-color="#13445c" stop-opacity=".65"/><stop offset="1" stop-color="#09273a" stop-opacity="0"/></radialGradient>
+  <linearGradient id="a1line" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d3eeed" stop-opacity=".66"/><stop offset=".52" stop-color="#a8d2d7" stop-opacity=".25"/><stop offset="1" stop-color="#b9f12f" stop-opacity=".68"/></linearGradient>
+  <filter id="a1glow"><feGaussianBlur stdDeviation="14"/></filter></defs>
+  <circle cx="305" cy="254" r="220" fill="url(#a1disc)"/>
+  <g stroke="#b4e6de" stroke-width=".7" opacity=".14">
+   <path d="M34 80H568M34 155H568M34 230H568M34 305H568M34 380H568M34 455H568"/>
+   <path d="M74 45V487M155 45V487M236 45V487M317 45V487M398 45V487M479 45V487M560 45V487"/>
+  </g>
+  <g fill="none" stroke="url(#a1line)">
+   <ellipse cx="312" cy="259" rx="213" ry="111" stroke-width="1.25" transform="rotate(-35 312 259)"/>
+   <ellipse cx="312" cy="259" rx="172" ry="179" stroke-width=".8" transform="rotate(30 312 259)"/>
+   <ellipse cx="312" cy="259" rx="121" ry="228" stroke-width=".65" transform="rotate(68 312 259)"/>
+   <path d="M52 361C142 283 185 122 319 141S473 330 553 123" stroke-width="1.2"/>
+   <path d="M72 135C170 228 193 393 343 390S477 264 539 366" stroke-width=".85"/>
+   <path d="M68 253C162 302 215 302 315 225S462 203 560 256" stroke-width=".7"/>
+  </g>
+  <g stroke="#b9f12f" stroke-opacity=".15"><circle cx="312" cy="259" r="99" fill="none"/><circle cx="312" cy="259" r="74" fill="none"/></g>
+  <circle cx="312" cy="259" r="41" fill="#b9f12f" opacity=".14" filter="url(#a1glow)"/>
+  <circle cx="312" cy="259" r="29" fill="#b9f12f"/>
+  <path d="M300 253l11 12 15-19" fill="none" stroke="#0b3048" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g><circle cx="129" cy="176" r="6" fill="#f2f0e9"/><circle cx="459" cy="132" r="7" fill="#b9f12f"/><circle cx="486" cy="383" r="6" fill="#f2f0e9"/><circle cx="188" cy="425" r="5" fill="#b9f12f"/></g>
+  <g font-family="Arial,sans-serif" font-size="10" fill="#e2f0eb" letter-spacing="1.5"><text x="63" y="157">QUESTIONS / 01</text><text x="405" y="112">METHODS / 02</text><text x="448" y="408">PAPERS / 03</text><text x="98" y="449">LABS / 04</text></g>
+  <g stroke="#f2f0e9" stroke-opacity=".35" fill="none"><path d="M129 176L95 176"/><path d="M459 132L459 118"/><path d="M486 383L487 394"/><path d="M188 425L164 435"/></g>
+ </svg></div>
+ <div class="platefoot"><div><span class="meta">From question to method to evidence</span><strong>The invisible connections.</strong></div><span class="plateopen">Explore the field ↗</span></div></a>
+ <nav class="a1-rail" aria-label="Featured research experiences">
+  <a href="#dna?lab=arbor"><span class="a1-rail-icon">01</span><span><strong>Lab DNA</strong><small>Read the research</small></span><span aria-hidden="true">↗</span></a>
+  <a href="#constellation?root=lab-arbor"><span class="a1-rail-icon">02</span><span><strong>Constellation</strong><small>Trace the links</small></span><span aria-hidden="true">↗</span></a>
+  <a href="#faceoff?problem=alignment"><span class="a1-rail-icon">03</span><span><strong>Research Face-Off</strong><small>Compare approaches</small></span><span aria-hidden="true">↗</span></a>
+  <a href="#fit"><span class="a1-rail-icon">04</span><span><strong>Fit Lens</strong><small>Find your direction</small></span><span aria-hidden="true">↗</span></a>
+ </nav></div>
+ <section class="collection" id="collection" tabindex="-1"><div class="sectionhead"><div><div class="kicker">Explore the collection</div><h2>Start with a question.</h2></div><label class="search">${icon("search")}<input type="search" data-query="q" aria-label="Search labs, methods and papers" placeholder="Search labs, methods, papers…" value="${esc(p.q)}"></label></div>${fieldTabs("explore", p)}<div id="results">${results(p)}</div></section>`;
 }
 export const toolsPage = () =>
   heading(
