@@ -56,7 +56,7 @@ function render(move = false) {
   previous = view;
   const active =
     {
-      dna: "explore",
+      dna: "dna",
       paper: "explore",
       opportunity: "tools",
       compare: "tools",
@@ -75,6 +75,7 @@ function render(move = false) {
   const cursor = key === "query" ? focused.selectionStart : null;
   nav.innerHTML = [
     ["explore", "Explore"],
+    ["dna", "Lab DNA"],
     ["constellation", "Constellation"],
     ["tools", "Research tools"],
     ["radar", "My Radar"],
@@ -182,6 +183,7 @@ document.addEventListener("change", (e) => {
     const param = el.dataset.param;
     const delta = { [param]: el.value };
     if (param === "root") Object.assign(delta, { node: "", type: "", rel: "" });
+    if (param === "institution") Object.assign(delta, { department: "", pick: "" });
     if (param === "problem") Object.assign(delta, { a: "", b: "" });
     if (param === "a" && route().p.b === el.value) delta.b = "";
     change(delta);

@@ -1,4 +1,5 @@
 import { labs, labBy, fields, papers, readings } from "../data/catalog.js";
+import { directory } from "./lab-directory.js";
 import {
   esc,
   icon,
@@ -66,14 +67,15 @@ export const toolsPage = () =>
 const labHeader = (l) =>
   `<div class="dossierhead">${mark(l)}<span class="meta">${esc(l.institution)}</span>${demo}</div>`;
 export function dna(p) {
-  const l = labBy(p.lab || "arbor");
+  if (!p.lab) return directory(p);
+  const l = labBy(p.lab);
   if (!l) return missing();
   const related = labs.filter(
     (x) => x !== l && x.topics.some((t) => l.topics.includes(t)),
   );
   return (
     heading("Lab DNA", l.name, l.focus) +
-    `<div class="toolbar">${select("lab", "Laboratory", labOptions, l.id)}${follow(l.id, l.short)}${link("compare", { a: l.id, b: related[0].id }, icon("compare") + " Compare labs", "button quiet")}</div><div class="readinglayout"><article><section class="question">${labHeader(l)}<h2>${esc(l.statement)}</h2>${tags(l.topics)}</section>
+    `<div class="toolbar">${link("dna", {}, "← Lab directory", "button quiet")}${select("lab", "Laboratory", labOptions, l.id)}${follow(l.id, l.short)}${link("compare", { a: l.id, b: related[0].id }, icon("compare") + " Compare labs", "button quiet")}</div><div class="readinglayout"><article><section class="question">${labHeader(l)}<h2>${esc(l.statement)}</h2>${tags(l.topics)}</section>
  <section><h2>Research trajectory</h2><p class="subtle">Three chapters from the fictional dossier. Dates are unavailable.</p><ol class="timeline">${l.chapters.map(([title, body, topic]) => `<li><span class="meta">${esc(topic)}</span><h3>${esc(title)}</h3><p>${esc(body)}</p></li>`).join("")}</ol></section>
  <section><h2>Methods &amp; evidence</h2>${l.methods.map((m, i) => `<details><summary>${esc(m)}</summary><p>Assumption in this dossier: ${esc(l.assumptions[i])}.</p><p>Limitation: ${esc(l.limits[i])}.</p></details>`).join("")}${readings(l).length ? link("faceoff", { problem: readings(l)[0].problem }, "Compare related approaches") : link("faceoff", {}, "Browse method comparisons")}</section>
  <section id="publications"><h2>Publications &amp; reading</h2><p>Illustrative titles from this dossier</p><ul>${l.works.map((x) => `<li>${esc(x)} <small>· Fictional work</small></li>`).join("")}</ul><h3>Published background reading</h3><p class="subtle">Editorial selections on adjacent methods. Authorship is independent of the fictional lab.</p>${readings(l).map(paperCard).join("") || "<p>No published background reading has been selected for this dossier.</p>"}</section></article>
