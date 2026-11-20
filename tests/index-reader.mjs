@@ -84,7 +84,7 @@ const accessibility = async (label) => {
     });
     return r.violations.map((v) => ({
       rule: v.id,
-      nodes: v.nodes.map((n) => n.target),
+      nodes: v.nodes.map((n) => ({ target: n.target, contrast: n.any.map((a) => a.data?.message || a.message || a.data).filter(Boolean) })),
     }));
   });
   if (v.length) violations.push({ label, v });
