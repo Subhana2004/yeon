@@ -48,6 +48,7 @@ const errors = [],
   widths = [1440, 1280, 1024, 768, 430, 390, 360, 320];
 const routes = [
   "explore",
+  "dna",
   "dna?lab=arbor",
   "compare",
   "radar",
@@ -118,9 +119,28 @@ try {
           path: resolve(output, route.split("?")[0] + "-" + width + ".png"),
         });
     }
-    console.log("PASS 12 routes at " + width + "px");
+    console.log("PASS 13 routes at " + width + "px");
   }
   await page.setViewportSize({ width: 1440, height: 900 });
+  await go("dna");
+  assert.equal(await page.locator(".ld-item").count(), 8);
+  await page.locator('[name="institution"]').selectOption("Sample Institute A");
+  await ready();
+  assert.equal(await page.locator(".ld-item").count(), 3);
+  await page.locator('[name="department"]').selectOption("School of Computing");
+  await ready();
+  assert.equal(await page.locator(".ld-item").count(), 2);
+  await page.getByRole("searchbox").fill("arbor");
+  await ready();
+  assert.equal(await page.locator(".ld-item").count(), 1);
+  await page.locator(".ld-open").click();
+  await ready();
+  assert.match(await page.locator("h1").innerText(), /Arbor/);
+  await page.getByRole("link", { name: "← Lab directory" }).click();
+  await ready();
+  assert.match(await page.locator("h1").innerText(), /Find the lab/i);
+  await go("dna?mode=researchers");
+  assert.match(await page.locator("main").innerText(), /No verified professors/);
   await go("explore");
   await page.getByRole("link", { name: "Vision", exact: true }).click();
   await ready();
@@ -273,7 +293,7 @@ try {
   assert.deepEqual(errors, []);
   assert.deepEqual(violations, []);
   console.log(
-    "PASS four cross-feature journeys, saved choices, filters, history, keyboard, graph and reduced motion; zero axe violations in 24 route/viewport scans.",
+    "PASS four cross-feature journeys, saved choices, filters, history, keyboard, graph and reduced motion; zero axe violations in 26 route/viewport scans.",
   );
 } finally {
   await browser.close();
