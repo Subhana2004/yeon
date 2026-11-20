@@ -88,3 +88,6 @@ body:has(.lab-directory) .mast .menu{color:#fff;background:#243d4b;border-color:
  #menu{background:#ffffff;color:#172338;border-color:#6a7d8a}
  body:has(.lab-directory) #menu{background:#1a3748;color:#ffffff;border-color:#9bc0cf}
 }
+
+/* Prevent temporary low-contrast interpolation when SPA routes swap header theme. */
+#menu{transition:none!important}
