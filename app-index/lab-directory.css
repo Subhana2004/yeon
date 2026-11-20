@@ -75,3 +75,16 @@ body:has(.lab-directory) .mast .menu{color:#fff;background:#243d4b;border-color:
 @media(max-width:700px){body:has(.lab-directory) .mast #topnav{background:#1c3544;border-color:#466270}.ld-header{padding:24px var(--gutter) 32px}.ld-tabs{flex-wrap:nowrap;overflow-x:auto;gap:16px}.ld-tab{white-space:nowrap;font-size:.83rem}.ld-searchbox{padding:16px}.ld-filter-foot{align-items:start;flex-direction:column}.ld-result-head{display:block}.ld-result-head>span{display:block;margin-top:7px}.ld-item{gap:9px;padding:15px}.ld-header h1{font-size:clamp(2.6rem,9vw,4rem)}}
 @media(max-width:420px){.ld-filters{grid-template-columns:1fr}.ld-preview{padding:20px}}
 @media(prefers-reduced-motion:reduce){.lab-directory *{transition:none!important}}
+
+/* Contrast audit: keep muted type legible on pale steel surfaces. */
+.lab-directory .ld-tab{color:#354f5b}
+.lab-directory .ld-filter-foot{color:#394f5c}
+.lab-directory .ld-result-head>span{color:#3b5360}
+.lab-directory .ld-result-head small{color:#873824}
+.lab-directory .ld-num{color:#833e2e}
+.lab-directory .ld-item small{color:#405863}
+.lab-directory .ld-note{color:#3a5260}
+@media(max-width:700px){
+ #menu{background:#ffffff;color:#172338;border-color:#6a7d8a}
+ body:has(.lab-directory) #menu{background:#1a3748;color:#ffffff;border-color:#9bc0cf}
+}
