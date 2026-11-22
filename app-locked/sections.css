@@ -103,3 +103,14 @@ body:has(.locked-section) .primary-nav a[aria-current] { color:#132432; backgrou
 .paper-glance-art { min-height:174px; border-radius:13px; background:url('./assets/sections/papers-5.webp') center/cover; }
 @media(max-width:1050px) { .papers-lock .layout-3 {grid-template-columns:minmax(160px,25%) minmax(0,1fr);} }
 @media(max-width:650px) { .papers-lock .layout-3 {grid-template-columns:minmax(0,1fr);} .section-shortcuts {grid-template-columns:repeat(2,minmax(0,1fr));} }
+.methods-lock .pagehead-art { height:143px; background-image:url('./assets/sections/methods-0.webp'); }
+.methods-lock .pagehead h1 { font-size:clamp(33px,3.35vw,58px); }
+.methods-lock .meta-strip .stat:first-child { background:#d9e5ef; border-radius:13px; }
+.methods-lock .stat strong { font-size:clamp(14px,1.25vw,21px); }
+.methods-lock :is(.thumb,.method-glance-art)[data-tone="0"] { background-image:url('./assets/sections/methods-1.webp'); }
+.methods-lock :is(.thumb,.method-glance-art)[data-tone="1"] { background-image:url('./assets/sections/methods-2.webp'); }
+.methods-lock :is(.thumb,.method-glance-art)[data-tone="2"] { background-image:url('./assets/sections/methods-3.webp'); }
+.methods-lock :is(.thumb,.method-glance-art)[data-tone="3"] { background-image:url('./assets/sections/methods-4.webp'); }
+.method-glance-art { min-height:150px; border-radius:13px; background-position:center; background-size:cover; }
+.method-evidence { margin-block:14px; border:1px solid var(--section-line); border-radius:12px; padding:12px; background:#edf2f7; }
+.method-evidence p { margin-top:3px; }
