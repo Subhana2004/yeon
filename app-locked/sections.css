@@ -83,3 +83,23 @@ body:has(.locked-section) .primary-nav a[aria-current] { color:#132432; backgrou
 .dna-lock .inspector-cover { background-image:url('./assets/sections/dna-cover.webp'); }
 .dna-lock .record { min-height:108px; }
 .dna-lock .record .tag { padding-block:3px; }
+.papers-lock .layout-3 { grid-template-columns:minmax(160px,19%) minmax(0,1.18fr) minmax(0,1fr); }
+.papers-lock .pagehead-art { background-image:url('./assets/sections/papers-0.webp'); }
+.papers-lock .thumb[data-tone="0"] { background-image:url('./assets/sections/papers-1.webp'); }
+.papers-lock .thumb[data-tone="1"] { background-image:url('./assets/sections/papers-2.webp'); }
+.papers-lock .thumb[data-tone="2"] { background-image:url('./assets/sections/papers-3.webp'); }
+.papers-lock .thumb[data-tone="3"] { background-image:url('./assets/sections/papers-4.webp'); }
+.section-shortcuts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); background:#f8f9fc; border:1px solid var(--section-line); border-radius:22px; padding:5px; box-shadow:var(--shadow); }
+.section-shortcuts > * { display:flex; justify-content:center; align-items:center; text-align:left; gap:8px; padding:9px 6px; border:0; background:none; color:#132d40; text-decoration:none; font-weight:650; line-height:1.15; font-size:14px; }
+.section-shortcuts .icon { flex:none; width:27px; height:27px; }
+.section-shortcuts > :first-child,.section-inspector-heading { background:linear-gradient(125deg,#37576b,#193449); color:white; border-radius:15px; }
+.section-inspector-heading { display:flex; align-items:center; gap:10px; font-size:20px; padding:8px 14px; margin-bottom:10px; }
+.locked-section .paper-title { font-family:var(--font); font-size:clamp(18px,1.4vw,24px); line-height:1.18; }
+.section-tablist { display:flex; gap:6px; flex-wrap:wrap; padding-block:10px; }
+.section-tablist button { flex:1; border:0; background:#e3e9f2; color:#142636; padding:7px 9px; border-radius:20px; font-size:13px; }
+.section-tablist button[aria-pressed="true"] { background:#ff8c61; }
+.section-tab-panel { min-height:170px; padding:8px; }
+.paper-glance { display:grid; grid-template-columns:1fr 1.45fr; gap:13px; }
+.paper-glance-art { min-height:174px; border-radius:13px; background:url('./assets/sections/papers-5.webp') center/cover; }
+@media(max-width:1050px) { .papers-lock .layout-3 {grid-template-columns:minmax(160px,25%) minmax(0,1fr);} }
+@media(max-width:650px) { .papers-lock .layout-3 {grid-template-columns:minmax(0,1fr);} .section-shortcuts {grid-template-columns:repeat(2,minmax(0,1fr));} }
