@@ -34,7 +34,9 @@ function renderThreads(rows, active) {
   const backgrounds = lanes.map((_, index) => {
     const y = 30 + index * 60;
     return `<rect x="0" y="${y-24}" width="760" height="48" rx="24" fill="url(#loom-lane)"/>
-      <path d="M155 ${y} Q285 ${y-31} 398 ${y} T745 ${y}" fill="none" stroke="#c2d0e2" stroke-width="13" opacity=".36"/>`;
+      <path d="M155 ${y} Q285 ${y-31} 398 ${y} T745 ${y}" fill="none" stroke="#c2d0e2" stroke-width="13" opacity=".36"/>
+      <path d="M142 ${y+5} C255 ${y-27} 310 ${y+29} 443 ${y+8} S614 ${y-31} 751 ${y+4}" fill="none" stroke="#fff" stroke-width="2" opacity=".82"/>
+      <path d="M144 ${y-11} C295 ${y+18} 345 ${y-16} 456 ${y-5} S651 ${y+28} 748 ${y-7}" fill="none" stroke="#a5bbd3" stroke-width="3" opacity=".27"/>`;
   });
   return {
     points,
@@ -51,7 +53,7 @@ export function renderConstellation(st) {
   const query = (st.loomQ || "").trim().toLowerCase();
   const entries = connectionEntries(lab).filter(entry => (!st.loomType || entry.type === st.loomType || entry.type === "Laboratory") &&
     (!query || [entry.name,entry.type,entry.detail].join(" ").toLowerCase().includes(query) || entry.type === "Laboratory"));
-  const selected = entries[Number(st.graphNode) || 0] || entries[0];
+  const selected = entries[st.graphNode === undefined || st.graphNode === 0 ? Math.min(1,entries.length-1) : Number(st.graphNode)] || entries[0];
   const rows = lanes.map(([type]) => entries.filter(entry => entry.type === type));
   const { points, svg } = renderThreads(rows, selected);
 
@@ -60,7 +62,7 @@ export function renderConstellation(st) {
     <div class="locked-summary">${searchBox("loomQ","Search this laboratory’s evidence…",st.loomQ)}
     <div class="meta-strip">${stat(labs.length,"Demo labs","book")}${stat(Object.keys(papers).length,"Papers","index")}${stat(Object.keys(approaches).length,"Methods","compare")}${stat(fields.length,"Topics","graph")}</div></div>
     <div class="constellation-stage">
-      <aside class="panel filter-panel"><div class="filter-title">${icon("filter")} Explore the Constellation</div>
+      <aside class="panel filter-panel" aria-label="Connection filters"><div class="filter-title">${icon("filter")} Explore the Constellation</div>
       ${filterBlock("index","Laboratory","graphLab",labs.map(item=>item.name),lab.name)}
       ${filterBlock("graph","Connection Type","loomType",lanes.slice(1).map(([type])=>type),st.loomType)}
       <div class="loom-legend"><strong>Evidence types</strong><p>Solid threads link the fictional dossier to indexed research fields or listed methods. Dashed threads indicate independent editorial readings.</p><p>Researcher records are unavailable.</p></div>
@@ -69,7 +71,7 @@ export function renderConstellation(st) {
         <div class="panel loom-panel">
           <div class="loom-bar"><div><h2>Evidence Loom</h2><small>From laboratory to documented relationship</small></div>
           <div class="loom-controls" aria-label="Diagram zoom"><button type="button" data-loom-zoom="reset" aria-label="Reset diagram zoom">↺</button><button type="button" data-loom-zoom="-25" aria-label="Zoom out">−</button><output class="loom-zoom" aria-live="polite">100%</output><button type="button" data-loom-zoom="25" aria-label="Zoom in">+</button></div></div>
-          <div class="loom-scroll"><div class="loom-map">${svg}
+          <div class="loom-scroll" tabindex="0" role="region" aria-label="Scrollable evidence diagram"><div class="loom-map">${svg}
             ${lanes.map(([, label, glyph], index)=>`<div class="loom-row" style="--lane:${index}">${icon(glyph,24)}<span><strong>${label}</strong><br>${rows[index].length || "—"}</span></div>`).join("")}
             ${points.map(({x,y,entry})=>`<button class="loom-node" type="button" style="left:${x/7.6}%;top:${y/3}%" data-graph-node="${entries.indexOf(entry)}" data-node-type="${esc(entry.type)}" aria-pressed="${entry===selected}" aria-label="${esc(entry.name)} · ${esc(entry.type)}" title="${esc(entry.name)}"></button>`).join("")}
           </div></div>

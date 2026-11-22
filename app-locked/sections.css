@@ -189,3 +189,12 @@ body:has(.locked-section) .primary-nav a[aria-current] { color:#132432; backgrou
   .loom-lock .constellation-stage,.loom-aside,.loom-lock .pagehead { grid-template-columns:minmax(0,1fr); }
   .loom-clusters .clusters { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
+.locked-section .bar-head h2 { display:inline; font-size:21px; }
+.locked-section .bar-head h2 small { margin-left:6px; }
+.dna-lock .meta-strip .stat:first-child span { color:#222e37; }
+.locked-section .meta-strip { overflow:visible; flex-wrap:wrap; gap:3px; }
+.methods-lock .stat { padding-inline:clamp(7px,1vw,16px); }
+.compare-lock .compare-head { display:grid; }
+.compare-lock .compare-choice select { background:transparent; border:0; padding:3px; }
+.compare-lock .compare-head .compare-switch { align-self:center; }
+.loom-controls { flex:none; }

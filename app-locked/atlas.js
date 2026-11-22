@@ -47,6 +47,12 @@ function render(move=false){const {view,params}=loc();state.params=params;
   document.querySelector("#primary-nav").innerHTML=items.map(([v,label])=>`<a href="#${v}" ${current===v?'aria-current="page"':""}>${label}</a>`).join("");const pages={explore:()=>renderHome(),dna:()=>renderDNA(state),dossier:()=>renderDossier(state),papers:()=>renderPapers(state),paper:()=>renderPaperDetail(state),methods:()=>renderMethods(state),compare:()=>renderCompare(state),constellation:()=>renderConstellation(state),radar:()=>renderRadar(state),tools:()=>renderTools(state)};const start=performance.now();try{document.querySelector("#main").innerHTML=(pages[view]||pages.explore)();}catch(err){console.error("YEON atlas view failed",err);document.querySelector("#main").innerHTML='<section class="canvas"><h1>Page unavailable</h1><p>Please reload or return to Explore.</p><a href="#explore" class="button primary">Explore</a></section>';}document.title=(view==="explore"?"Explore":view==="dna"?"Lab DNA":view==="compare"?"Lab Compare":view[0]?.toUpperCase()+view.slice(1))+" · YEON Research Atlas";document.querySelector("#primary-nav").classList.remove("open");document.querySelector(".menu-toggle").setAttribute("aria-expanded","false");if(move){const title=document.querySelector("#main h1");if(title){title.setAttribute("tabindex","-1");title.focus({preventScroll:true});}window.scrollTo({top:0,behavior:"instant"});}return performance.now()-start;}
 
 function onClick(e){
+  const search = e.target.closest(".locked-section .searchbox button");
+  if (search) {
+    const section = search.closest(".locked-section");
+    (section.querySelector(".record, .loom-node") || section.querySelector(".searchbox input"))?.focus();
+    return;
+  }
   const zoom = e.target.closest("[data-loom-zoom]");
   if (zoom) {
     const panel = zoom.closest(".loom-panel");
