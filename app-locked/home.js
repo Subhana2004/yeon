@@ -32,19 +32,19 @@ const popularTopics = ["Multimodal learning", "Human–AI interaction", "Clean e
 
 function renderArtwork() {
   const labels = [
-    ["Papers", `${Object.keys(papers).length} published`, "paper"],
-    ["Labs", `${labs.length} demo dossiers`, "lab"],
-    ["Methods", `${Object.keys(approaches).length} approaches`, "layers"],
-    ["Topics", `${fields.length} indexed fields`, "graph"],
-    ["Connections", "Evidence links", "link"],
+    ["Papers", `${Object.keys(papers).length} published`, "paper", "#papers"],
+    ["Labs", `${labs.length} demo dossiers`, "lab", "#dna"],
+    ["Methods", `${Object.keys(approaches).length} approaches`, "layers", "#methods"],
+    ["Topics", `${fields.length} indexed fields`, "graph", "#constellation"],
+    ["Connections", "Evidence links", "link", "#constellation"],
   ];
   return `<div class="locked-art">
-    <picture class="locked-compact-art">
+    <div class="locked-art-stage" aria-hidden="true"><picture class="locked-compact-art">
       <source media="(max-width: 1050px)" srcset="./assets/home-atmosphere-compact.webp">
       <img width="768" height="474" alt="" decoding="async">
-    </picture>
+    </picture><canvas class="locked-live-scene" aria-hidden="true"></canvas></div>
     <ul class="locked-art-labels" aria-label="Atlas coverage">
-      ${labels.map(([label, detail, glyph]) => `<li class="locked-label-${label.toLowerCase()}"><span>${homeIcon(glyph)}</span><div><strong>${label}</strong><small>${detail}</small></div></li>`).join("")}
+      ${labels.map(([label, detail, glyph, href], index) => `<li class="locked-label-${label.toLowerCase()}"><a href="${href}" data-evidence-label="${index}"><span>${homeIcon(glyph)}</span><div><strong>${label}</strong><small>${detail}</small></div></a></li>`).join("")}
     </ul>
   </div>`;
 }
@@ -54,7 +54,7 @@ export function renderHome() {
     <div class="locked-copy">
       <p class="locked-kicker">Korea’s research, connected</p>
       <h1><span>Explore</span> <span>The Evidence</span> <em>Behind Research.</em></h1>
-      <p class="locked-intro">A unified space to explore Korea’s research laboratories, papers, methods and their connections.</p>
+      <p class="locked-intro">A unified space to explore Korea’s research <br class="locked-intro-break">laboratories, papers, methods and their connections.</p>
       <form class="locked-search" role="search" aria-label="Research atlas" data-home-form>
         ${icon("search", 32)}
         <input id="home-search" name="q" type="search" aria-label="Search research" placeholder="Search labs, papers, methods or topics…">
@@ -71,3 +71,39 @@ export function renderHome() {
     <p class="locked-signoff">Korean Research <span>×</span> Evidence <span>×</span> Exploration</p>
   </section>`;
 }
+
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+let mountedHome;
+let stopMotion;
+let motionRequest = 0;
+
+export function syncHomeMotion(home) {
+  if (mountedHome === home) return;
+  stopMotion?.();
+  stopMotion = undefined;
+  mountedHome = home;
+  const request = ++motionRequest;
+  if (!home || motionPreference.matches) return;
+  const canvas = home.querySelector(".locked-live-scene");
+  let context;
+  try {
+    context = canvas.getContext("webgl2", { alpha: false, antialias: false, depth: true });
+  } catch {
+    return;
+  }
+  if (!context) return;
+
+  import("./home-scene.js").then(({ mountHomeScene }) => {
+    if (request !== motionRequest || motionPreference.matches) return;
+    stopMotion = mountHomeScene(home, canvas, context);
+  }).catch(() => {
+    // The original locked artwork is already visible when rendering cannot start.
+    canvas.classList.remove("is-live");
+  });
+}
+
+motionPreference.addEventListener("change", () => {
+  const home = mountedHome;
+  mountedHome = undefined;
+  syncHomeMotion(home);
+});
