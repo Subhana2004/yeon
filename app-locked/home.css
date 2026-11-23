@@ -487,3 +487,15 @@ body:has(.locked-home) :focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .locked-live-scene { display: none; }
 }
+
+/* Once the opaque procedural scene is ready, the poster serves fallback only. */
+@media (min-width: 1051px) {
+  body:has(.locked-live-scene.is-live) { background-image: none; }
+}
+.locked-art-stage:has(.is-live) .locked-compact-art { visibility: hidden; }
+.locked-tools a:focus-visible svg,
+.locked-tools a:hover svg { color: #ffceb8; }
+@media (prefers-reduced-motion: no-preference) {
+  .locked-tools svg { transition: transform 180ms ease, color 180ms ease; }
+  .locked-tools a:is(:hover, :focus-visible) svg { transform: translateY(-3px) rotate(-3deg); }
+}

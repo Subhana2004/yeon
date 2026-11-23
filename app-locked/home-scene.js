@@ -1,8 +1,9 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, DoubleSide, LineLoop,
+  AdditiveBlending, BufferAttribute, BufferGeometry, DoubleSide, Line, LineLoop,
   LineBasicMaterial, Mesh, PerspectiveCamera, PlaneGeometry, Points, Scene,
-  ShaderMaterial, TextureLoader, Vector2, WebGLRenderer,
+  ShaderMaterial, TextureLoader, Vector2, Vector3, WebGLRenderer,
 } from "./vendor/three/three.module.min.js";
+import { environmentPlane, mistFragment, skyFragment, terrainFragment, terrainVertex } from "./home-environment.js";
 
 const cameraDepth = 1850;
 const sheets = [[778,186,697,158], [781,301,646,138], [876,379,542,151]];
@@ -34,40 +35,14 @@ void main() {
 const membrane = `
 uniform sampler2D artwork;
 uniform float entrance, focus, layer;
+uniform vec3 evidence;
 varying vec2 surfaceUv;
 varying float shimmer;
 void main() {
   vec4 texel = texture2D(artwork, surfaceUv);
   float rim = pow(max(0., 1. - abs(surfaceUv.y - .48) * 2.), 3.);
   vec3 tint = layer < .5 ? vec3(.64,.81,1.) : vec3(1.,.46,.25);
-  gl_FragColor = vec4(texel.rgb * (1. + shimmer) + tint * rim * focus * .094, texel.a * entrance);
-}`;
-
-const atmosphere = `
-uniform sampler2D artwork;
-uniform float time;
-uniform vec2 pointer;
-varying vec2 surfaceUv;
-float hash(vec2 p) { return fract(sin(dot(p, vec2(129.7, 311.5))) * 43758.54); }
-float noise(vec2 p) {
-  vec2 i=floor(p), f=fract(p);
-  vec2 w=f*f*(3.-2.*f);
-  return mix(mix(hash(i),hash(i+vec2(1,0)),w.x),mix(hash(i+vec2(0,1)),hash(i+1.),w.x),w.y);
-}
-void main() {
-  vec2 uv = surfaceUv;
-  float ground = (1. - smoothstep(.30,.52,uv.y));
-  float edge = smoothstep(0.,.08,uv.x) * (1. - smoothstep(.92,1.,uv.x));
-  float drift = sin(uv.x*19. + time*.42) + .6*sin(uv.x*41. - time*.26 + uv.y*25.);
-  vec2 displacement = vec2(drift*.0024 + pointer.x*.002, cos(uv.x*13. - time*.46)*.0028);
-  vec3 color = texture2D(artwork, uv + displacement*ground*edge).rgb;
-  vec2 fogUV = vec2(uv.x*12.-time*.15,uv.y*53.+time*.045);
-  float fog = noise(fogUV)*.72 + noise(fogUV*2.6)*.28;
-  float band = exp(-pow((uv.y-.32 + sin(uv.x*7.)*.06)*11.,2.));
-  color = mix(color, vec3(.56,.65,.74), max(0.,fog-.36)*band*.21);
-  float illumination = exp(-distance(uv,vec2(.68 + sin(time*.44)*.05,.28))*9.);
-  color += vec3(.13,.043,.016)*illumination*(.45+.3*sin(time*1.25));
-  gl_FragColor = vec4(color,1.);
+  gl_FragColor = vec4(texel.rgb * (1. + shimmer + evidence.z * .065) + tint * rim * focus * .094, texel.a * entrance);
 }`;
 
 function orbitPoint(angle, index) {
@@ -104,20 +79,25 @@ export function mountHomeScene(home, canvas, context) {
   const time = { value: 0 };
   const entrance = { value: 0 };
   const focus = { value: 0 };
+  const evidence = { value: new Vector3(.68,.66,0) };
   const pixelRatio = { value: 1 };
   let alive = true;
   let frame = 0;
   let visible = true;
   let ready = false;
+  let loaded = false;
   let playingIntro = false;
   let elapsed = 0;
   let lastTick = 0;
   let active = -1;
+  let resolution = 1;
+  let budgetMs = 0;
+  let budgetFrames = 0;
 
   function mesh(box, segments, material, order) {
     const [x,y,w,h] = box;
     const geometry = new PlaneGeometry(w, h, segments[0], segments[1]);
-    geometry.translate(x + w / 2, -y - h / 2, order === 0 ? -1 : 0);
+    geometry.translate(x + w / 2, -y - h / 2, 0);
     const surface = new Mesh(geometry, material);
     surface.frustumCulled = false;
     surface.renderOrder = order;
@@ -125,24 +105,23 @@ export function mountHomeScene(home, canvas, context) {
     return surface;
   }
 
-  const backdrop = mesh(desktop, [32,18], new ShaderMaterial({
-    uniforms: { time, pointer: { value: pointer }, artwork: { value: null } },
-    vertexShader: `uniform float time; varying vec2 surfaceUv;
-      void main() {
-        surfaceUv = uv;
-        vec3 p = position;
-        float ground = (1. - smoothstep(.30,.44,uv.y))*smoothstep(0.,.15,uv.y);
-        float border = smoothstep(0.,.1,uv.x)*(1.-smoothstep(.9,1.,uv.x));
-        p.z += ground*border*sin(uv.x*18.-time*.57)*4.;
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);
-      }`,
-    fragmentShader: atmosphere,
-    depthWrite: false,
-    depthTest: false,
-  }), 0);
+  const environmentUniforms = { time, evidence, pointer: { value: pointer }, center: { value: center } };
+  const environmentMaterial = (vertexShader, fragmentShader, layer, transparent = false) =>
+    new ShaderMaterial({
+      uniforms: { ...environmentUniforms, layer: { value: layer } },
+      vertexShader, fragmentShader, transparent, side: DoubleSide,
+      depthTest: false, depthWrite: false,
+    });
+  const atmosphereBounds = [-12,-12,1696,965];
+  mesh(atmosphereBounds,[1,1],environmentMaterial(environmentPlane,skyFragment,0),-9);
+  const mistBounds = [[-12,268,1696,510],[-12,481,1696,460],[-12,637,1696,320]];
+  for (let i=0;i<3;i++) {
+    mesh(desktop,[132,23],environmentMaterial(terrainVertex,terrainFragment,i,true),-7+i*2);
+    mesh(mistBounds[i],[1,1],environmentMaterial(environmentPlane,mistFragment,i,true),-6+i*2);
+  }
 
   const sculpture = sheets.map((box,index) => mesh(box, [92,34], new ShaderMaterial({
-    uniforms: { time, entrance, focus, pointer: { value: pointer }, center: { value: center },
+    uniforms: { time, entrance, focus, evidence, pointer: { value: pointer }, center: { value: center },
       layer: { value: index }, artwork: { value: null } },
     vertexShader: vertex,
     fragmentShader: membrane,
@@ -166,7 +145,9 @@ export function mountHomeScene(home, canvas, context) {
   });
 
   const orbitingCount = 15;
-  const count = orbitingCount + targets.length + 1;
+  const groundCount = 26;
+  const anchorPoints = [[1257,135],[1137,551],[1137,624]];
+  const count = orbitingCount + targets.length + groundCount + anchorPoints.length + 2;
   const signalGeometry = new BufferGeometry();
   signalGeometry.setAttribute("position",new BufferAttribute(new Float32Array(count*3),3));
   signalGeometry.setAttribute("energy",new BufferAttribute(new Float32Array(count),1));
@@ -174,12 +155,12 @@ export function mountHomeScene(home, canvas, context) {
     uniforms: { pixelRatio },
     vertexShader: `attribute float energy; uniform float pixelRatio; varying float strength;
       void main(){ strength=energy; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);
-        gl_PointSize=(4. + energy*18.) * pixelRatio; }`,
+        gl_PointSize=(3. + energy*22.) * pixelRatio; }`,
     fragmentShader: `varying float strength;
       void main(){ float r=length(gl_PointCoord-.5)*2.;
         float halo=exp(-r*r*6.)*(1.-smoothstep(.73,1.,r));
         float core=1.-smoothstep(.07,.32,r);
-        gl_FragColor=vec4(mix(vec3(1.,.32,.13),vec3(1.,.90,.75),core), (halo*.47+core*.52)*strength); }`,
+        gl_FragColor=vec4(mix(vec3(1.,.32,.13),vec3(1.,.90,.75),core), (halo*.56+core*.64)*strength); }`,
     blending: AdditiveBlending,
     transparent: true,
     depthTest: false,
@@ -188,6 +169,24 @@ export function mountHomeScene(home, canvas, context) {
   signals.frustumCulled = false;
   signals.renderOrder = 6;
   scene.add(signals);
+
+  const paths = [
+    [[753,465],[813,430],[895,385],[1010,344],[1120,270],[1257,135]],
+    [[1257,135],[1257,278],[1190,375],[1137,448],[1137,551],[1137,624]],
+    [[788,174],[854,174],[910,230]],
+    [[1430,175],[1399,175],[1327,254]],
+    [[1494,336],[1450,336],[1421,369]],
+    [[823,507],[925,507],[976,453]],
+    [[1397,507],[1352,507],[1296,457]],
+  ].map((points,index)=>{
+    const geometry = new BufferGeometry().setFromPoints(points.map(([x,y])=>new Vector3(x,-y,0)));
+    const line = new Line(geometry,new LineBasicMaterial({
+      color:index<2?0xf69267:0xa4bcce, transparent:true, opacity:.5, depthTest:false, depthWrite:false,
+    }));
+    line.renderOrder=1;
+    scene.add(line);
+    return line;
+  });
 
   const size = () => {
     if (!alive) return;
@@ -200,7 +199,7 @@ export function mountHomeScene(home, canvas, context) {
     camera.aspect = width / height;
     camera.fov = 2 * Math.atan(height / (2 * cameraDepth)) * 180 / Math.PI;
     camera.updateProjectionMatrix();
-    const ratio = Math.min(devicePixelRatio, small ? 1.3 : 1.15);
+    const ratio = Math.min(devicePixelRatio, small ? 1.3 : 1.15) * resolution;
     pixelRatio.value = cssWidth / width * ratio;
     renderer.setPixelRatio(ratio);
     renderer.setSize(cssWidth, cssHeight, false);
@@ -209,11 +208,27 @@ export function mountHomeScene(home, canvas, context) {
   function animate(now) {
     frame = 0;
     if (!ready || document.hidden || !visible) return;
-    const dt = lastTick ? Math.min((now - lastTick) / 1000, .08) : 0;
+    const deltaMs = lastTick ? now - lastTick : 0;
+    const dt = Math.min(deltaMs / 1000, .15);
+    if (deltaMs && deltaMs < 300 && resolution > .65) {
+      budgetMs += deltaMs;
+      if (++budgetFrames >= 28) {
+        if (budgetMs / budgetFrames > 35) {
+          resolution = Math.max(.65, resolution * .88);
+          size();
+        }
+        budgetMs = budgetFrames = 0;
+      }
+    }
     lastTick = now;
     elapsed += dt;
     time.value = elapsed;
     const step = Math.min(1,elapsed / 1.75);
+    const descent = (elapsed % 13.7) / 2.8;
+    const contact = Math.exp(-((descent-1)**2)*15);
+    evidence.value.z = .22 + .14*Math.sin(elapsed*1.23) + contact*.67 + focus.value*.37;
+    paths[1].material.opacity = .33+contact*.35;
+    for (let i=2;i<paths.length;i++) paths[i].material.opacity = (i===active+2?.85:.44)*entrance.value;
     entrance.value = playingIntro ? 1 - (1-step)**3 : 1;
     pointer.lerp(requested, 1 - Math.exp(-dt*4.4));
     focus.value += ((active < 0 ? 0 : 1) - focus.value) * (1-Math.exp(-dt*5));
@@ -221,7 +236,7 @@ export function mountHomeScene(home, canvas, context) {
       track.position.z = Math.sin(elapsed*.27+index)*18;
       track.position.x = pointer.x*(5+index);
       track.position.y = pointer.y*(4+index);
-      track.material.opacity = entrance.value * (.10 + .055*Math.sin(elapsed*.61+index));
+      track.material.opacity = entrance.value * (.19 + .068*Math.sin(elapsed*.61+index));
     });
 
     const xyz = signalGeometry.attributes.position;
@@ -229,6 +244,28 @@ export function mountHomeScene(home, canvas, context) {
     for (let i=0; i<count; i++) {
       const index=i%4;
       const phase=elapsed*(.20+index*.029) + i*2.399;
+      if (i === count-2) {
+        const y=135+Math.min(1,descent)*488;
+        xyz.setXYZ(i, y<278 ? 1257 : 1137+120*Math.max(0,1-(y-278)/170),-y,3);
+        energy.setX(i, descent<1 ? Math.sin(descent*Math.PI)*1.27 : 0);
+        continue;
+      }
+      const anchor = anchorPoints[i-(count-anchorPoints.length-2)];
+      if (anchor) {
+        xyz.setXYZ(i,anchor[0],-anchor[1],6);
+        energy.setX(i,entrance.value*(i===count-3 ? .88+contact*.56 : 1.45+.23*Math.sin(elapsed*1.35-i)));
+        continue;
+      }
+      const grain = i-orbitingCount-targets.length;
+      if (grain>=0 && grain<groundCount) {
+        const drift = (grain*.381966+elapsed*(.006+grain%3*.002))%1;
+        const near = grain%3===0;
+        const x=drift*1672;
+        const y=near ? 899-82*Math.abs(drift-.52)**2 : 637-74*drift+19*Math.sin(drift*16.+elapsed*.59+grain);
+        xyz.setXYZ(i,x,-y+Math.sin(elapsed*.83+grain)*9,0);
+        energy.setX(i,(.10+.18*(.5+.5*Math.sin(elapsed*.92+grain*2.4))**4)*Math.sin(drift*Math.PI));
+        continue;
+      }
       if (i === count-1) {
         const target = targets[active];
         if (target) {
@@ -298,7 +335,7 @@ export function mountHomeScene(home, canvas, context) {
     sync();
   }, on);
   canvas.addEventListener("webglcontextrestored", () => {
-    ready = Boolean(backdrop.material.uniforms.artwork.value);
+    ready = loaded;
     canvas.classList.toggle("is-live",ready);
     sync();
   }, on);
@@ -310,19 +347,18 @@ export function mountHomeScene(home, canvas, context) {
   });
   intersection.observe(canvas);
 
-  const surfaces = [backdrop,...sculpture];
   const textures = [];
-  const assets = ["atmosphere", "membrane-0", "membrane-1", "membrane-2"];
+  const assets = ["membrane-0", "membrane-1", "membrane-2"];
   Promise.all(assets.map(asset => loader.loadAsync(new URL(`./assets/p7/${asset}.webp`,import.meta.url).href)
     .then(texture => { if (alive) textures.push(texture); else texture.dispose(); return texture; })))
     .then(images => {
       if (!alive) return;
-      images.forEach((texture,index) => surfaces[index].material.uniforms.artwork.value = texture);
+      images.forEach((texture,index) => sculpture[index].material.uniforms.artwork.value = texture);
       playingIntro = introduction();
       entrance.value = playingIntro ? 0 : 1;
       size();
       renderer.render(scene,camera);
-      ready = true;
+      loaded = ready = true;
       canvas.classList.add("is-live");
       sync();
     }).catch(error => { console.warn("YEON live artwork fallback:", error.message); stop(); });
