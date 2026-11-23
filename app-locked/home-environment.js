@@ -14,6 +14,11 @@ float noise(vec2 p) {
 }
 `;
 
+const powers = `
+float fourth(float x) { float square=x*x; return square*square; }
+float sixteenth(float x) { return fourth(fourth(x)); }
+`;
+
 const ridge = `
 float crest(float x, float t, float layer) {
   float farRidge = .624 - .095*smoothstep(.64,1.,x);
@@ -70,18 +75,19 @@ void main() {
   float fieldY=p.y+.016*curl+.009*sin(p.x*32.-time*.41+layer);
   float elevation=.603 + .18*layer - .17*right*max(0.,1.-layer)
     - .048*left*sin(p.x*10.+time*.17+layer);
-  float band=exp(-pow((fieldY-elevation)/(layer>1.5?.075:.107),2.));
-  float wisps=exp(-pow((fieldY-(.45+.20*layer-.12*right+.08*p.x))/.085,2.));
+  float band=1.-smoothstep(.016,layer>1.5?.143:.178,abs(fieldY-elevation));
+  float wisps=1.-smoothstep(.012,.15,abs(fieldY-(.45+.20*layer-.12*right+.08*p.x)));
   vec2 flow=vec2(p.x*(10.+layer*7.)+time*drift+pointer.x*.42,
     fieldY*(62.-layer*14.)-time*(.16-layer*.29)+layer*29.);
-  flow.y += (noise(vec2(flow.x*.73,p.y*7.+time*.10))- .5)*3.7;
+  flow.y += sin(flow.x*.51+p.y*16.+time*.18)*1.65;
   float structure=noise(flow)*.72+noise(flow*vec2(2.2,1.22)+8.1)*.28;
   float coverage=(band*.64+wisps*.24)*(.51+.60*max(left,right));
   float edge=smoothstep(0.,.063,p.y-(layer<.5?.285:layer<1.5?.511:.677));
   if (layer<.5) edge*=1.-smoothstep(.76,.826,p.y);
   float density=clamp((structure-.24)*coverage*(layer>1.5?1.33:1.06)*edge,0.,.61);
   vec3 steel=mix(vec3(.27,.37,.47),vec3(.63,.71,.82),structure);
-  float light=exp(-length((p-evidence.xy)*vec2(4.,3.))*4.);
+  vec2 spill=(p-evidence.xy)*vec2(4.,3.);
+  float light=1./(1.+18.*dot(spill,spill));
   steel+=light*evidence.z*vec3(.26,.081,.026);
   gl_FragColor=vec4(steel,density);
 }
@@ -116,6 +122,7 @@ uniform vec3 evidence;
 varying vec2 field;
 varying float slope;
 ${noise}
+${powers}
 void main() {
   float x=field.x, d=field.y;
   float t=time+layer*4.;
@@ -125,21 +132,21 @@ void main() {
   vec3 dark=vec3(.032,.057,.079);
   vec3 blue=vec3(.18,.258,.337);
   vec3 color=mix(dark,blue,lit)*mix(.83,1.06,smoothstep(0.,.19,d));
-  float stream=pow(.5+.5*sin(x*(19.-layer*3.)-t*.93+d*20.),4.);
+  float stream=fourth(.5+.5*sin(x*(19.-layer*3.)-t*.93+d*20.));
   float endpoints = layer<.5 ? smoothstep(.52,.94,x) : layer<1.5 ?
     smoothstep(.30,.65,x) : 1.-smoothstep(.05,.47,min(x,1.-x));
   float coil=sin(d*91.+sin(x*34.+t*.62)*2.4+x*41.);
-  float threads=pow(.5+.5*coil,17.)*exp(-d*7.);
-  float rim=exp(-d*108.);
-  float glint=pow(max(0.,sin(x*25.-time*1.48+layer)),22.)
-    *pow(.5+.5*cos(time*.87+layer),4.);
-  float coupled=exp(-pow((x-evidence.x)*15.,2.))*evidence.z;
+  float threads=sixteenth(.5+.5*coil)*(1.-smoothstep(0.,.39,d));
+  float rim=1.-smoothstep(0.,.021,d);
+  float glint=sixteenth(max(0.,sin(x*25.-time*1.48+layer)))
+    *fourth(.5+.5*cos(time*.87+layer));
+  float coupled=(1.-smoothstep(0.,.102,abs(x-evidence.x)))*evidence.z;
   vec2 cell=vec2(x*510.-t*2.4,d*98.);
   float dots=(1.-smoothstep(.09,.31,length(fract(cell)-.5)))*step(.40,hash(floor(cell)));
   float intensity=(rim*(.40+stream*.58+glint*.85) + threads*(.13+stream*.36)
-    +dots*exp(-d*9.)*(.24+stream*.55))*endpoints;
+    +dots*(1.-smoothstep(0.,.33,d))*(.24+stream*.55))*endpoints;
   color+=vec3(.99,.31,.13)*intensity+vec3(.26,.094,.052)*coupled*(rim+threads*.34);
-  color+=vec3(.16,.21,.25)*exp(-d*52.)*(.36+lit*.55);
+  color+=vec3(.16,.21,.25)*(1.-smoothstep(0.,.05,d))*(.36+lit*.55);
   gl_FragColor=vec4(color,1.);
 }
 `;
