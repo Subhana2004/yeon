@@ -446,7 +446,7 @@ body:has(.locked-home) :focus-visible {
   opacity: 0;
 }
 
-.locked-live-scene.is-live { opacity: 1; transition: opacity 650ms ease-out; }
+.locked-live-scene.is-live { opacity: 1; }
 
 .locked-art-labels li > a {
   display: flex;
