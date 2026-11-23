@@ -159,7 +159,7 @@ body:has(.locked-home) .header-actions :is(a, button, svg) {
 }
 
 .locked-intro {
-  max-width: calc(520 * var(--u));
+  max-width: calc(610 * var(--u));
   font-size: calc(23 * var(--u));
   line-height: 1.32;
   letter-spacing: -.036em;
@@ -254,17 +254,6 @@ body:has(.locked-home) .header-actions :is(a, button, svg) {
   align-items: flex-start;
   gap: calc(16 * var(--u));
   white-space: nowrap;
-}
-
-.locked-art-labels li > span {
-  display: grid;
-  place-items: center;
-  width: calc(37 * var(--u));
-  height: calc(37 * var(--u));
-  border: 1px solid var(--home-accent);
-  border-radius: calc(7 * var(--u));
-  background: #192832a0;
-  color: var(--home-accent);
 }
 
 .locked-art-labels svg { width: 62%; }
@@ -377,6 +366,7 @@ body:has(.locked-home) :focus-visible {
   .locked-home { padding: 39px clamp(16px, 5vw, 48px) 36px; min-height: auto; }
   .locked-copy { width: 100%; margin: 0; }
   .locked-home h1 { font-size: clamp(24px, 7.9vw, 70px); }
+  .locked-intro-break { display: none; }
   .locked-intro { max-width: 590px; font-size: clamp(17px, 3vw, 23px); }
   .locked-search { width: min(100%, 622px); }
   .locked-art { position: relative; margin-block: 16px 8px; }
@@ -400,7 +390,6 @@ body:has(.locked-home) :focus-visible {
   }
 
   .locked-art-labels li { position: static; gap: 6px; }
-  .locked-art-labels li > span { width: 24px; height: 24px; }
   .locked-art-labels strong,
   .locked-art-labels small { font-size: 11px; }
   .locked-tools { position: static; height: auto; grid-template-columns: repeat(4, 1fr); gap: 12px 0; padding: 14px 0; }
@@ -439,4 +428,74 @@ body:has(.locked-home) :focus-visible {
 @media (forced-colors: active) {
   .locked-kicker::before { background: CanvasText; }
   .locked-tools svg { color: LinkText; }
+}
+
+/* The live scene uses the same reference coordinates as the static artwork. */
+.locked-art-stage {
+  position: absolute;
+  inset: calc(-74 * var(--u)) 0 auto;
+  height: calc(941 * var(--u));
+  pointer-events: none;
+}
+
+.locked-live-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.locked-live-scene.is-live { opacity: 1; }
+
+.locked-art-labels li > a {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(16 * var(--u));
+  border-radius: 7px;
+  text-decoration: none;
+}
+
+.locked-art-labels li > a > span {
+  display: grid;
+  place-items: center;
+  width: calc(37 * var(--u));
+  height: calc(37 * var(--u));
+  border: 1px solid var(--home-accent);
+  border-radius: calc(7 * var(--u));
+  background: #192832a0;
+  color: var(--home-accent);
+}
+
+.locked-art-labels a:is(:hover,:focus-visible) > span { background: #4e352d; color: #ffd7c4; }
+
+@media (max-width: 1050px) {
+  .locked-art-stage {
+    position: relative;
+    inset: auto;
+    width: min(100%, 760px);
+    height: auto;
+    margin-inline: auto;
+  }
+  .locked-live-scene {
+    mask-image: radial-gradient(ellipse 69% 70% at 56% 49%, #000 60%, #0000 100%);
+  }
+  .locked-art-labels li > a { gap: 6px; }
+  .locked-art-labels li > a > span { width: 24px; height: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locked-live-scene { display: none; }
+}
+
+/* Once the opaque procedural scene is ready, the poster serves fallback only. */
+@media (min-width: 1051px) {
+  body:has(.locked-live-scene.is-live) { background-image: none; }
+}
+.locked-art-stage:has(.is-live) .locked-compact-art { visibility: hidden; }
+.locked-tools a:focus-visible svg,
+.locked-tools a:hover svg { color: #ffceb8; }
+@media (prefers-reduced-motion: no-preference) {
+  .locked-tools svg { transition: transform 180ms ease, color 180ms ease; }
+  .locked-tools a:is(:hover, :focus-visible) svg { transform: translateY(-3px) rotate(-3deg); }
 }
